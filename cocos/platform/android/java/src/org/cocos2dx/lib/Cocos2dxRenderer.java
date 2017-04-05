@@ -61,6 +61,8 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     public void setScreenWidthAndHeight(final int surfaceWidth, final int surfaceHeight) {
         this.mScreenWidth = surfaceWidth;
         this.mScreenHeight = surfaceHeight;
+Cocos2dxRenderer.nativeSetFrameSize(surfaceWidth, surfaceHeight);
+
     }
 
     // ===========================================================
@@ -116,6 +118,8 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     private static native boolean nativeKeyEvent(final int keyCode,boolean isPressed);
     private static native void nativeRender();
     private static native void nativeInit(final int width, final int height);
+private static native void nativeSetFrameSize(final int width, final int height);
+
     private static native void nativeOnSurfaceChanged(final int width, final int height);
     private static native void nativeOnPause();
     private static native void nativeOnResume();

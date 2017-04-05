@@ -127,6 +127,17 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeOnSurfaceChanged(JNI
 {
     cocos2d::Application::getInstance()->applicationScreenSizeChanged(w, h);
 }
+JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeSetFrameSize(JNIEnv*  env, jobject thiz, jint w, jint h)
+            {
+                auto director = cocos2d::Director::getInstance();
+                auto glview = director->getOpenGLView();
+                if(glview)
+                    glview->setFrameSize(w, h);
+                else{
+                    CCLOG("Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeSetFrameSize:glview is null,do nothing");
+                }
+            }
+
 
 }
 

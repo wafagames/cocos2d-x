@@ -485,6 +485,15 @@ void SIOClientImpl::handshakeResponse(HttpClient* /*sender*/, HttpResponse *resp
     std::string res = s.str();
     std::string sid = "";
     int heartbeat = 0, timeout = 0;
+        if(res.size()<=0){
+            CCLOGINFO("SIOClientImpl::handshake() get data nothing,return!");
+            for (auto iter = _clients.begin(); iter != _clients.end(); ++iter)
+            {
+                iter->second->getDelegate()->onError(iter->second, response->getErrorBuffer());
+            }
+            return;
+        }
+
 
     if (res.at(res.size() - 1) == '}') {
 

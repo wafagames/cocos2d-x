@@ -34,18 +34,27 @@ class __JSDownloaderDelegator : cocos2d::Ref
 public:
     void downloadAsync();
     void download();
+void downloadToFileAsync(std::string &savePath);
+void downloadToFile(std::string &savePath);
     
-    static __JSDownloaderDelegator *create(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback);
+    static __JSDownloaderDelegator *create(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback,JS::HandleObject callbackOnProgress);
 
 protected:
-    __JSDownloaderDelegator(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback);
+    __JSDownloaderDelegator(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback,JS::HandleObject callbackOnProgress);
     ~__JSDownloaderDelegator();
     
     void startDownload();
+void startDownloadToFile();
     
 private:
     void onSuccess(cocos2d::Texture2D *tex);
     void onError();
+void onSuccessToFile();
+    void onProgress( int64_t bytesReceived,int64_t totalBytesReceived,int64_t totalBytesExpected);
+    std::string _saveFileName;
+    std::string _password;
+    JS::Heap<JSObject*> _jsCallbackOnProgress;
+
     std::shared_ptr<cocos2d::network::Downloader> _downloader;
     std::string _url;
     JSContext *_cx;

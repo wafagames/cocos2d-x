@@ -827,12 +827,13 @@ bool js_cocos2dx_extension_EventListenerAssetsManagerEx_create(JSContext *cx, ui
     return false;
 }
 
-__JSDownloaderDelegator::__JSDownloaderDelegator(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback)
+__JSDownloaderDelegator::__JSDownloaderDelegator(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback,JS::HandleObject callbackOnProgress)
 : _cx(cx)
 , _url(url)
 {
     _obj = obj;
     _jsCallback = callback;
+_jsCallbackOnProgress=callbackOnProgress;
 
     JS::RootedValue target(cx, OBJECT_TO_JSVAL(obj));
     if (!target.isNullOrUndefined())
@@ -854,6 +855,7 @@ __JSDownloaderDelegator::~__JSDownloaderDelegator()
         js_remove_object_root(target);
     }
     target.set(OBJECT_TO_JSVAL(_jsCallback));
+target.set(OBJECT_TO_JSVAL(_jsCallbackOnProgress));
     if (!target.isNullOrUndefined())
     {
         js_remove_object_root(target);
@@ -861,11 +863,14 @@ __JSDownloaderDelegator::~__JSDownloaderDelegator()
 
     _downloader->onTaskError = (nullptr);
     _downloader->onDataTaskSuccess = (nullptr);
+_downloader->onFileTaskSuccess = (nullptr);
+_downloader->onTaskProgress=(nullptr);
+
 }
 
-__JSDownloaderDelegator *__JSDownloaderDelegator::create(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback)
+__JSDownloaderDelegator *__JSDownloaderDelegator::create(JSContext *cx, JS::HandleObject obj, const std::string &url, JS::HandleObject callback,JS::HandleObject callbackOnProgress)
 {
-    __JSDownloaderDelegator *delegate = new (std::nothrow) __JSDownloaderDelegator(cx, obj, url, callback);
+    __JSDownloaderDelegator *delegate = new (std::nothrow) __JSDownloaderDelegator(cx, obj, url, callback,callbackOnProgress);
     delegate->autorelease();
     return delegate;
 }
@@ -916,6 +921,102 @@ void __JSDownloaderDelegator::startDownload()
 
         _downloader->createDownloadDataTask(_url);
     }
+}
+void __JSDownloaderDelegator::startDownloadToFile()
+{
+    _downloader = std::make_shared<cocos2d::network::Downloader>();
+    _downloader->onTaskProgress = [this](const cocos2d::network::DownloadTask& task,
+        int64_t bytesReceived,
+        int64_t totalBytesReceived,
+        int64_t totalBytesExpected)
+    {
+        this->onProgress(bytesReceived,totalBytesReceived,totalBytesExpected);
+    };
+    _downloader->onTaskError = [this](const cocos2d::network::DownloadTask& task,
+        int errorCode,
+        int errorCodeInternal,
+    const std::string& errorStr)
+    {
+        CCLOG("__JSDownloaderDelegator:download file %s error",_url.c_str());
+        this->onError();
+    };
+    _downloader->onFileTaskSuccess = [this](const cocos2d::network::DownloadTask& task)
+    {
+        CCLOG("__JSDownloaderDelegator:download file %s ok",_url.c_str());
+        this->onSuccessToFile();
+    };
+    _downloader->createDownloadFileTask(_url,_saveFileName);
+}
+
+void __JSDownloaderDelegator::downloadToFile(std::string &saveFileName)
+{
+    retain();
+    _saveFileName=saveFileName;
+    startDownloadToFile();
+}
+
+void __JSDownloaderDelegator::downloadToFileAsync(std::string &saveFileName)
+{
+    retain();
+    _saveFileName=saveFileName;
+    auto t = std::thread(&__JSDownloaderDelegator::startDownloadToFile, this);
+    t.detach();
+}
+
+void __JSDownloaderDelegator::onProgress(int64_t bytesReceived,int64_t totalBytesReceived,int64_t totalBytesExpected)
+{
+    JS::RootedObject global(_cx, ScriptingCore::getInstance()->getGlobalObject());
+    JSAutoCompartment ac(_cx, global);
+    
+    JS::RootedValue callbackOnProgress(_cx, OBJECT_TO_JSVAL(_jsCallbackOnProgress));
+    if (!callbackOnProgress.isNull())
+    {
+        jsval retArray[3];
+        retArray[0]=long_long_to_jsval(_cx, bytesReceived);
+        retArray[1]=long_long_to_jsval(_cx, totalBytesReceived);
+        retArray[2]=long_long_to_jsval(_cx, totalBytesExpected);
+        JS::RootedValue retval(_cx);
+        JS_CallFunctionValue(_cx, global, callbackOnProgress, JS::HandleValueArray::fromMarkedLocation(3, retArray), &retval);
+    }
+}
+
+void __JSDownloaderDelegator::onSuccessToFile()
+{
+    JS::RootedObject global(_cx, ScriptingCore::getInstance()->getGlobalObject());
+    JSAutoCompartment ac(_cx, global);
+
+    JS::RootedValue callback(_cx, OBJECT_TO_JSVAL(_jsCallback));
+    if (!callback.isNull())
+    {
+        jsval success=BOOLEAN_TO_JSVAL(true);
+        JS::RootedValue retval(_cx);
+        JS_CallFunctionValue(_cx, global, callback, JS::HandleValueArray::fromMarkedLocation(1, &success), &retval);
+    }
+    release();
+}
+//add by flyingkisser
+//jsb.downloadToFileAsync(url,savePath,function(success){},function(recv,totalRecv,total) {})
+bool js_download_to_file_async(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    if (argc >= 3)
+    {
+        std::string url;
+        std::string savePath;
+        bool ok = jsval_to_std_string(cx, args.get(0), &url);
+        JSB_PRECONDITION2(ok, cx, false, "js_download_to_file_async : Error processing arguments");
+        ok = jsval_to_std_string(cx, args.get(1), &savePath);
+        JSB_PRECONDITION2(ok, cx, false, "js_download_to_file_async : Error processing arguments");
+        JS::RootedObject callback(cx, args.get(2).toObjectOrNull());
+        JS::RootedObject callbackOnProgress(cx, args.get(3).toObjectOrNull());
+        __JSDownloaderDelegator *delegate = __JSDownloaderDelegator::create(cx, obj, url, callback,callbackOnProgress);
+        delegate->downloadToFileAsync(savePath);
+        args.rval().setUndefined();
+        return true;
+    }
+    JS_ReportError(cx, "js_download_to_file_async : wrong number of arguments");
+    return false;
 }
 
 void __JSDownloaderDelegator::download()
@@ -984,14 +1085,15 @@ bool js_load_remote_image(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
-    if (argc == 2)
+    if (argc >= 2)
     {
         std::string url;
         bool ok = jsval_to_std_string(cx, args.get(0), &url);
         JSB_PRECONDITION2(ok, cx, false, "js_load_remote_image : Error processing arguments");
         JS::RootedObject callback(cx, args.get(1).toObjectOrNull());
+JS::RootedObject callbackOnProgress(cx, args.get(2).toObjectOrNull());
 
-        __JSDownloaderDelegator *delegate = __JSDownloaderDelegator::create(cx, obj, url, callback);
+        __JSDownloaderDelegator *delegate = __JSDownloaderDelegator::create(cx, obj, url, callback,callbackOnProgress);
         delegate->downloadAsync();
 
         args.rval().setUndefined();
@@ -1057,6 +1159,7 @@ void register_all_cocos2dx_extension_manual(JSContext* cx, JS::HandleObject glob
     JS_DefineFunction(cx, tmpObj, "create", js_cocos2dx_CCTableView_create, 3, JSPROP_READONLY | JSPROP_PERMANENT);
 
     JS_DefineFunction(cx, jsbObj, "loadRemoteImg", js_load_remote_image, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+JS_DefineFunction(cx, jsbObj, "downloadToFileAsync", js_download_to_file_async, 3, JSPROP_READONLY | JSPROP_PERMANENT);
 
     JS::RootedObject performance(cx);
     get_or_create_js_obj(cx, global, "performance", &performance);
