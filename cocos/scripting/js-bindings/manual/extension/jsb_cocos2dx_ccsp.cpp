@@ -196,6 +196,20 @@ bool js_unzip_get_total(JSContext *cx, uint32_t argc, jsval *vp)
     return  true;
 }
 
+bool js_texture_print_plist_info(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    //JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    ccsp::TextureUtil::getInstance()->printPlistInfo();
+    return  true;
+}
+
+bool js_texture_print_sprite_frames_info(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    //JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    ccsp::TextureUtil::getInstance()->printSpriteFramesInfo();
+    return  true;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -203,12 +217,14 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject httpUtilObj(cx);
     JS::RootedObject fileUtilObj(cx);
     JS::RootedObject zipUtilObj(cx);
+    JS::RootedObject textureUtilObj(cx);
    
     get_or_create_js_obj(cx, global, "jsb", &jsbObj);
     get_or_create_js_obj(cx, jsbObj, "fileUtil", &fileUtilObj);
     get_or_create_js_obj(cx, jsbObj, "logUtil", &logUtilObj);
     get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpUtilObj);
     get_or_create_js_obj(cx, jsbObj, "zipUtil", &zipUtilObj);
+    get_or_create_js_obj(cx, jsbObj, "textureUtil", &textureUtilObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -220,5 +236,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS_DefineFunction(cx,zipUtilObj, "unzipToPathAsync", js_unzip_to_path_async,3,JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,zipUtilObj, "unzipGetProgress", js_unzip_get_progress, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,zipUtilObj, "unzipGetTotal", js_unzip_get_total, 0, JSPROP_READONLY | JSPROP_PERMANENT);
+    
+    JS_DefineFunction(cx,textureUtilObj, "printPlistInfo", js_texture_print_plist_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx,textureUtilObj, "printSpriteFramesInfo", js_texture_print_sprite_frames_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     
 }

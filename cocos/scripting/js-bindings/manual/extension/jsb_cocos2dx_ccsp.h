@@ -18,6 +18,7 @@
 #include "extensions/ccsp/FileUtil.h"
 #include "extensions/ccsp/ZipUtil.h"
 #include "extensions/ccsp/TimeUtil.h"
+#include "extensions/ccsp/TextureUtil.h"
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);
 
