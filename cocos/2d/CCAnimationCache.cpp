@@ -132,7 +132,7 @@ void AnimationCache::parseVersion1(const ValueMap& animations)
     }
 }
 
-void AnimationCache::parseVersion2(const ValueMap& animations)
+void AnimationCache::addSpriteFrames(const ValueMap& animations)
 {
     SpriteFrameCache *frameCache = SpriteFrameCache::getInstance();
 
