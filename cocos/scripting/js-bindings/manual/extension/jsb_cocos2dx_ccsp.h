@@ -1,5 +1,5 @@
 //
-//  jsb_cocos2dx_ccsp_manual.h
+//  jsb_cocos2dx_ccsp.h
 //  cocos2d_js_bindings
 //
 //  Created by Joe on 16/2/25.
@@ -18,6 +18,7 @@
 #include "extensions/ccsp/FileUtil.h"
 #include "extensions/ccsp/ZipUtil.h"
 #include "extensions/ccsp/TimeUtil.h"
+#include "2d/CCCamera.h"
 #include "extensions/ccsp/TextureUtil.h"
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);

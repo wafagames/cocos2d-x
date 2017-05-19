@@ -1,5 +1,5 @@
 //
-//  jsb_cocos2dx_ccsp_manual.cpp
+//  jsb_cocos2dx_ccsp.cpp
 //  cocos2d_js_bindings
 //
 //  Created by Joe on 16/2/25.
@@ -196,6 +196,38 @@ bool js_unzip_get_total(JSContext *cx, uint32_t argc, jsval *vp)
     return  true;
 }
 
+bool js_cocos2dx_Camera_unprojectGL(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = true;
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    cocos2d::Camera* cobj = (cocos2d::Camera *)(proxy ? proxy->ptr : NULL);
+    JSB_PRECONDITION2( cobj, cx, false, "js_cocos2dx_Camera_unprojectGL : Invalid Native Object");
+    if (argc >= 2) {
+        cocos2d::Size arg0;
+        cocos2d::Vec3 arg1;
+        cocos2d::Vec3 ret;
+        ok &= jsval_to_ccsize(cx, args.get(0), &arg0);
+        ok &= jsval_to_vector3(cx, args.get(1), &arg1);
+        JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_Camera_unprojectGL : Error processing arguments");
+        cobj->unprojectGL(arg0, &arg1, &ret);
+        args.rval().set(vector3_to_jsval(cx, ret));
+        return true;
+    }
+    else if (argc == 1)
+    {
+        cocos2d::Vec3 arg0;
+        ok &= jsval_to_vector3(cx, args.get(0), &arg0);
+        JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_Camera_unprojectGL : Error processing arguments");
+        cocos2d::Vec3 ret = cobj->unprojectGL(arg0);
+        args.rval().set(vector3_to_jsval(cx, ret));
+        return true;
+    }
+    JS_ReportError(cx, "js_cocos2dx_Camera_unprojectGL : wrong number of arguments: %d, was expecting %d", argc, 3);
+    return false;
+}
+	
 bool js_texture_print_plist_info(JSContext *cx, uint32_t argc, jsval *vp)
 {
     //JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -217,6 +249,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject httpUtilObj(cx);
     JS::RootedObject fileUtilObj(cx);
     JS::RootedObject zipUtilObj(cx);
+
+    JS::RootedObject tmpObj(cx);
     JS::RootedObject textureUtilObj(cx);
    
     get_or_create_js_obj(cx, global, "jsb", &jsbObj);
@@ -236,6 +270,11 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS_DefineFunction(cx,zipUtilObj, "unzipToPathAsync", js_unzip_to_path_async,3,JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,zipUtilObj, "unzipGetProgress", js_unzip_get_progress, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,zipUtilObj, "unzipGetTotal", js_unzip_get_total, 0, JSPROP_READONLY | JSPROP_PERMANENT);
+
+
+    tmpObj.set(jsb_cocos2d_Camera_prototype);
+    JS_DefineFunction(cx, tmpObj, "unprojectGL", js_cocos2dx_Camera_unprojectGL, 1, JSPROP_ENUMERATE | JSPROP_PERMANENT);
+    
     
     JS_DefineFunction(cx,textureUtilObj, "printPlistInfo", js_texture_print_plist_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,textureUtilObj, "printSpriteFramesInfo", js_texture_print_sprite_frames_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
