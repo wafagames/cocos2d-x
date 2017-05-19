@@ -227,6 +227,20 @@ bool js_cocos2dx_Camera_unprojectGL(JSContext *cx, uint32_t argc, jsval *vp)
     JS_ReportError(cx, "js_cocos2dx_Camera_unprojectGL : wrong number of arguments: %d, was expecting %d", argc, 3);
     return false;
 }
+	
+bool js_texture_print_plist_info(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    //JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    ccsp::TextureUtil::getInstance()->printPlistInfo();
+    return  true;
+}
+
+bool js_texture_print_sprite_frames_info(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    //JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    ccsp::TextureUtil::getInstance()->printSpriteFramesInfo();
+    return  true;
+}
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
@@ -237,12 +251,14 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject zipUtilObj(cx);
 
     JS::RootedObject tmpObj(cx);
+    JS::RootedObject textureUtilObj(cx);
    
     get_or_create_js_obj(cx, global, "jsb", &jsbObj);
     get_or_create_js_obj(cx, jsbObj, "fileUtil", &fileUtilObj);
     get_or_create_js_obj(cx, jsbObj, "logUtil", &logUtilObj);
     get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpUtilObj);
     get_or_create_js_obj(cx, jsbObj, "zipUtil", &zipUtilObj);
+    get_or_create_js_obj(cx, jsbObj, "textureUtil", &textureUtilObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -258,5 +274,9 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 
     tmpObj.set(jsb_cocos2d_Camera_prototype);
     JS_DefineFunction(cx, tmpObj, "unprojectGL", js_cocos2dx_Camera_unprojectGL, 1, JSPROP_ENUMERATE | JSPROP_PERMANENT);
+    
+    
+    JS_DefineFunction(cx,textureUtilObj, "printPlistInfo", js_texture_print_plist_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx,textureUtilObj, "printSpriteFramesInfo", js_texture_print_sprite_frames_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     
 }

@@ -19,6 +19,7 @@
 #include "extensions/ccsp/ZipUtil.h"
 #include "extensions/ccsp/TimeUtil.h"
 #include "2d/CCCamera.h"
+#include "extensions/ccsp/TextureUtil.h"
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);
 

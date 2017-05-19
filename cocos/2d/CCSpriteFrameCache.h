@@ -239,6 +239,8 @@ public:
 
     bool reloadTexture(const std::string& plist);
 
+    Map<std::string, SpriteFrame*> _spriteFrames;
+    std::set<std::string>*  _loadedFileNames;
 protected:
     // MARMALADE: Made this protected not private, as deriving from this class is pretty useful
     SpriteFrameCache(){}
@@ -269,9 +271,9 @@ protected:
 
     void reloadSpriteFramesWithDictionary(ValueMap& dictionary, Texture2D *texture);
 
-    Map<std::string, SpriteFrame*> _spriteFrames;
+    //Map<std::string, SpriteFrame*> _spriteFrames;
     ValueMap _spriteFramesAliases;
-    std::set<std::string>*  _loadedFileNames;
+    //std::set<std::string>*  _loadedFileNames;
 };
 
 // end of _2d group
