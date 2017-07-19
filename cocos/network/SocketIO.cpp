@@ -43,6 +43,8 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
+#include "extensions/ccsp/DataUtil.h"
+
 NS_CC_BEGIN
 
 namespace network {
@@ -772,6 +774,9 @@ void SIOClientImpl::onMessage(WebSocket* /*ws*/, const WebSocket::Data& data)
 
     SIOClient *c = nullptr;
 
+    if(data.isBinary)
+        control=data.bytes[0];
+
     switch (_version)
     {
         case SocketIOPacket::SocketIOVersion::V09x:
@@ -897,6 +902,18 @@ void SIOClientImpl::onMessage(WebSocket* /*ws*/, const WebSocket::Data& data)
                 break;
             case 4:
             {
+                if(data.isBinary){
+                    //if (c) c->fireEvent(eventname, payload);
+                    ccsp::DataUtil::getInstance()->store("sio_binary", (unsigned char*)&data.bytes[1],(int)data.len-1);
+                    c = getClient("/");
+                    char szBuf[8]={0};
+                    sprintf(szBuf,"%d",(int)data.len-1);
+                    std::string szData=std::string(szBuf);
+                    if (c) c->fireEvent("sio_binary", szData);
+                    if (c) c->getDelegate()->onMessage(c, szData);
+                    break;
+                }
+
                 int control2 = payload.at(0) - '0';
                 CCLOGINFO("Message code: [%i]", control2);
 

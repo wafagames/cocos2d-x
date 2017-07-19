@@ -5887,6 +5887,10 @@
 		D8D72DE71E95ED62007341AF /* LogUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD31E95E27C007341AF /* LogUtil.cpp */; };
 		D8D72DE81E95ED62007341AF /* TimeUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD51E95E27C007341AF /* TimeUtil.cpp */; };
 		D8D72DE91E95ED62007341AF /* ZipUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD71E95E27C007341AF /* ZipUtil.cpp */; };
+		D8DF4BE61F1EFB720008C96F /* DataUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */; };
+		D8DF4BE71F1EFB720008C96F /* DataUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */; };
+		D8DF4BE81F1EFB720008C96F /* DataUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8DF4BE51F1EFB720008C96F /* DataUtil.h */; };
+		D8DF4BE91F1EFB720008C96F /* DataUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8DF4BE51F1EFB720008C96F /* DataUtil.h */; };
 		DA8C62A219E52C6400000516 /* ioapi_mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA8C62A019E52C6400000516 /* ioapi_mem.cpp */; };
 		DA8C62A319E52C6400000516 /* ioapi_mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA8C62A019E52C6400000516 /* ioapi_mem.cpp */; };
 		DA8C62A419E52C6400000516 /* ioapi_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = DA8C62A119E52C6400000516 /* ioapi_mem.h */; };
@@ -7985,6 +7989,8 @@
 		D8D72DD61E95E27C007341AF /* TimeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TimeUtil.h; path = ccsp/TimeUtil.h; sourceTree = "<group>"; };
 		D8D72DD71E95E27C007341AF /* ZipUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZipUtil.cpp; path = ccsp/ZipUtil.cpp; sourceTree = "<group>"; };
 		D8D72DD81E95E27C007341AF /* ZipUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZipUtil.h; path = ccsp/ZipUtil.h; sourceTree = "<group>"; };
+		D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataUtil.cpp; path = ccsp/DataUtil.cpp; sourceTree = "<group>"; };
+		D8DF4BE51F1EFB720008C96F /* DataUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataUtil.h; path = ccsp/DataUtil.h; sourceTree = "<group>"; };
 		DA8C62A019E52C6400000516 /* ioapi_mem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ioapi_mem.cpp; sourceTree = "<group>"; };
 		DA8C62A119E52C6400000516 /* ioapi_mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi_mem.h; sourceTree = "<group>"; };
 		DABC9FA719E7DFA900FA252C /* CCClippingRectangleNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCClippingRectangleNode.cpp; sourceTree = "<group>"; };
@@ -11655,6 +11661,8 @@
 				D8D72DD61E95E27C007341AF /* TimeUtil.h */,
 				D8D72DD71E95E27C007341AF /* ZipUtil.cpp */,
 				D8D72DD81E95E27C007341AF /* ZipUtil.h */,
+				D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */,
+				D8DF4BE51F1EFB720008C96F /* DataUtil.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -11894,6 +11902,7 @@
 				5020A1A71D49912500E80C72 /* extension.h in Headers */,
 				50ABBEA11925AB6F00A911A9 /* CCScheduler.h in Headers */,
 				B6CAB2211AF9AA1A00B9B856 /* btBoxBoxDetector.h in Headers */,
+				D8DF4BE81F1EFB720008C96F /* DataUtil.h in Headers */,
 				B6CAB5271AF9AA1A00B9B856 /* btRandom.h in Headers */,
 				B6CAB28D1AF9AA1A00B9B856 /* btCollisionMargin.h in Headers */,
 				B6CAB1FB1AF9AA1A00B9B856 /* btDbvtBroadphase.h in Headers */,
@@ -14797,6 +14806,7 @@
 				B665E2C11AA80A6500DDB1C5 /* CCPUGeometryRotator.h in Headers */,
 				1AAF5852180E40B9000584C8 /* LocalStorage.h in Headers */,
 				50CB247619D9C5A100687767 /* AudioCache.h in Headers */,
+				D8DF4BE91F1EFB720008C96F /* DataUtil.h in Headers */,
 				B6CAB2C61AF9AA1A00B9B856 /* btHeightfieldTerrainShape.h in Headers */,
 				15AE194119AAD35100C27E9E /* CCBone.h in Headers */,
 				D0FD035A1A3B51AA00825BB5 /* CCAllocatorStrategyDefault.h in Headers */,
@@ -15646,6 +15656,7 @@
 				B6CAB2891AF9AA1A00B9B856 /* btCapsuleShape.cpp in Sources */,
 				3E2A09C21BAA91B70086B878 /* CCMotionStreak3D.cpp in Sources */,
 				5020A1981D49912500E80C72 /* Event.c in Sources */,
+				D8DF4BE61F1EFB720008C96F /* DataUtil.cpp in Sources */,
 				B6CAB42F1AF9AA1A00B9B856 /* btWheelInfo.cpp in Sources */,
 				B6CAB3391AF9AA1A00B9B856 /* btTriangleShapeEx.cpp in Sources */,
 				50ABC0011926664800A911A9 /* CCLock-apple.cpp in Sources */,
@@ -16821,6 +16832,7 @@
 				B6CAB3CA1AF9AA1A00B9B856 /* btPoint2PointConstraint.cpp in Sources */,
 				B665E3A71AA80A6500DDB1C5 /* CCPURandomiser.cpp in Sources */,
 				15AE1BFB19AAE01E00C27E9E /* CCControlUtils.cpp in Sources */,
+				D8DF4BE71F1EFB720008C96F /* DataUtil.cpp in Sources */,
 				B665E30F1AA80A6500DDB1C5 /* CCPUObserver.cpp in Sources */,
 				B6CAB4A01AF9AA1A00B9B856 /* PosixThreadSupport.cpp in Sources */,
 				B230ED7219B417AE00364AA8 /* CCTrianglesCommand.cpp in Sources */,
