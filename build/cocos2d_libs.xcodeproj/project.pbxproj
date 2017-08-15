@@ -5871,6 +5871,10 @@
 		D0FD035E1A3B51AA00825BB5 /* CCAllocatorStrategyGlobalSmallBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FD03451A3B51AA00825BB5 /* CCAllocatorStrategyGlobalSmallBlock.h */; };
 		D0FD035F1A3B51AA00825BB5 /* CCAllocatorStrategyPool.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */; };
 		D0FD03601A3B51AA00825BB5 /* CCAllocatorStrategyPool.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */; };
+		D8012B0A1F42BAC80097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
+		D8012B0B1F42BAC80097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
+		D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
+		D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
 		D8347E921EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
@@ -7979,6 +7983,8 @@
 		D0FD03441A3B51AA00825BB5 /* CCAllocatorStrategyFixedBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyFixedBlock.h; sourceTree = "<group>"; };
 		D0FD03451A3B51AA00825BB5 /* CCAllocatorStrategyGlobalSmallBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyGlobalSmallBlock.h; sourceTree = "<group>"; };
 		D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyPool.h; sourceTree = "<group>"; };
+		D8012B081F42BAC80097FA3E /* UIUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UIUtil.cpp; path = ccsp/UIUtil.cpp; sourceTree = "<group>"; };
+		D8012B091F42BAC80097FA3E /* UIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIUtil.h; path = ccsp/UIUtil.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
 		D8D72DD11E95E27C007341AF /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ccsp/FileUtil.cpp; sourceTree = "<group>"; };
@@ -11663,6 +11669,8 @@
 				D8D72DD81E95E27C007341AF /* ZipUtil.h */,
 				D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */,
 				D8DF4BE51F1EFB720008C96F /* DataUtil.h */,
+				D8012B081F42BAC80097FA3E /* UIUtil.cpp */,
+				D8012B091F42BAC80097FA3E /* UIUtil.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -12010,6 +12018,7 @@
 				B6CAB2771AF9AA1A00B9B856 /* btUnionFind.h in Headers */,
 				1A40D1451E8E56C7002E363A /* strtod.h in Headers */,
 				B6CAB2111AF9AA1A00B9B856 /* btSimpleBroadphase.h in Headers */,
+				D8012B0B1F42BAC80097FA3E /* UIUtil.h in Headers */,
 				15AE1BD919AAE01E00C27E9E /* CCControlStepper.h in Headers */,
 				291A09241C5F06A60068C1D2 /* CCUIEditBoxMac.h in Headers */,
 				15AE192119AAD35000C27E9E /* CocoStudio.h in Headers */,
@@ -13874,6 +13883,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */,
 				C5F516201C822D900013B695 /* UITabControl.h in Headers */,
 				C5F5161E1C822D5B0013B695 /* TabControlReader.h in Headers */,
 				503DD8F01926736A00CD74DD /* CCStdC-ios.h in Headers */,
@@ -15715,6 +15725,7 @@
 				B6CAAFEE1AF9A9E100B9B856 /* CCPhysics3DDebugDrawer.cpp in Sources */,
 				B6CAB5051AF9AA1A00B9B856 /* btGeometryUtil.cpp in Sources */,
 				15AE1A7619AAD40300C27E9E /* b2EdgeAndPolygonContact.cpp in Sources */,
+				D8012B0A1F42BAC80097FA3E /* UIUtil.cpp in Sources */,
 				B6CAB4BB1AF9AA1A00B9B856 /* SpuGatheringCollisionDispatcher.cpp in Sources */,
 				50ABBD8B1925AB4100A911A9 /* CCGLProgram.cpp in Sources */,
 				464AD6E5197EBB1400E502D8 /* pvr.cpp in Sources */,
@@ -16793,6 +16804,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */,
 				C5F5161F1C822D6D0013B695 /* UITabControl.cpp in Sources */,
 				C5F5161D1C822D400013B695 /* TabControlReader.cpp in Sources */,
 				D0FD03541A3B51AA00825BB5 /* CCAllocatorGlobalNewDelete.cpp in Sources */,

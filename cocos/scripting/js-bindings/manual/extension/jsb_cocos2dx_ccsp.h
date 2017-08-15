@@ -21,7 +21,7 @@
 #include "2d/CCCamera.h"
 #include "extensions/ccsp/TextureUtil.h"
 #include "extensions/ccsp/DataUtil.h"
-
+#include "extensions/ccsp/UIUtil.h"
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);
 
 

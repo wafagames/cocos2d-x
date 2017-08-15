@@ -297,6 +297,39 @@ bool js_DataUtil_freeBuf(JSContext *cx, uint32_t argc, jsval *vp)
     return false;
 }
 
+bool js_UIUtil_seekNodeByName(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = true;
+    if (argc == 2) {
+        cocos2d::Node* arg0 = nullptr;
+        std::string arg1;
+        do {
+            if (args.get(0).isNull()) { arg0 = nullptr; break; }
+            if (!args.get(0).isObject()) { ok = false; break; }
+            js_proxy_t *jsProxy;
+            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
+            jsProxy = jsb_get_js_proxy(tmpObj);
+            arg0 = (cocos2d::Node*)(jsProxy ? jsProxy->ptr : NULL);
+            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
+        } while (0);
+        ok &= jsval_to_std_string(cx, args.get(1), &arg1);
+        JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_ui_Helper_seekWidgetByName : Error processing arguments");
+        
+        cocos2d::Node* ret = ccsp::UIUtil::getInstance()->seekNodeByName(arg0, arg1);
+        jsval jsret = JSVAL_NULL;
+        if (ret) {
+            jsret = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)ret));
+        } else {
+            jsret = JSVAL_NULL;
+        };
+        args.rval().set(jsret);
+        return true;
+    }
+    JS_ReportError(cx, "js_UIUtil_seekNodeByName : wrong number of arguments");
+    return false;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -305,6 +338,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject fileUtilObj(cx);
     JS::RootedObject zipUtilObj(cx);
  	JS::RootedObject dataUtilObj(cx);
+    JS::RootedObject uiUtilObj(cx);
     
     JS::RootedObject tmpObj(cx);
     JS::RootedObject textureUtilObj(cx);
@@ -315,7 +349,9 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpUtilObj);
     get_or_create_js_obj(cx, jsbObj, "zipUtil", &zipUtilObj);
     get_or_create_js_obj(cx, jsbObj, "textureUtil", &textureUtilObj);
-     get_or_create_js_obj(cx, jsbObj, "dataUtil", &dataUtilObj);
+    get_or_create_js_obj(cx, jsbObj, "dataUtil", &dataUtilObj);
+    get_or_create_js_obj(cx, jsbObj, "uiUtil", &uiUtilObj);
+
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -338,5 +374,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     
      JS_DefineFunction(cx, dataUtilObj, "getBuf", js_DataUtil_getBuf, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, dataUtilObj, "freeBuf", js_DataUtil_freeBuf, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    
+    JS_DefineFunction(cx,uiUtilObj, "seekNodeByName", js_UIUtil_seekNodeByName, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+
     
 }
