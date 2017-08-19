@@ -14,6 +14,7 @@ ccsp/TimeUtil.cpp \
 ccsp/ZipUtil.cpp \
 ccsp/TextureUtil.cpp \
 ccsp/DataUtil.cpp \
+ccsp/UIUtil.cpp \
 assets-manager/AssetsManager.cpp \
 assets-manager/Manifest.cpp \
 assets-manager/AssetsManagerEx.cpp \
