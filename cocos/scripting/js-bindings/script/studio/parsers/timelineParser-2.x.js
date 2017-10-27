@@ -129,7 +129,7 @@
 
         node.setCascadeColorEnabled(true);
         node.setCascadeOpacityEnabled(true);
-
+    
         setLayoutComponent(node, json);
     };
 
@@ -258,6 +258,7 @@
             self = this;
         loadTexture(json["FileData"], resourcePath, function(path, type){
             node = new cc.ParticleSystem(path);
+
             self.generalAttributes(node, json);
             node.setPositionType(cc.ParticleSystem.TYPE_GROUPED);
             !cc.sys.isNative && node.setDrawMode(cc.ParticleSystem.TEXTURE_MODE);
@@ -492,6 +493,7 @@
      * @returns {ccui.Layout}
      */
     parser.initPanel = function(json, resourcePath){
+        cc.dbg("initPanel:begin %s",json.Name);
         var widget = new ccui.Layout();
 
         this.widgetAttributes(widget, json);
@@ -539,7 +541,7 @@
 
         setLayoutBackground(widget, json["SingleColor"], json["FirstColor"], json["EndColor"]);
         setLayoutBackgroundVector(widget, json["ColorVector"]);
-
+        cc.dbg("initPanel:end");
         return widget;
     };
 
@@ -549,7 +551,7 @@
      * @param resourcePath
      */
     parser.initText = function(json, resourcePath){
-
+         cc.dbg("initText:begin %s",json.Name);
         var widget = new ccui.Text();
 
         var touchScaleEnabled = json["TouchScaleChangeAble"];
@@ -633,6 +635,7 @@
         widget.setTextColor(getColor(color));
         this.widgetAttributes(widget, json, widget.isIgnoreContentAdaptWithSize());
         json["CColor"] = color;
+        cc.dbg("initText:end");
         return widget;
 
     };
@@ -643,7 +646,7 @@
      * @param resourcePath
      */
     parser.initButton = function(json, resourcePath){
-
+        cc.dbg("initButton:begin %s",json.Name);
         var widget = new ccui.Button();
 
         loadTexture(json["NormalFileData"], resourcePath, function(path, type){
@@ -723,7 +726,7 @@
         }
 
         setContentSize(widget, json["Size"]);
-
+        cc.dbg("initButton:end");
         return widget;
 
     };
@@ -769,6 +772,7 @@
      * @param resourcePath
      */
     parser.initScrollView = function(json, resourcePath){
+        cc.dbg("initScrollView:begin %s",json.Name);
         var widget = new ccui.ScrollView();
 
         this.widgetAttributes(widget, json);
@@ -822,7 +826,7 @@
 
         var bounceEnabled = getParam(json["IsBounceEnabled"], false);
         widget.setBounceEnabled(bounceEnabled);
-
+        cc.dbg("initScrollView:end");
         return widget;
     };
 
@@ -832,7 +836,7 @@
      * @param resourcePath
      */
     parser.initImageView = function(json, resourcePath){
-
+        cc.dbg("initImageView:begin %s",json.Name);
         var widget = new ccui.ImageView();
 
         loadTexture(json["FileData"], resourcePath, function(path, type){
@@ -862,7 +866,7 @@
             setContentSize(widget, json["Size"]);
 
         this.widgetAttributes(widget, json);
-
+        cc.dbg("initImageView:end");
         return widget;
     };
 
@@ -1214,7 +1218,6 @@
         loadTexture(json["FileData"], resourcePath, function(path, type){
             if(type === 0)
                 node = new cc.TMXTiledMap(path);
-
             parser.generalAttributes(node, json);
         });
 
@@ -1313,7 +1316,7 @@
         var blendFunc = json["BlendFunc"];
         if(blendFunc && blendFunc["Src"] !== undefined && blendFunc["Dst"] !== undefined)
             node.setBlendFunc(new cc.BlendFunc(blendFunc["Src"] || 0, blendFunc["Dst"] || 0));
-
+      
         parser.generalAttributes(node, json);
         var color = json["CColor"];
         if(color && (color["R"] !== undefined || color["G"] !== undefined || color["B"] !== undefined))
@@ -1323,6 +1326,7 @@
 
     parser.initSkeletonNode = function(json){
         var node = new ccs.SkeletonNode();
+      
         parser.generalAttributes(node, json);
         var color = json["CColor"];
         if(color && (color["R"] !== undefined || color["G"] !== undefined || color["B"] !== undefined))
@@ -1425,7 +1429,7 @@
         var camMask =json["CameraFlagMode"];
         if(undefined !== camMask && null !== camMask)
             node.setCameraMask(camMask);
-
+      
         this.generalAttributes(node, json);
     };
 

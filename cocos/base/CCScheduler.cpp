@@ -473,7 +473,8 @@ void Scheduler::schedulePerFrame(const ccSchedulerFunc& callback, void *target, 
         else
         {
             // don't add it again
-            CCLOG("warning: don't update it again");
+            //edit by flyingkisser,may double called,sucks!
+            CCLOGINFO("warning: don't update it again");
             return;
         }
     }
