@@ -1202,6 +1202,16 @@ void Widget::copyClonedWidgetChildren(Widget* model)
 
     for (auto& subWidget : modelChildren)
     {
+        Node* child = dynamic_cast<Node*>(subWidget);
+        Widget* child2 = dynamic_cast<Widget*>(subWidget);
+        if (child && child2 == NULL)
+        {
+            replaceNodeWithWidget(child);
+        }
+    }
+    
+    for (auto& subWidget : modelChildren)
+    {
         Widget* child = dynamic_cast<Widget*>(subWidget);
         if (child)
         {
@@ -1209,7 +1219,33 @@ void Widget::copyClonedWidgetChildren(Widget* model)
         }
     }
 }
-
+    
+void Widget::replaceNodeWithWidget(Node *node) {
+    Widget* clonedWidget = createCloneInstance();
+    clonedWidget->setName(node->getName());
+    clonedWidget->setAnchorPoint(node->getAnchorPoint());
+    clonedWidget->setPosition(node->getPosition());
+    clonedWidget->setContentSize(node->getContentSize());
+    clonedWidget->setScaleX(node->getScaleX());
+    clonedWidget->setScaleY(node->getScaleY());
+    clonedWidget->setRotation(node->getRotation());
+    auto& modelChildren = node->getChildren();
+    for (auto& subWidget : modelChildren)
+    {
+        subWidget->retain();
+        node->removeChild(subWidget);
+        clonedWidget->addChild(subWidget);
+        subWidget->release();
+    }
+    
+    auto parent = node->getParent();
+    auto zOrder = node->getLocalZOrder();
+    if(parent) {
+        parent->removeChild(node);
+        parent->addChild(clonedWidget, zOrder);
+    }
+}
+    
 GLProgramState* Widget::getNormalGLProgramState(Texture2D* texture)const
 {
     return GLProgramState::getOrCreateWithGLProgramName(GLProgram::SHADER_NAME_POSITION_TEXTURE_COLOR_NO_MVP, texture);
