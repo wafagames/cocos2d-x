@@ -915,7 +915,7 @@ protected:
     virtual Widget* createCloneInstance();
     virtual void copySpecialProperties(Widget* model);
     virtual void copyClonedWidgetChildren(Widget* model);
-    void replaceNodeWithWidget(Node *node);
+
     Widget* getWidgetParent();
     void updateContentSizeWithTextureSize(const Size& size);
     
