@@ -34,4 +34,13 @@ EventCustom::EventCustom(const std::string& eventName)
 {
 }
 
+void EventCustom::setUserData(void* data) {
+    _userData = data;
+}
+
+void* EventCustom::getUserData() {
+    return _userData;
+}
+
+
 NS_CC_END

@@ -52,13 +52,15 @@ public:
      *
      * @param data The user data pointer, it's a void*.
      */
-    void setUserData(void* data) { _userData = data; }
+    void setUserData(void* data);
+    //void setUserData(void* data) { _userData = data; }
     
     /** Gets user data.
      *
      * @return The user data pointer, it's a void*.
      */
-    void* getUserData() const { return _userData; }
+    void* getUserData();
+    //void* getUserData() const { return _userData; }
     
     /** Gets event name.
      *

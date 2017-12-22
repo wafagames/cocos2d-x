@@ -78,6 +78,9 @@ CC_CONSTRUCTOR_ACCESS:
      * @js NA
      */
     bool init(Type t, const ListenerID& listenerID, const std::function<void(Event*)>& callback);
+    void setCustomCB(const std::function<void(Event*,const char*)>& callback){
+        _onEventCustom=callback;
+    }
 public:
     /** Destructor.
      * @js NA 
@@ -164,7 +167,8 @@ protected:
     // Properties
     //////////////
     std::function<void(Event*)> _onEvent;   /// Event callback function
-
+    std::function<void(Event*,const char*)> _onEventCustom;   /// Event callback function
+    
     Type _type;                             /// Event listener type
     ListenerID _listenerID;                 /// Event listener ID
     bool _isRegistered;                     /// Whether the listener has been added to dispatcher.

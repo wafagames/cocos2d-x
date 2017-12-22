@@ -34,6 +34,8 @@ THE SOFTWARE.
 #include "2d/CCSpriteFrame.h"
 
 #include <string>
+//add by flyingkisser
+#include "extensions/ccsp/JsonUtil.h"
 
 NS_CC_BEGIN
 
@@ -112,12 +114,17 @@ public:
     const ValueMap& getUserInfo() const { return _userInfo; };
     ValueMap& getUserInfo() { return _userInfo; };
     
+    //add by flyingkisser
+    const char* getUserInfoAsCString(){return _userInfoASString.c_str();}
+    
     /** Sets user information.
      * @param userInfo A dictionary as UserInfo.
      */
     void setUserInfo(const ValueMap& userInfo)
     {
         _userInfo = userInfo;
+        //add by flyingkisser
+        _userInfoASString=ccsp::JsonUtil::getInstance()->toString((cocos2d::ValueMap*)&_userInfo);
     }
     
     // Overrides
@@ -147,6 +154,7 @@ protected:
 
     /**  A AnimationFrameDisplayedNotification notification will be broadcast when the frame is displayed with this dictionary as UserInfo. If UserInfo is nil, then no notification will be broadcast. */
     ValueMap _userInfo;
+    std::string _userInfoASString;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(AnimationFrame);

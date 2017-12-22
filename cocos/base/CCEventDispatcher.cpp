@@ -928,10 +928,12 @@ void EventDispatcher::dispatchEvent(Event* event)
         
         auto onEvent = [&event](EventListener* listener) -> bool{
             event->setCurrentTarget(listener->getAssociatedNode());
-            listener->_onEvent(event);
+            if(event->getType()==Event::Type::CUSTOM)
+                listener->_onEvent(event,((EventCustom*)event)->getUserData());
+            else
+                listener->_onEvent(event);
             return event->isStopped();
-        };
-        
+        };        
         (this->*pfnDispatchEventToListeners)(listeners, onEvent);
     }
     

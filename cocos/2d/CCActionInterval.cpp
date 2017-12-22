@@ -2661,15 +2661,16 @@ void Animate::update(float t)
             static_cast<Sprite*>(_target)->setSpriteFrame(frameToDisplay);
             static_cast<Sprite*>(_target)->setBlendFunc(blend);
 
-            const ValueMap& dict = frame->getUserInfo();
+            ValueMap& dict = frame->getUserInfo();
             if ( !dict.empty() )
             {
                 if (_frameDisplayedEvent == nullptr)
                     _frameDisplayedEvent = new (std::nothrow) EventCustom(AnimationFrameDisplayedNotification);
                 
-                _frameDisplayedEventInfo.target = _target;
-                _frameDisplayedEventInfo.userInfo = &dict;
-                _frameDisplayedEvent->setUserData(&_frameDisplayedEventInfo);
+                //_frameDisplayedEventInfo.target = _target;
+                //_frameDisplayedEventInfo.userInfo = &dict;
+                //_frameDisplayedEvent->setUserData(&_frameDisplayedEventInfo);
+                _frameDisplayedEvent->setUserData((void*)frame->getUserInfoAsCString());
                 Director::getInstance()->getEventDispatcher()->dispatchEvent(_frameDisplayedEvent);
             }
             _nextFrame = i+1;

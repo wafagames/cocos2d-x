@@ -5895,6 +5895,14 @@
 		D8DF4BE71F1EFB720008C96F /* DataUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */; };
 		D8DF4BE81F1EFB720008C96F /* DataUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8DF4BE51F1EFB720008C96F /* DataUtil.h */; };
 		D8DF4BE91F1EFB720008C96F /* DataUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8DF4BE51F1EFB720008C96F /* DataUtil.h */; };
+		D8FB27EC1FE92AAD00EF0F64 /* EventUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8FB27EA1FE92AAD00EF0F64 /* EventUtil.cpp */; };
+		D8FB27ED1FE92AAD00EF0F64 /* EventUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8FB27EA1FE92AAD00EF0F64 /* EventUtil.cpp */; };
+		D8FB27EE1FE92AAD00EF0F64 /* EventUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */; };
+		D8FB27EF1FE92AAD00EF0F64 /* EventUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */; };
+		D8FB28021FEA8D5800EF0F64 /* JsonUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8FB28001FEA8D5700EF0F64 /* JsonUtil.h */; };
+		D8FB28031FEA8D5800EF0F64 /* JsonUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8FB28001FEA8D5700EF0F64 /* JsonUtil.h */; };
+		D8FB28041FEA8D5800EF0F64 /* JsonUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */; };
+		D8FB28051FEA8D5800EF0F64 /* JsonUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */; };
 		DA8C62A219E52C6400000516 /* ioapi_mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA8C62A019E52C6400000516 /* ioapi_mem.cpp */; };
 		DA8C62A319E52C6400000516 /* ioapi_mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DA8C62A019E52C6400000516 /* ioapi_mem.cpp */; };
 		DA8C62A419E52C6400000516 /* ioapi_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = DA8C62A119E52C6400000516 /* ioapi_mem.h */; };
@@ -7997,6 +8005,10 @@
 		D8D72DD81E95E27C007341AF /* ZipUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZipUtil.h; path = ccsp/ZipUtil.h; sourceTree = "<group>"; };
 		D8DF4BE41F1EFB720008C96F /* DataUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DataUtil.cpp; path = ccsp/DataUtil.cpp; sourceTree = "<group>"; };
 		D8DF4BE51F1EFB720008C96F /* DataUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataUtil.h; path = ccsp/DataUtil.h; sourceTree = "<group>"; };
+		D8FB27EA1FE92AAD00EF0F64 /* EventUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = EventUtil.cpp; path = ccsp/EventUtil.cpp; sourceTree = "<group>"; };
+		D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EventUtil.h; path = ccsp/EventUtil.h; sourceTree = "<group>"; };
+		D8FB28001FEA8D5700EF0F64 /* JsonUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JsonUtil.h; path = ccsp/JsonUtil.h; sourceTree = "<group>"; };
+		D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JsonUtil.cpp; path = ccsp/JsonUtil.cpp; sourceTree = "<group>"; };
 		DA8C62A019E52C6400000516 /* ioapi_mem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ioapi_mem.cpp; sourceTree = "<group>"; };
 		DA8C62A119E52C6400000516 /* ioapi_mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi_mem.h; sourceTree = "<group>"; };
 		DABC9FA719E7DFA900FA252C /* CCClippingRectangleNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCClippingRectangleNode.cpp; sourceTree = "<group>"; };
@@ -11657,6 +11669,8 @@
 		D8D72DD01E95E271007341AF /* ccsp */ = {
 			isa = PBXGroup;
 			children = (
+				D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */,
+				D8FB28001FEA8D5700EF0F64 /* JsonUtil.h */,
 				D8347E901EBC673000616927 /* TextureUtil.cpp */,
 				D8347E911EBC673000616927 /* TextureUtil.h */,
 				D8D72DD11E95E27C007341AF /* FileUtil.cpp */,
@@ -11671,6 +11685,8 @@
 				D8DF4BE51F1EFB720008C96F /* DataUtil.h */,
 				D8012B081F42BAC80097FA3E /* UIUtil.cpp */,
 				D8012B091F42BAC80097FA3E /* UIUtil.h */,
+				D8FB27EA1FE92AAD00EF0F64 /* EventUtil.cpp */,
+				D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -11713,6 +11729,7 @@
 				15AE18EB19AAD35000C27E9E /* CCActionNode.h in Headers */,
 				B6CAB2151AF9AA1A00B9B856 /* btActivatingCollisionAlgorithm.h in Headers */,
 				B665E2501AA80A6500DDB1C5 /* CCPUColorAffectorTranslator.h in Headers */,
+				D8FB27EE1FE92AAD00EF0F64 /* EventUtil.h in Headers */,
 				B665E3901AA80A6500DDB1C5 /* CCPUPlaneCollider.h in Headers */,
 				B6CAB4A71AF9AA1A00B9B856 /* SequentialThreadSupport.h in Headers */,
 				B6CAB31D1AF9AA1A00B9B856 /* btContactProcessing.h in Headers */,
@@ -12009,6 +12026,7 @@
 				B665E2681AA80A6500DDB1C5 /* CCPUDoExpireEventHandlerTranslator.h in Headers */,
 				15FB208B1AE7C57D00C31518 /* utils.h in Headers */,
 				50864C971C7BC1B000B3BAB1 /* chipmunk_unsafe.h in Headers */,
+				D8FB28021FEA8D5800EF0F64 /* JsonUtil.h in Headers */,
 				B6DD2FB51B04825B00E47F5F /* RecastDump.h in Headers */,
 				1A40D10F1E8E56C7002E363A /* document.h in Headers */,
 				B6CAB3411AF9AA1A00B9B856 /* gim_bitset.h in Headers */,
@@ -14406,6 +14424,7 @@
 				50864C9B1C7BC1B000B3BAB1 /* cpCompat62.h in Headers */,
 				5020A1A21D49912500E80C72 /* EventData.h in Headers */,
 				1A40D1131E8E56C7002E363A /* encodedstream.h in Headers */,
+				D8FB27EF1FE92AAD00EF0F64 /* EventUtil.h in Headers */,
 				1A570205180BCBD40088DEC7 /* CCClippingNode.h in Headers */,
 				B6CAB3041AF9AA1A00B9B856 /* btTriangleIndexVertexMaterialArray.h in Headers */,
 				15AE1B8919AADA9A00C27E9E /* UICheckBox.h in Headers */,
@@ -14564,6 +14583,7 @@
 				1A5702CB180BCE370088DEC7 /* CCTextFieldTTF.h in Headers */,
 				1A5702ED180BCE750088DEC7 /* CCTileMapAtlas.h in Headers */,
 				15AE195E19AAD35100C27E9E /* CCSkin.h in Headers */,
+				D8FB28031FEA8D5800EF0F64 /* JsonUtil.h in Headers */,
 				B6CAB3CC1AF9AA1A00B9B856 /* btPoint2PointConstraint.h in Headers */,
 				B6DD2FE01B04825B00E47F5F /* DetourObstacleAvoidance.h in Headers */,
 				B6CAB5081AF9AA1A00B9B856 /* btGeometryUtil.h in Headers */,
@@ -15634,6 +15654,7 @@
 				15AE199A19AAD39600C27E9E /* PageViewReader.cpp in Sources */,
 				1A57030C180BCF190088DEC7 /* CCComponent.cpp in Sources */,
 				382383F61A258FA7002C4610 /* idl_gen_fbs.cpp in Sources */,
+				D8FB27EC1FE92AAD00EF0F64 /* EventUtil.cpp in Sources */,
 				15FB20741AE7BF8600C31518 /* CCAutoPolygon.cpp in Sources */,
 				B665E2A61AA80A6500DDB1C5 /* CCPUEventHandlerTranslator.cpp in Sources */,
 				15AE1A5919AAD40300C27E9E /* b2StackAllocator.cpp in Sources */,
@@ -15700,6 +15721,7 @@
 				29394CF619B01DBA00D2DE1A /* UIWebViewImpl-ios.mm in Sources */,
 				B6CAB3FF1AF9AA1A00B9B856 /* btMultiBodyConstraintSolver.cpp in Sources */,
 				382383FC1A258FA7002C4610 /* idl_gen_text.cpp in Sources */,
+				D8FB28041FEA8D5800EF0F64 /* JsonUtil.cpp in Sources */,
 				463AE73D1E4DA31C00926B3A /* idl_gen_php.cpp in Sources */,
 				50ABBE831925AB6F00A911A9 /* ccFPSImages.c in Sources */,
 				B6CAB4CD1AF9AA1A00B9B856 /* SpuContactResult.cpp in Sources */,
@@ -17350,6 +17372,7 @@
 				1A5702C9180BCE370088DEC7 /* CCTextFieldTTF.cpp in Sources */,
 				15AE1C1719AAE2C700C27E9E /* CCPhysicsSprite.cpp in Sources */,
 				1A5702EB180BCE750088DEC7 /* CCTileMapAtlas.cpp in Sources */,
+				D8FB28051FEA8D5800EF0F64 /* JsonUtil.cpp in Sources */,
 				B665E4131AA80A6600DDB1C5 /* CCPUTextureAnimator.cpp in Sources */,
 				1A5702EF180BCE750088DEC7 /* CCTMXLayer.cpp in Sources */,
 				15AE1BA519AADFDF00C27E9E /* UIHBox.cpp in Sources */,
@@ -17570,6 +17593,7 @@
 				B6CAB27E1AF9AA1A00B9B856 /* btBox2dShape.cpp in Sources */,
 				15AE1B9519AADA9A00C27E9E /* CocosGUI.cpp in Sources */,
 				B665E2BB1AA80A6500DDB1C5 /* CCPUForceFieldAffectorTranslator.cpp in Sources */,
+				D8FB27ED1FE92AAD00EF0F64 /* EventUtil.cpp in Sources */,
 				15AE180919AAD2F700C27E9E /* CCAABB.cpp in Sources */,
 				5020A2171D49912500E80C72 /* spine-cocos2dx.cpp in Sources */,
 				15AE1AA719AAD40300C27E9E /* b2Island.cpp in Sources */,

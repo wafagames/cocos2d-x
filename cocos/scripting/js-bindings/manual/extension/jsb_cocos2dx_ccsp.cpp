@@ -330,6 +330,42 @@ bool js_UIUtil_seekNodeByName(JSContext *cx, uint32_t argc, jsval *vp)
     return false;
 }
 
+bool js_EventUtil_getUserDataAsJsonString(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    bool ok = false;
+//    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    if (argc == 1)
+    {
+        cocos2d::EventCustom* arg0 = nullptr;
+        do {
+            if (args.get(0).isNull())
+                break;
+            if (!args.get(0).isObject())
+                break;
+            js_proxy_t *jsProxy;
+            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
+            jsProxy = jsb_get_js_proxy(tmpObj);
+            arg0 = (cocos2d::EventCustom*)(jsProxy ? jsProxy->ptr : NULL);
+            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
+            ok=true;
+        } while (0);
+        
+        if (!ok){
+            JS_ReportError(cx, "js_EventUtil_getUserDataAsJsonString : wrong number of arguments: %d, was expecting %d", argc, 1);
+            return false;
+        }
+        std::string jsonString = ccsp::EventUtil::getInstance()->getUserDataAsJsonString(arg0);
+        JS::RootedValue jsret(cx);
+        jsret=std_string_to_jsval(cx,jsonString);
+        args.rval().set(jsret);
+        return true;
+    }
+   
+    JS_ReportError(cx, "js_EventUtil_getUserDataAsJsonString : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -339,9 +375,11 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject zipUtilObj(cx);
  	JS::RootedObject dataUtilObj(cx);
     JS::RootedObject uiUtilObj(cx);
+     JS::RootedObject textureUtilObj(cx);
+     JS::RootedObject eventUtilObj(cx);
     
     JS::RootedObject tmpObj(cx);
-    JS::RootedObject textureUtilObj(cx);
+   
    
     get_or_create_js_obj(cx, global, "jsb", &jsbObj);
     get_or_create_js_obj(cx, jsbObj, "fileUtil", &fileUtilObj);
@@ -351,7 +389,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "textureUtil", &textureUtilObj);
     get_or_create_js_obj(cx, jsbObj, "dataUtil", &dataUtilObj);
     get_or_create_js_obj(cx, jsbObj, "uiUtil", &uiUtilObj);
-
+    get_or_create_js_obj(cx, jsbObj, "eventUtil", &eventUtilObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -377,5 +415,6 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     
     JS_DefineFunction(cx,uiUtilObj, "seekNodeByName", js_UIUtil_seekNodeByName, 2, JSPROP_READONLY | JSPROP_PERMANENT);
 
+     JS_DefineFunction(cx,eventUtilObj, "getUserDataAsJsonString", js_EventUtil_getUserDataAsJsonString, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     
 }
