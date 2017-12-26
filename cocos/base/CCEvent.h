@@ -86,10 +86,11 @@ public:
      *        It returns 0 when the listener is associated with fixed priority.
      */
     Node* getCurrentTarget() { return _currentTarget; }
-    
-protected:
     /** Sets current target */
     void setCurrentTarget(Node* target) { _currentTarget = target; }
+protected:
+    /** Sets current target */
+    //void setCurrentTarget(Node* target) { _currentTarget = target; }
     
 	Type _type;     ///< Event type
     

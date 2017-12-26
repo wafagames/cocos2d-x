@@ -169,7 +169,11 @@ public:
      * @param event The event needs to be dispatched.
      */
     void dispatchEvent(Event* event);
-
+     void dispatchAnimationFrameEvent(EventCustom* event);
+    
+    
+    //void dispatchAnimationFrameEvent(EventCustom* event);
+    
     /** Dispatches a Custom Event with a event name an optional user data.
      *
      * @param eventName The name of the event which needs to be dispatched.

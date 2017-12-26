@@ -70,16 +70,20 @@ public:
     /// Overrides
     virtual bool checkAvailable() override;
     virtual EventListenerCustom* clone() override;
-    
+    void setCustomCB(const std::function<void(EventCustom*,const char*)>& callback){
+        _onCustomEvent2=callback;
+    }
 CC_CONSTRUCTOR_ACCESS:
     /** Constructor */
     EventListenerCustom();
     
     /** Initializes event with type and callback function */
     bool init(const ListenerID& listenerId, const std::function<void(EventCustom*)>& callback);
+    std::function<void(EventCustom*,const char*)> _onCustomEvent2;
     
 protected:
     std::function<void(EventCustom*)> _onCustomEvent;
+    
     
     friend class LuaEventListenerCustom;
 };

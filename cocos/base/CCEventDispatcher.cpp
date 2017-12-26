@@ -928,15 +928,49 @@ void EventDispatcher::dispatchEvent(Event* event)
         
         auto onEvent = [&event](EventListener* listener) -> bool{
             event->setCurrentTarget(listener->getAssociatedNode());
-            if(event->getType()==Event::Type::CUSTOM)
-                listener->_onEvent(event,((EventCustom*)event)->getUserData());
-            else
-                listener->_onEvent(event);
+            listener->_onEvent(event);
             return event->isStopped();
-        };        
+        };
         (this->*pfnDispatchEventToListeners)(listeners, onEvent);
     }
     
+    updateListeners(event);
+}
+
+void EventDispatcher::dispatchAnimationFrameEvent(EventCustom* event)
+{
+    if (!_isEnabled)
+        return;
+    
+    updateDirtyFlagForSceneGraph();
+
+    DispatchGuard guard(_inDispatch);
+    
+    if (event->getType() != Event::Type::CUSTOM)
+    {
+        return;
+    }
+    
+    auto listenerID = __getListenerID(event);
+    
+    sortEventListeners(listenerID);
+    
+    auto pfnDispatchEventToListeners = &EventDispatcher::dispatchEventToListeners;
+   
+    auto iter = _listenerMap.find(listenerID);
+    if (iter != _listenerMap.end())
+    {
+        auto listeners = iter->second;
+        
+        auto onEvent = [&event](EventListener* listener) -> bool{
+            //event->setCurrentTarget(listener->getAssociatedNode());
+            if( ((EventListenerCustom*)listener)->_onCustomEvent2)
+                ((EventListenerCustom*)listener)->_onCustomEvent2(event,(const char*)(event->getUserData()));
+            return event->isStopped();
+        };
+        (this->*pfnDispatchEventToListeners)(listeners, onEvent);
+    }
+
     updateListeners(event);
 }
 

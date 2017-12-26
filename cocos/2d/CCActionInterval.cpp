@@ -2670,8 +2670,10 @@ void Animate::update(float t)
                 //_frameDisplayedEventInfo.target = _target;
                 //_frameDisplayedEventInfo.userInfo = &dict;
                 //_frameDisplayedEvent->setUserData(&_frameDisplayedEventInfo);
+                Node* target=getOriginalTarget();
+                ((Event*)_frameDisplayedEvent)->setCurrentTarget(target);
                 _frameDisplayedEvent->setUserData((void*)frame->getUserInfoAsCString());
-                Director::getInstance()->getEventDispatcher()->dispatchEvent(_frameDisplayedEvent);
+                Director::getInstance()->getEventDispatcher()->dispatchAnimationFrameEvent(_frameDisplayedEvent);
             }
             _nextFrame = i+1;
         }

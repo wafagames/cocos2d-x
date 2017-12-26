@@ -30,6 +30,7 @@ namespace ccsp{
         JsonUtil();
       
         std::string toString(cocos2d::ValueMap* valueMap);
+        void print(rapidjson::Document* d);
     };
 }
 

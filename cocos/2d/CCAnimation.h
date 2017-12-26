@@ -124,7 +124,9 @@ public:
     {
         _userInfo = userInfo;
         //add by flyingkisser
-        _userInfoASString=ccsp::JsonUtil::getInstance()->toString((cocos2d::ValueMap*)&_userInfo);
+        if(!userInfo.empty()){
+             _userInfoASString=ccsp::JsonUtil::getInstance()->toString((cocos2d::ValueMap*)&_userInfo);
+        }
     }
     
     // Overrides
