@@ -8,13 +8,15 @@ LOCAL_MODULE_FILENAME := libextension
 LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
-ccsp/FileUtil.cpp \
-ccsp/LogUtil.cpp \
-ccsp/TimeUtil.cpp \
-ccsp/ZipUtil.cpp \
-ccsp/TextureUtil.cpp \
 ccsp/DataUtil.cpp \
+ccsp/EventUtil.cpp \
+ccsp/FileUtil.cpp \
+ccsp/JsonUtil.cpp \
+ccsp/LogUtil.cpp \
+ccsp/TextureUtil.cpp \
+ccsp/TimeUtil.cpp \
 ccsp/UIUtil.cpp \
+ccsp/ZipUtil.cpp \
 assets-manager/AssetsManager.cpp \
 assets-manager/Manifest.cpp \
 assets-manager/AssetsManagerEx.cpp \

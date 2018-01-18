@@ -35,7 +35,7 @@ THE SOFTWARE.
 
 #include <string>
 //add by flyingkisser
-#include "extensions/ccsp/JsonUtil.h"
+#include "../extensions/ccsp/JsonUtil.h"
 
 NS_CC_BEGIN
 
