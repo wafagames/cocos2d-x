@@ -1375,7 +1375,13 @@ void RichText::formatText()
                     case RichElement::Type::IMAGE:
                     {
                         RichElementImage* elmtImage = static_cast<RichElementImage*>(element);
-                        elementRenderer = Sprite::create(elmtImage->_filePath);
+                        if(elmtImage->_filePath[0]=='#'){
+                            elmtImage->_filePath.erase(0,1);
+                            elementRenderer = Sprite::createWithSpriteFrameName(elmtImage->_filePath);
+                        }else{
+                            elementRenderer = Sprite::create(elmtImage->_filePath);
+                        }
+                        
                         if (elementRenderer && (elmtImage->_height != -1 || elmtImage->_width != -1))
                         {
                             auto currentSize = elementRenderer->getContentSize();
@@ -1682,7 +1688,15 @@ void RichText::handleTextRenderer(const std::string& text, const std::string& fo
     
 void RichText::handleImageRenderer(const std::string& filePath, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
 {
-    Sprite* imageRenderer = Sprite::create(filePath);
+    Sprite* imageRenderer;
+    if(filePath[0]=='#'){
+        std::string newFileName=std::string(filePath);
+        newFileName.erase(0,1);
+        imageRenderer = Sprite::createWithSpriteFrameName(newFileName);
+    }else{
+        imageRenderer= Sprite::create(filePath);
+    }
+    //Sprite* imageRenderer = Sprite::create(filePath);
     if (imageRenderer)
     {
         auto currentSize = imageRenderer->getContentSize();
