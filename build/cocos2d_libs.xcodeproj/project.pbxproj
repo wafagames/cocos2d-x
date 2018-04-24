@@ -5875,6 +5875,10 @@
 		D8012B0B1F42BAC80097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
 		D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
 		D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
+		D82F6061208F88DA00A910AB /* RichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* RichText.cpp */; };
+		D82F6062208F88DA00A910AB /* RichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* RichText.cpp */; };
+		D82F6063208F88DA00A910AB /* RichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* RichText.h */; };
+		D82F6064208F88DA00A910AB /* RichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* RichText.h */; };
 		D8347E921EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
@@ -7993,6 +7997,8 @@
 		D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyPool.h; sourceTree = "<group>"; };
 		D8012B081F42BAC80097FA3E /* UIUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UIUtil.cpp; path = ccsp/UIUtil.cpp; sourceTree = "<group>"; };
 		D8012B091F42BAC80097FA3E /* UIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIUtil.h; path = ccsp/UIUtil.h; sourceTree = "<group>"; };
+		D82F605F208F88DA00A910AB /* RichText.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = RichText.cpp; path = ccsp/RichText.cpp; sourceTree = "<group>"; };
+		D82F6060208F88DA00A910AB /* RichText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RichText.h; path = ccsp/RichText.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
 		D8D72DD11E95E27C007341AF /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ccsp/FileUtil.cpp; sourceTree = "<group>"; };
@@ -11687,6 +11693,8 @@
 				D8012B091F42BAC80097FA3E /* UIUtil.h */,
 				D8FB27EA1FE92AAD00EF0F64 /* EventUtil.cpp */,
 				D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */,
+				D82F605F208F88DA00A910AB /* RichText.cpp */,
+				D82F6060208F88DA00A910AB /* RichText.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -11925,6 +11933,7 @@
 				382384111A259092002C4610 /* NodeReaderDefine.h in Headers */,
 				50ABBD8D1925AB4100A911A9 /* CCGLProgram.h in Headers */,
 				5020A1A71D49912500E80C72 /* extension.h in Headers */,
+				D82F6063208F88DA00A910AB /* RichText.h in Headers */,
 				50ABBEA11925AB6F00A911A9 /* CCScheduler.h in Headers */,
 				B6CAB2211AF9AA1A00B9B856 /* btBoxBoxDetector.h in Headers */,
 				D8DF4BE81F1EFB720008C96F /* DataUtil.h in Headers */,
@@ -14892,6 +14901,7 @@
 				B6CAB3D41AF9AA1A00B9B856 /* btSliderConstraint.h in Headers */,
 				B6CAB4381AF9AA1A00B9B856 /* btGpu3DGridBroadphaseSharedCode.h in Headers */,
 				B665E2091AA80A6500DDB1C5 /* CCPUBaseCollider.h in Headers */,
+				D82F6064208F88DA00A910AB /* RichText.h in Headers */,
 				1A01C68718F57BE800EFE3A6 /* CCArray.h in Headers */,
 				B665E3DD1AA80A6600DDB1C5 /* CCPUScriptTranslator.h in Headers */,
 				1A01C6A718F58F7500EFE3A6 /* CCNotificationCenter.h in Headers */,
@@ -15864,6 +15874,7 @@
 				5020A2161D49912500E80C72 /* spine-cocos2dx.cpp in Sources */,
 				B6CAB4BF1AF9AA1A00B9B856 /* SpuLibspe2Support.cpp in Sources */,
 				B665E21E1AA80A6500DDB1C5 /* CCPUBehaviourManager.cpp in Sources */,
+				D82F6061208F88DA00A910AB /* RichText.cpp in Sources */,
 				15AE18E319AAD35000C27E9E /* TriggerObj.cpp in Sources */,
 				15AE1BA119AADFDF00C27E9E /* UILayoutParameter.cpp in Sources */,
 				50ABC0211926664800A911A9 /* CCGLViewImpl-desktop.cpp in Sources */,
@@ -17170,6 +17181,7 @@
 				B665E40F1AA80A6600DDB1C5 /* CCPUTechniqueTranslator.cpp in Sources */,
 				292DB16019B461CA00A80320 /* ExtensionDeprecated.cpp in Sources */,
 				50ABBEAC1925AB6F00A911A9 /* ccTypes.cpp in Sources */,
+				D82F6062208F88DA00A910AB /* RichText.cpp in Sources */,
 				15AE196A19AAD35100C27E9E /* DictionaryHelper.cpp in Sources */,
 				B6CAB3901AF9AA1A00B9B856 /* btRaycastCallback.cpp in Sources */,
 				B6CAB3CE1AF9AA1A00B9B856 /* btSequentialImpulseConstraintSolver.cpp in Sources */,
