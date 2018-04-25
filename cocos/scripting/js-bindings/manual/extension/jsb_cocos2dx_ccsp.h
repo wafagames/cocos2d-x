@@ -25,6 +25,7 @@
 #include "extensions/ccsp/DataUtil.h"
 #include "extensions/ccsp/UIUtil.h"
 #include "extensions/ccsp/EventUtil.h"
+#include "extensions/ccsp/XPRichText.h"
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);
 

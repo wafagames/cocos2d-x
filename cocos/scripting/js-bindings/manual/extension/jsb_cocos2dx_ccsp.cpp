@@ -15,7 +15,7 @@
 //#include "scripting/js-bindings/manual/jsb_cocos2dx_auto.hpp"
 #include "scripting/js-bindings/auto/jsb_cocos2dx_auto.hpp"
 //#include <thread>
-
+#include "jsb_cocos2dx_ccsp_ui.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -380,8 +380,12 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     
     JS::RootedObject tmpObj(cx);
    
+    
    
     get_or_create_js_obj(cx, global, "jsb", &jsbObj);
+    
+    js_register_XPRichText(cx, jsbObj);
+    
     get_or_create_js_obj(cx, jsbObj, "fileUtil", &fileUtilObj);
     get_or_create_js_obj(cx, jsbObj, "logUtil", &logUtilObj);
     get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpUtilObj);

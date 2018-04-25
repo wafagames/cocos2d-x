@@ -84,7 +84,7 @@ public:
     
     bool equalType(Type type);
     void setColor(const Color3B& color);
-protected:
+//protected:
     Type _type;             /*!< Rich element type. */
     int _tag;               /*!< A integer tag value. */
     Color3B _color;         /*!< A color in `Color3B`. */
@@ -174,7 +174,7 @@ public:
                                    const Color3B& outlineColor = Color3B::WHITE, int outlineSize = -1,
                                    const Color3B& shadowColor = Color3B::BLACK, const cocos2d::Size& shadowOffset = Size(2.0, -2.0), int shadowBlurRadius = 0,
                                    const Color3B& glowColor = Color3B::WHITE);
-protected:
+//protected:
     std::string _text;
     std::string _fontName;
     float _fontSize;
@@ -241,7 +241,7 @@ public:
     void setWidth(int width);
     void setHeight(int height);
     void setUrl(const std::string& url);
-protected:
+//protected:
     std::string _filePath;
     Rect _textureRect;
     int _textureType;
@@ -295,7 +295,7 @@ public:
      * @return A RichElementCustomNode instance.
      */
     static RichElementCustomNode* create(int tag, const Color3B& color, GLubyte opacity, Node* customNode);
-protected:
+//protected:
     Node* _customNode;
     friend class RichText;
 };
@@ -331,7 +331,7 @@ public:
      * @return A RichElementNewLine instance.
      */
     static RichElementNewLine* create(int tag, const Color3B& color, GLubyte opacity);
-protected:
+//protected:
     friend class RichText;
 };
 
