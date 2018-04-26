@@ -16,6 +16,7 @@
 #include "base/CCValue.h"
 #include "ui/UIRichText.h"
 #include "cocos/2d/CCDrawNode.h"
+#include "cocos/2d/CCLayer.h"
 
 
 class Label;
@@ -148,6 +149,7 @@ namespace ccsp {
         TextVAlignment _alignV;
         int _newLinePolicy=0;
         bool _debug=false;
+        LayerColor* _backLayer;
         DrawNode* _drawNode;
     };
     

@@ -90,7 +90,10 @@ void XPRichText::initRenderer()
 {
     if(_debug){
         _drawNode=DrawNode::create();
-        addChild(_drawNode,1,-1);
+         addChild(_drawNode,1,-1);
+       
+//        _backLayer=LayerColor::create(Color4B(255,0,0,200));
+//        addChild(_backLayer,0,-1);
     }
 }
 
@@ -189,7 +192,10 @@ void XPRichText::formatText()
                     case RichElement::Type::IMAGE:
                     {
                         RichElementImage* elmtImage = static_cast<RichElementImage*>(element);
-                        elementRenderer = Sprite::create(elmtImage->_filePath);
+                        if(elmtImage->_filePath[0]=='#')
+                            elementRenderer = Sprite::createWithSpriteFrameName(elmtImage->_filePath.substr(1,elmtImage->_filePath.length()));
+                        else
+                            elementRenderer = Sprite::create(elmtImage->_filePath);
                         if (elementRenderer && (elmtImage->_height != -1 || elmtImage->_width != -1))
                         {
                             auto currentSize = elementRenderer->getContentSize();
@@ -223,6 +229,8 @@ void XPRichText::formatText()
 
                 if (elementRenderer)
                 {
+                    elementRenderer->setAnchorPoint(Point(0,0));
+                    elementRenderer->setIgnoreAnchorPointForPosition(false);
                     elementRenderer->setColor(element->_color);
                     elementRenderer->setOpacity(element->_opacity);
                     pushToContainer(index,elementRenderer);
@@ -415,6 +423,8 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
             }
             if (leftRenderer)
             {
+                leftRenderer->setAnchorPoint(Point(0,0));
+                leftRenderer->setIgnoreAnchorPointForPosition(false);
                 leftRenderer->setColor(color);
                 leftRenderer->setOpacity(opacity);
                 pushToContainer(index,leftRenderer);
@@ -462,7 +472,12 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
 
 int XPRichText::handleImageRenderer(int index,const std::string& filePath, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
 {
-    Sprite* imageRenderer = Sprite::create(filePath);
+    Sprite* imageRenderer;
+    if(filePath[0]=='#')
+        imageRenderer = Sprite::createWithSpriteFrameName(filePath.substr(1,filePath.length()));
+    else
+        imageRenderer = Sprite::create(filePath);
+    ///Sprite* imageRenderer = Sprite::create(filePath);
     if (imageRenderer)
     {
         auto currentSize = imageRenderer->getContentSize();
@@ -483,6 +498,8 @@ int XPRichText::handleImageRenderer(int index,const std::string& filePath, const
 
 int XPRichText::handleCustomRenderer(int index,cocos2d::Node *renderer)
 {
+    renderer->setAnchorPoint(Point(0,0));
+    renderer->setIgnoreAnchorPointForPosition(false);
     Size imgSize = renderer->getContentSize();
     _leftSpaceWidth -= imgSize.width;
     if (_leftSpaceWidth < 0.0f)
@@ -524,13 +541,11 @@ float XPRichText::_getLineHeight(Vector<Node*>* arr){
 }
 
 float XPRichText::_getLineWidth(Vector<Node*>* arr){
-    float max=0;
+    float v=0;
     for(auto& node:*arr){
-        float h=node->getContentSize().width;
-        if(h>max)
-            max=h;
+        v+=node->getContentSize().width;
     }
-    return max;
+    return v;
 }
 float XPRichText::_findMaxLineWidth(){
     float max=0;
@@ -718,8 +733,11 @@ void XPRichText::formarRenderers(){
     setContentSize(newSize);
     updateContentSizeWithTextureSize(newSize);
     
-    if(_debug)
+    if(_debug){
         _debugDrawAllLines();
+        //_backLayer->setContentSize(newSize);
+    }
+    
 }
 
 

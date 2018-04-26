@@ -13,9 +13,11 @@ ccsp/EventUtil.cpp \
 ccsp/FileUtil.cpp \
 ccsp/JsonUtil.cpp \
 ccsp/LogUtil.cpp \
+ccsp/StrUtil.cpp \
 ccsp/TextureUtil.cpp \
 ccsp/TimeUtil.cpp \
 ccsp/UIUtil.cpp \
+ccsp/XPRichText.cpp \
 ccsp/ZipUtil.cpp \
 assets-manager/AssetsManager.cpp \
 assets-manager/Manifest.cpp \
