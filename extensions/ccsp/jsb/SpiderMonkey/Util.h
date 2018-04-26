@@ -30,6 +30,8 @@ namespace ccsp{
                 static Size toSize (JSContext* cx, JS::CallArgs* args,int index);
                 static Point toPoint (JSContext* cx, JS::CallArgs* args,int index);
                 static void* toObject(JSContext* cx, JS::CallArgs* args,int index);
+
+                 static int returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
                
             };
         //}

@@ -79,3 +79,16 @@ Point Util::toPoint (JSContext* cx, JS::CallArgs* args,int index)
     return p;
 }
 
+int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+     JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
+    if (nullptr == array)
+        return 0;
+            
+        uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
+        memcpy(bufdata, memsrc, size*sizeof(uint8_t));
+            
+        args->rval().set(OBJECT_TO_JSVAL(array));
+    
+    return size*sizeof(uint8_t);
+}
+               

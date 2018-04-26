@@ -5883,6 +5883,9 @@
 		D82F6062208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6063208F88DA00A910AB /* XPRichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* XPRichText.h */; };
 		D82F6064208F88DA00A910AB /* XPRichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* XPRichText.h */; };
+		D82F608620924A4A00A910AB /* define.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F608220924A4900A910AB /* define.h */; };
+		D82F608720924A4A00A910AB /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F608420924A4900A910AB /* Util.cpp */; };
+		D82F608820924A4A00A910AB /* Util.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F608520924A4900A910AB /* Util.h */; };
 		D8347E921EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
@@ -8006,6 +8009,9 @@
 		D805485C2091B6A6007D697C /* StrUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrUtil.cpp; path = ccsp/StrUtil.cpp; sourceTree = "<group>"; };
 		D82F605F208F88DA00A910AB /* XPRichText.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XPRichText.cpp; path = ccsp/XPRichText.cpp; sourceTree = "<group>"; };
 		D82F6060208F88DA00A910AB /* XPRichText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XPRichText.h; path = ccsp/XPRichText.h; sourceTree = "<group>"; };
+		D82F608220924A4900A910AB /* define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
+		D82F608420924A4900A910AB /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
+		D82F608520924A4900A910AB /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
 		D8D72DD11E95E27C007341AF /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ccsp/FileUtil.cpp; sourceTree = "<group>"; };
@@ -11680,9 +11686,29 @@
 			path = ../base/allocator;
 			sourceTree = "<group>";
 		};
+		D82F608120924A4900A910AB /* jsb */ = {
+			isa = PBXGroup;
+			children = (
+				D82F608220924A4900A910AB /* define.h */,
+				D82F608320924A4900A910AB /* SpiderMonkey */,
+			);
+			name = jsb;
+			path = ccsp/jsb;
+			sourceTree = "<group>";
+		};
+		D82F608320924A4900A910AB /* SpiderMonkey */ = {
+			isa = PBXGroup;
+			children = (
+				D82F608420924A4900A910AB /* Util.cpp */,
+				D82F608520924A4900A910AB /* Util.h */,
+			);
+			path = SpiderMonkey;
+			sourceTree = "<group>";
+		};
 		D8D72DD01E95E271007341AF /* ccsp */ = {
 			isa = PBXGroup;
 			children = (
+				D82F608120924A4900A910AB /* jsb */,
 				D805485C2091B6A6007D697C /* StrUtil.cpp */,
 				D805485B2091B6A6007D697C /* StrUtil.h */,
 				D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */,
@@ -12013,6 +12039,7 @@
 				1A57011D180BC90D0088DEC7 /* CCGrabber.h in Headers */,
 				B665E3C81AA80A6600DDB1C5 /* CCPUScaleVelocityAffector.h in Headers */,
 				B665E3781AA80A6500DDB1C5 /* CCPUParticleFollowerTranslator.h in Headers */,
+				D82F608620924A4A00A910AB /* define.h in Headers */,
 				15AE1B6819AADA9900C27E9E /* UIScale9Sprite.h in Headers */,
 				1A570121180BC90D0088DEC7 /* CCGrid.h in Headers */,
 				50864C9A1C7BC1B000B3BAB1 /* cpCompat62.h in Headers */,
@@ -12495,6 +12522,7 @@
 				50ABBD621925AB0000A911A9 /* Vec4.h in Headers */,
 				B6CAB4E51AF9AA1A00B9B856 /* SpuSampleTaskProcess.h in Headers */,
 				B6CAB2B51AF9AA1A00B9B856 /* btConvexShape.h in Headers */,
+				D82F608820924A4A00A910AB /* Util.h in Headers */,
 				B60C5BD619AC68B10056FBDE /* CCBillBoard.h in Headers */,
 				50864CD01C7BC1B100B3BAB1 /* cpShape.h in Headers */,
 				15AE1BA419AADFDF00C27E9E /* UILayoutManager.h in Headers */,
@@ -15210,6 +15238,7 @@
 				B665E30E1AA80A6500DDB1C5 /* CCPUObserver.cpp in Sources */,
 				15AE188E19AAD33D00C27E9E /* CCLabelTTFLoader.cpp in Sources */,
 				B665E37E1AA80A6500DDB1C5 /* CCPUParticleSystem3DTranslator.cpp in Sources */,
+				D82F608720924A4A00A910AB /* Util.cpp in Sources */,
 				B665E3061AA80A6500DDB1C5 /* CCPUMeshSurfaceEmitterTranslator.cpp in Sources */,
 				5020A1EC1D49912500E80C72 /* SkeletonBounds.c in Sources */,
 				15AE1A3019AAD3D500C27E9E /* b2ChainShape.cpp in Sources */,

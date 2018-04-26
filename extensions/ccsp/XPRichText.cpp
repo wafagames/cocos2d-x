@@ -91,9 +91,8 @@ void XPRichText::initRenderer()
     if(_debug){
         _drawNode=DrawNode::create();
          addChild(_drawNode,1,-1);
-       
-//        _backLayer=LayerColor::create(Color4B(255,0,0,200));
-//        addChild(_backLayer,0,-1);
+        _backLayer=LayerColor::create(Color4B(255,0,0,50));
+        addChild(_backLayer,0,-1);
     }
 }
 
@@ -593,8 +592,11 @@ float XPRichText::_formatOneLine(Vector<Node*>* arr,TextHAlignment alignH,TextVA
             y=-lineHeight;
         else if(alignV==TextVAlignment::TOP)
             y=-renderSize.height;
-        else
+        else{
             y=-(lineHeight+renderSize.height)/2;
+            //y=-renderSize.height-(lineHeight-renderSize.height)/2;
+        }
+        
     
         x=lastX;
         lastX+=renderSize.width;
@@ -617,8 +619,11 @@ Node* XPRichText::_getHighestRenderInLine(Vector<Node*>* arr){
     Node* nodeRet=nullptr;
     for(auto& node:*arr){
         float h=node->getContentSize().height;
-        if(h>max)
+        if(h>max){
+            max=h;
             nodeRet=node;
+        }
+        
     }
     return nodeRet;
 }
@@ -735,7 +740,7 @@ void XPRichText::formarRenderers(){
     
     if(_debug){
         _debugDrawAllLines();
-        //_backLayer->setContentSize(newSize);
+        _backLayer->setContentSize(newSize);
     }
     
 }
