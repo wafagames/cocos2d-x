@@ -7,11 +7,10 @@
 //
 
 #include "DataUtil.h"
-#include "platform/CCFileUtils.h"
 
 
 using namespace ccsp;
-using namespace cocos2d;
+
 static DataUtil* s_instance=NULL;
 
 DataUtil* DataUtil::getInstance(){

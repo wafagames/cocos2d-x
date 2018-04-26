@@ -28,6 +28,7 @@
 //#include "platform/CCSAXParser.h"
 
 //#include "ui/UIRichText.h"
+#include "StrUtil.h"
 
 //USING_NS_CC;
 using namespace cocos2d;
@@ -43,7 +44,8 @@ XPRichText::XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,Tex
 , _leftSpaceWidth(0.0f)
 {
     _lineInner=linneInner;
-    _fixedSize=fixedSize;
+    _fixWidth=fixedSize.width;
+    _fixHeight=fixedSize.height;
     _alignH=alignH;
     _alignV=alignV;
     _newLinePolicy=newLinePolicy;
@@ -53,6 +55,13 @@ XPRichText::XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,Tex
 XPRichText::~XPRichText()
 {
     _richElements.clear();
+
+    for (auto& iter : _elementRenders)
+    {
+        iter->clear();
+        delete iter;
+    }
+    _elementRenders.clear();
 }
 
 XPRichText* XPRichText::create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug)
@@ -79,16 +88,27 @@ bool XPRichText::init()
 
 void XPRichText::initRenderer()
 {
-//    if(_debug){
-//        _drawNode=DrawNode::create();
-//    }
+    if(_debug){
+        _drawNode=DrawNode::create();
+        addChild(_drawNode,1,-1);
+    }
 }
 
-
-void XPRichText::insertElement(RichElement *element, int index)
+void XPRichText::pushToContainer(int index,cocos2d::Node *renderer)
 {
-    _richElements.insert(index, element);
-    _formatTextDirty = true;
+    if (_elementRenders.size() <= 0)
+        _elementRenders.push_back(new Vector<Node*>());
+    if(index==_elementRenders.size())
+         _elementRenders.push_back(new Vector<Node*>());
+    if(index>_elementRenders.size())
+        return;
+    _elementRenders[index]->pushBack(renderer);
+}
+
+void XPRichText::addNewLine()
+{
+    _leftSpaceWidth = _fixWidth;
+    _elementRenders.push_back(new Vector<Node*>());
 }
 
 
@@ -98,30 +118,23 @@ void XPRichText::pushBackElement(RichElement *element)
     _formatTextDirty = true;
 }
 
-void XPRichText::openUrl(const std::string& url)
-{
-    if (_handleOpenUrl) {
-        _handleOpenUrl(url);
-    }
-    else {
-        Application::getInstance()->openURL(url);
-    }
-}
 
-void XPRichText::setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl)
-{
-    _handleOpenUrl = handleOpenUrl;
-}
 
 void XPRichText::formatText()
 {
     if (_formatTextDirty)
     {
         this->removeAllProtectedChildren();
-        _elementRenders.clear();
-        if (_ignoreSize)
+        for (auto& iter : _elementRenders)
         {
-            addNewLine();
+            iter->clear();
+            delete iter;
+        }
+        _elementRenders.clear();
+        int index=0;
+        if (!_fixWidth)
+        {
+           //auto size
             for (ssize_t i=0, size = _richElements.size(); i<size; ++i)
             {
                 RichElement* element = _richElements.at(i);
@@ -131,6 +144,11 @@ void XPRichText::formatText()
                     case RichElement::Type::TEXT:
                     {
                         RichElementText* elmtText = static_cast<RichElementText*>(element);
+                        if(elmtText->_text=="\n"){
+                            addNewLine();
+                            index++;
+                            continue;
+                        }
                         cocos2d::Label* label;
                         if (FileUtils::getInstance()->isFileExist(elmtText->_fontName))
                         {
@@ -140,28 +158,31 @@ void XPRichText::formatText()
                         {
                             label = cocos2d::Label::createWithSystemFont(elmtText->_text, elmtText->_fontName, elmtText->_fontSize);
                         }
-                        if (elmtText->_flags & RichElementText::ITALICS_FLAG)
-                            label->enableItalics();
-                        if (elmtText->_flags & RichElementText::BOLD_FLAG)
-                            label->enableBold();
-                        if (elmtText->_flags & RichElementText::UNDERLINE_FLAG)
-                            label->enableUnderline();
-                        if (elmtText->_flags & RichElementText::STRIKETHROUGH_FLAG)
-                            label->enableStrikethrough();
-//                        if (elmtText->_flags & RichElementText::URL_FLAG)
-//                            label->addComponent(cocos2d::ui::ListenerComponent::create(label, elmtText->_url,
-//                                                                          std::bind(&XPRichText::openUrl, this, std::placeholders::_1)));
-                        if (elmtText->_flags & RichElementText::OUTLINE_FLAG) {
-                            label->enableOutline(Color4B(elmtText->_outlineColor), elmtText->_outlineSize);
+                        if(elmtText->_flags){
+                            if (elmtText->_flags & RichElementText::ITALICS_FLAG)
+                                label->enableItalics();
+                            if (elmtText->_flags & RichElementText::BOLD_FLAG)
+                                label->enableBold();
+                            if (elmtText->_flags & RichElementText::UNDERLINE_FLAG)
+                                label->enableUnderline();
+                            if (elmtText->_flags & RichElementText::STRIKETHROUGH_FLAG)
+                                label->enableStrikethrough();
+                            //                        if (elmtText->_flags & RichElementText::URL_FLAG)
+                            //                            label->addComponent(cocos2d::ui::ListenerComponent::create(label, elmtText->_url,
+                            //                                                                          std::bind(&XPRichText::openUrl, this, std::placeholders::_1)));
+                            if (elmtText->_flags & RichElementText::OUTLINE_FLAG) {
+                                label->enableOutline(Color4B(elmtText->_outlineColor), elmtText->_outlineSize);
+                            }
+                            if (elmtText->_flags & RichElementText::SHADOW_FLAG) {
+                                label->enableShadow(Color4B(elmtText->_shadowColor),
+                                                    elmtText->_shadowOffset,
+                                                    elmtText->_shadowBlurRadius);
+                            }
+                            if (elmtText->_flags & RichElementText::GLOW_FLAG) {
+                                label->enableGlow(Color4B(elmtText->_glowColor));
+                            }
                         }
-                        if (elmtText->_flags & RichElementText::SHADOW_FLAG) {
-                            label->enableShadow(Color4B(elmtText->_shadowColor),
-                                                elmtText->_shadowOffset,
-                                                elmtText->_shadowBlurRadius);
-                        }
-                        if (elmtText->_flags & RichElementText::GLOW_FLAG) {
-                            label->enableGlow(Color4B(elmtText->_glowColor));
-                        }
+                     
                         elementRenderer = label;
                         break;
                     }
@@ -193,6 +214,7 @@ void XPRichText::formatText()
                     case RichElement::Type::NEWLINE:
                     {
                         addNewLine();
+                         index++;
                         break;
                     }
                     default:
@@ -203,13 +225,14 @@ void XPRichText::formatText()
                 {
                     elementRenderer->setColor(element->_color);
                     elementRenderer->setOpacity(element->_opacity);
-                    pushToContainer(elementRenderer);
+                    pushToContainer(index,elementRenderer);
                 }
             }
         }
         else
         {
-            addNewLine();
+            //fixed size
+            _leftSpaceWidth=_fixWidth;
             for (ssize_t i=0, size = _richElements.size(); i<size; ++i)
             {
                 RichElement* element = static_cast<RichElement*>(_richElements.at(i));
@@ -218,28 +241,39 @@ void XPRichText::formatText()
                     case RichElement::Type::TEXT:
                     {
                         RichElementText* elmtText = static_cast<RichElementText*>(element);
-                        handleTextRenderer(elmtText->_text, elmtText->_fontName, elmtText->_fontSize, elmtText->_color,
-                                           elmtText->_opacity, elmtText->_flags, elmtText->_url,
-                                           elmtText->_outlineColor, elmtText->_outlineSize,
-                                           elmtText->_shadowColor, elmtText->_shadowOffset, elmtText->_shadowBlurRadius,
-                                           elmtText->_glowColor);
+                        if(elmtText->_text=="\n"){
+                            addNewLine();
+                            index++;
+                            continue;
+                        }
+                        
+                        std::vector<std::string> textArr=StrUtil::explode(elmtText->_text,'\n');
+                        unsigned long m=textArr.size();
+                        for(int j=0;j<m;j++){
+                            index=handleTextRenderer(index,textArr.at(j), elmtText->_fontName, elmtText->_fontSize, elmtText->_color,elmtText->_opacity, elmtText->_flags, elmtText->_url,elmtText->_outlineColor, elmtText->_outlineSize,elmtText->_shadowColor, elmtText->_shadowOffset, elmtText->_shadowBlurRadius,elmtText->_glowColor);
+                            if(m>=2 && j!=m-1){
+                                addNewLine();
+                                index++;
+                            }
+                        }
                         break;
                     }
                     case RichElement::Type::IMAGE:
                     {
                         RichElementImage* elmtImage = static_cast<RichElementImage*>(element);
-                        handleImageRenderer(elmtImage->_filePath, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
+                        index=handleImageRenderer(index,elmtImage->_filePath, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
                         break;
                     }
                     case RichElement::Type::CUSTOM:
                     {
                         RichElementCustomNode* elmtCustom = static_cast<RichElementCustomNode*>(element);
-                        handleCustomRenderer(elmtCustom->_customNode);
+                        index=handleCustomRenderer(index,elmtCustom->_customNode);
                         break;
                     }
                     case RichElement::Type::NEWLINE:
                     {
                         addNewLine();
+                        index++;
                         break;
                     }
                     default:
@@ -309,12 +343,14 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     return (int)text.size();
 }
 
-void XPRichText::handleTextRenderer(const std::string& text, const std::string& fontName, float fontSize, const Color3B &color,
+int XPRichText::handleTextRenderer(int index,const std::string& text, const std::string& fontName, float fontSize, const Color3B &color,
                                   GLubyte opacity, uint32_t flags, const std::string& url,
                                   const Color3B& outlineColor, int outlineSize ,
                                   const Color3B& shadowColor, const cocos2d::Size& shadowOffset, int shadowBlurRadius,
                                   const Color3B& glowColor)
 {
+    if(text=="")
+        return index;
     auto fileExist = FileUtils::getInstance()->isFileExist(fontName);
     cocos2d::Label* textRenderer = nullptr;
     if (fileExist)
@@ -381,34 +417,36 @@ void XPRichText::handleTextRenderer(const std::string& text, const std::string& 
             {
                 leftRenderer->setColor(color);
                 leftRenderer->setOpacity(opacity);
-                pushToContainer(leftRenderer);
+                pushToContainer(index,leftRenderer);
 
-                if (flags & RichElementText::ITALICS_FLAG)
-                    leftRenderer->enableItalics();
-                if (flags & RichElementText::BOLD_FLAG)
-                    leftRenderer->enableBold();
-                if (flags & RichElementText::UNDERLINE_FLAG)
-                    leftRenderer->enableUnderline();
-                if (flags & RichElementText::STRIKETHROUGH_FLAG)
-                    leftRenderer->enableStrikethrough();
-//                if (flags & RichElementText::URL_FLAG)
-//                    leftRenderer->addComponent(ListenerComponent::create(leftRenderer,
-//                                                                         url,
-//                                                                         std::bind(&RichText::openUrl, this, std::placeholders::_1)));
-                if (flags & RichElementText::OUTLINE_FLAG) {
-                    leftRenderer->enableOutline(Color4B(outlineColor), outlineSize);
-                }
-                if (flags & RichElementText::SHADOW_FLAG) {
-                    leftRenderer->enableShadow(Color4B(shadowColor), shadowOffset, shadowBlurRadius);
-                }
-                if (flags & RichElementText::GLOW_FLAG) {
-                    leftRenderer->enableGlow(Color4B(glowColor));
+                if(flags){
+                    if (flags & RichElementText::ITALICS_FLAG)
+                        leftRenderer->enableItalics();
+                    if (flags & RichElementText::BOLD_FLAG)
+                        leftRenderer->enableBold();
+                    if (flags & RichElementText::UNDERLINE_FLAG)
+                        leftRenderer->enableUnderline();
+                    if (flags & RichElementText::STRIKETHROUGH_FLAG)
+                        leftRenderer->enableStrikethrough();
+                    //                if (flags & RichElementText::URL_FLAG)
+                    //                    leftRenderer->addComponent(ListenerComponent::create(leftRenderer,
+                    //                                                                         url,
+                    //                                                                         std::bind(&RichText::openUrl, this, std::placeholders::_1)));
+                    if (flags & RichElementText::OUTLINE_FLAG) {
+                        leftRenderer->enableOutline(Color4B(outlineColor), outlineSize);
+                    }
+                    if (flags & RichElementText::SHADOW_FLAG) {
+                        leftRenderer->enableShadow(Color4B(shadowColor), shadowOffset, shadowBlurRadius);
+                    }
+                    if (flags & RichElementText::GLOW_FLAG) {
+                        leftRenderer->enableGlow(Color4B(glowColor));
+                    }
                 }
             }
         }
 
         addNewLine();
-        handleTextRenderer(cutWords, fontName, fontSize, color, opacity, flags, url,
+        return handleTextRenderer(index+1,cutWords, fontName, fontSize, color, opacity, flags, url,
                            outlineColor, outlineSize,
                            shadowColor, shadowOffset, shadowBlurRadius,
                            glowColor);
@@ -417,11 +455,12 @@ void XPRichText::handleTextRenderer(const std::string& text, const std::string& 
     {
         textRenderer->setColor(color);
         textRenderer->setOpacity(opacity);
-        pushToContainer(textRenderer);
+        pushToContainer(index,textRenderer);
+        return index;
     }
 }
 
-void XPRichText::handleImageRenderer(const std::string& filePath, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
+int XPRichText::handleImageRenderer(int index,const std::string& filePath, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
 {
     Sprite* imageRenderer = Sprite::create(filePath);
     if (imageRenderer)
@@ -434,140 +473,308 @@ void XPRichText::handleImageRenderer(const std::string& filePath, const Color3B 
         imageRenderer->setContentSize(Size(currentSize.width * imageRenderer->getScaleX(),
                                            currentSize.height * imageRenderer->getScaleY()));
 
-        handleCustomRenderer(imageRenderer);
+        return handleCustomRenderer(index,imageRenderer);
 //        imageRenderer->addComponent(ListenerComponent::create(imageRenderer,
 //                                                              url,
 //                                                              std::bind(&RichText::openUrl, this, std::placeholders::_1)));
     }
+    return index;
 }
 
-void XPRichText::handleCustomRenderer(cocos2d::Node *renderer)
+int XPRichText::handleCustomRenderer(int index,cocos2d::Node *renderer)
 {
     Size imgSize = renderer->getContentSize();
     _leftSpaceWidth -= imgSize.width;
     if (_leftSpaceWidth < 0.0f)
     {
         addNewLine();
-        pushToContainer(renderer);
+        index++;
+        pushToContainer(index,renderer);
         _leftSpaceWidth -= imgSize.width;
     }
     else
     {
-        pushToContainer(renderer);
+        pushToContainer(index,renderer);
     }
+    return index;
 }
 
-void XPRichText::addNewLine()
-{
-    _leftSpaceWidth = _customSize.width;
-    _elementRenders.push_back(new Vector<Node*>());
-}
-
-void XPRichText::formarRenderers()
-{
-    if (_ignoreSize)
-    {
-        float newContentSizeWidth = 0.0f;
-        float nextPosY = 0.0f;
-        for (auto& element: _elementRenders)
-        {
-            Vector<Node*>* row = element;
-            float nextPosX = 0.0f;
-            float maxY = 0.0f;
-            for (auto& iter : *row)
-            {
-                iter->setAnchorPoint(Vec2::ZERO);
-                iter->setPosition(nextPosX, nextPosY);
-                this->addProtectedChild(iter, 1);
-                Size iSize = iter->getContentSize();
-                newContentSizeWidth += iSize.width;
-                nextPosX += iSize.width;
-                maxY = MAX(maxY, iSize.height);
-            }
-            nextPosY -= maxY;
+float XPRichText::_findMaxHeightInAllRenders(){
+    float max=0;
+    for(auto& row:_elementRenders){
+        if(!row->size())
+            continue;
+        for(auto& node:*row){
+            float h=node->getContentSize().height;
+            if(h>max)
+                max=h;
         }
-        this->setContentSize(Size(newContentSizeWidth, -nextPosY));
     }
+    return max;
+}
+
+float XPRichText::_getLineHeight(Vector<Node*>* arr){
+    float max=0;
+    for(auto& node:*arr){
+        float h=node->getContentSize().height;
+        if(h>max)
+            max=h;
+    }
+    return max;
+}
+
+float XPRichText::_getLineWidth(Vector<Node*>* arr){
+    float max=0;
+    for(auto& node:*arr){
+        float h=node->getContentSize().width;
+        if(h>max)
+            max=h;
+    }
+    return max;
+}
+float XPRichText::_findMaxLineWidth(){
+    float max=0;
+    for(auto& row:_elementRenders){
+        if(!row->size())
+            continue;
+        float w=_getLineWidth(row);
+        if(w>max)
+            max=w;
+    }
+    return max;
+}
+
+float XPRichText::_formatOneLine(Vector<Node*>* arr,TextHAlignment alignH,TextVAlignment alignV,float offsetY){
+    float lineHeight=_getLineHeight(arr);
+    float maxLineWidth=0;
+    if(_maxLineWidth)
+        maxLineWidth=_maxLineWidth;
+    else if(_fixWidth){
+        maxLineWidth=_fixWidth;
+        _maxLineWidth=maxLineWidth;
+    }
+    else{
+        maxLineWidth=_findMaxLineWidth();
+        _maxLineWidth=maxLineWidth;
+    }
+    
+    float lineWidth=_getLineWidth(arr);
+    float x=0;
+    float y=0;
+    float lastX=0;
+    if(alignH==TextHAlignment::LEFT)
+        lastX=0;
+    else if(alignH==TextHAlignment::RIGHT)
+        lastX=maxLineWidth-lineWidth;
     else
-    {
-        float newContentSizeHeight = 0.0f;
-        float *maxHeights = new (std::nothrow) float[_elementRenders.size()];
-
-        for (size_t i=0, size = _elementRenders.size(); i<size; i++)
-        {
-            Vector<Node*>* row = (_elementRenders[i]);
-            float maxHeight = 0.0f;
-            for (auto& iter : *row)
-            {
-                maxHeight = MAX(iter->getContentSize().height, maxHeight);
-            }
-            maxHeights[i] = maxHeight;
-            newContentSizeHeight += maxHeights[i];
-        }
-
-        float nextPosY = _customSize.height;
-        for (size_t i=0, size = _elementRenders.size(); i<size; i++)
-        {
-            Vector<Node*>* row = (_elementRenders[i]);
-            float nextPosX = 0.0f;
-            //nextPosY -= (maxHeights[i] + _defaults.at(KEY_VERTICAL_SPACE).asFloat());
-            nextPosY -= (maxHeights[i] + 0);
-            for (auto& iter : *row)
-            {
-                iter->setAnchorPoint(Vec2::ZERO);
-                iter->setPosition(nextPosX, nextPosY);
-                this->addProtectedChild(iter, 1);
-                nextPosX += iter->getContentSize().width;
-            }
-        }
-        delete [] maxHeights;
+        lastX=(maxLineWidth-lineWidth)/2;
+    
+    for(int i=0,l=(int)arr->size();i<l;i++){
+        Node* render=arr->at(i);
+        render->setAnchorPoint(Point(0,0));
+        render->setIgnoreAnchorPointForPosition(false);
+        Size renderSize=render->getContentSize();
+        if(alignV==TextVAlignment::BOTTOM)
+            y=-lineHeight;
+        else if(alignV==TextVAlignment::TOP)
+            y=-renderSize.height;
+        else
+            y=-(lineHeight+renderSize.height)/2;
+    
+        x=lastX;
+        lastX+=renderSize.width;
+        render->setPosition(Point(x,y+offsetY));
     }
-
-    for (auto& iter : _elementRenders)
-    {
-        iter->clear();
-        delete iter;
-    }
-    _elementRenders.clear();
-
-    if (_ignoreSize)
-    {
-        Size s = getVirtualRendererSize();
-        this->setContentSize(s);
-    }
-    else
-    {
-        this->setContentSize(_customSize);
-    }
-    updateContentSizeWithTextureSize(_contentSize);
+    return lineHeight;
 }
+
+void XPRichText::_adjustPositionY(float v){
+    for(auto& row:_elementRenders){
+        if(!row->size())
+            continue;
+        for(auto& node:*row)
+            node->setPositionY(node->getPositionY()+v);
+    }
+}
+
+Node* XPRichText::_getHighestRenderInLine(Vector<Node*>* arr){
+    float max=0;
+    Node* nodeRet=nullptr;
+    for(auto& node:*arr){
+        float h=node->getContentSize().height;
+        if(h>max)
+            nodeRet=node;
+    }
+    return nodeRet;
+}
+
+
+void XPRichText::_addAllRenders(){
+    int k=0;
+    for(auto& row:_elementRenders){
+        if(!row->size())
+            continue;
+        for(auto& node:*row)
+            addProtectedChild(node,1,k++);
+    }
+}
+
+void XPRichText::_debugDrawOneLine(Vector<Node*>* arr,float offsetX,float offsetY){
+    float lineWidth=_getLineWidth(arr);
+    float lineHeight=_getLineHeight(arr);
+    Point p1=Point(0+offsetX,0+offsetY);
+    //Point p2=Point(lineWidth+offsetX,0+offsetY);
+    Point p3=Point(lineWidth+offsetX,lineHeight+offsetY);
+    //Point p4=Point(0+offsetX,lineHeight+offsetY);
+    _drawNode->drawRect(p1,p3,Color4F::GREEN);
+    
+    Point pLeft=Point(0+offsetX,lineHeight/2+offsetY);
+    Point pRight=Point(lineWidth+offsetX,lineHeight/2+offsetY);
+    _drawNode->drawLine(pLeft,pRight,Color4F::GREEN);
+}
+
+void XPRichText::_debugDrawAllLines(){
+    for(auto& row:_elementRenders){
+        if(!row->size())
+            continue;
+        Node* node=_getHighestRenderInLine(row);
+        _debugDrawOneLine(row, row->at(0)->getPositionX(), node->getPositionY());
+    }
+}
+
+
+Node* XPRichText::getRenderByID(int i){
+    return getProtectedChildByTag(i);
+}
+
+void XPRichText::formarRenderers(){
+    float maxLineHeight=_findMaxHeightInAllRenders();
+    float offsetY=0;
+    float innerOffsetY=0;
+    float lastLineHeight=0;
+    int i=0;
+    int l=(int)_elementRenders.size();
+    for(auto& row:_elementRenders){
+        i++;
+        if(!row->size()){
+            if(!_newLinePolicy)
+                offsetY-=maxLineHeight+_lineInner;
+            else
+                 offsetY-=lastLineHeight+_lineInner;
+            continue;
+        }
+        float newLineHeight=0;
+        float lineHeight=_getLineHeight(row);
+        if(!_newLinePolicy){
+            if(_alignV==TextVAlignment::TOP){
+                
+            }else if(_alignV==TextVAlignment::BOTTOM){
+                innerOffsetY=maxLineHeight-lineHeight;
+            }else{
+                innerOffsetY=(maxLineHeight-lineHeight)/2;
+            }
+        }
+        lineHeight=_formatOneLine(row,_alignH,_alignV,offsetY-innerOffsetY);
+        lastLineHeight=lineHeight;
+        
+        if(!_newLinePolicy)
+            newLineHeight=maxLineHeight;
+        else
+            newLineHeight=lastLineHeight;
+        
+        //if line inner is set and not the last line,should add inner
+        if(_lineInner && i!=l)
+            newLineHeight+=_lineInner;
+        
+        offsetY-=newLineHeight;
+    }
+   
+    float adjustY=0;
+    float contentWidth=0;
+    float contentHeight=0;
+    
+    if(_fixWidth)
+        contentWidth=_fixWidth;
+    else
+        contentWidth=_maxLineWidth;
+    
+    if(_fixHeight){
+        contentHeight=_fixHeight;
+        if(_alignV==TextVAlignment::TOP)
+            adjustY=_fixHeight;
+        else if(_alignV==TextVAlignment::BOTTOM)
+            adjustY=-offsetY;
+        else
+            adjustY=(-offsetY+_fixHeight)/2;
+    }else{
+        contentHeight=-offsetY;
+        adjustY=-offsetY;
+    }
+    
+    _adjustPositionY(adjustY);
+    Size newSize=Size(contentWidth,contentHeight);
+    _addAllRenders();
+    _updateClickArea();
+    setContentSize(newSize);
+    updateContentSizeWithTextureSize(newSize);
+    
+    if(_debug)
+        _debugDrawAllLines();
+}
+
 
 void XPRichText::adaptRenderers()
 {
     this->formatText();
 }
 
-void XPRichText::pushToContainer(cocos2d::Node *renderer)
-{
-    if (_elementRenders.size() <= 0)
-    {
-        return;
-    }
-    _elementRenders[_elementRenders.size()-1]->pushBack(renderer);
+void XPRichText::_updateClickArea(){
+    
+}
+void XPRichText::_onClick(){
+    
+}
+void XPRichText::_initClick(){
+    
 }
 
-//void XPRichText::setVerticalSpace(float space)
-//{
-//    _defaults[KEY_VERTICAL_SPACE] = space;
-//}
+void XPRichText::addClickEventForRenderer(int i, std::function<void(Node* node,Point p)> cb){
+    
+}
 
-void XPRichText::ignoreContentAdaptWithSize(bool ignore)
-{
-    if (_ignoreSize != ignore)
-    {
-        _formatTextDirty = true;
-        Widget::ignoreContentAdaptWithSize(ignore);
+void XPRichText::setRenderString(int index, std::string str){
+    Node* node=getRenderByID(index);
+    cocos2d::Label* obj=dynamic_cast<cocos2d::Label*>(node);
+    if(!obj){
+        CCLOG("richText.setRenderString:cannot find render by given index %d",index);
+        return;
     }
+    Size oldSize=obj->getContentSize();
+    obj->setString(str);
+    Size newSize=obj->getContentSize();
+    
+    if(oldSize.equals(newSize))
+        return;
+    
+    if(_alignH==TextHAlignment::CENTER){
+        obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width)/2);
+    }else if(_alignH==TextHAlignment::RIGHT){
+        obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width));
+    }
+}
+
+void XPRichText::setRenderTexture(int index, std::string texturePath){
+    Node* node=getRenderByID(index);
+    cocos2d::Sprite* obj=dynamic_cast<cocos2d::Sprite*>(node);
+    if(!obj){
+        CCLOG("setRenderTexture:cannot find render by given index %d",index);
+        return;
+    }
+    
+    if(texturePath[0]=='#')
+        obj->initWithSpriteFrameName(texturePath.substr(1,texturePath.length()-1));
+    else
+        obj->initWithFile(texturePath);
 }
 
 std::string XPRichText::getDescription() const
@@ -575,3 +782,104 @@ std::string XPRichText::getDescription() const
     return "XPRichText";
 }
 
+void XPRichText::openUrl(const std::string& url)
+{
+    if (_handleOpenUrl) {
+        _handleOpenUrl(url);
+    }
+    else {
+        Application::getInstance()->openURL(url);
+    }
+}
+
+void XPRichText::setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl)
+{
+    _handleOpenUrl = handleOpenUrl;
+}
+
+//void XPRichText::ignoreContentAdaptWithSize(bool ignore)
+//{
+//    if (_ignoreSize != ignore)
+//    {
+//        _formatTextDirty = true;
+//        Widget::ignoreContentAdaptWithSize(ignore);
+//    }
+//}
+//void XPRichText::formarRenderers()
+//{
+//    if (_ignoreSize)
+//    {
+//        float newContentSizeWidth = 0.0f;
+//        float nextPosY = 0.0f;
+//        for (auto& element: _elementRenders)
+//        {
+//            Vector<Node*>* row = element;
+//            float nextPosX = 0.0f;
+//            float maxY = 0.0f;
+//            for (auto& iter : *row)
+//            {
+//                iter->setAnchorPoint(Vec2::ZERO);
+//                iter->setPosition(nextPosX, nextPosY);
+//                this->addProtectedChild(iter, 1);
+//                Size iSize = iter->getContentSize();
+//                newContentSizeWidth += iSize.width;
+//                nextPosX += iSize.width;
+//                maxY = MAX(maxY, iSize.height);
+//            }
+//            nextPosY -= maxY;
+//        }
+//        this->setContentSize(Size(newContentSizeWidth, -nextPosY));
+//    }
+//    else
+//    {
+//        float newContentSizeHeight = 0.0f;
+//        float *maxHeights = new (std::nothrow) float[_elementRenders.size()];
+//
+//        for (size_t i=0, size = _elementRenders.size(); i<size; i++)
+//        {
+//            Vector<Node*>* row = (_elementRenders[i]);
+//            float maxHeight = 0.0f;
+//            for (auto& iter : *row)
+//            {
+//                maxHeight = MAX(iter->getContentSize().height, maxHeight);
+//            }
+//            maxHeights[i] = maxHeight;
+//            newContentSizeHeight += maxHeights[i];
+//        }
+//
+//        float nextPosY = _customSize.height;
+//        for (size_t i=0, size = _elementRenders.size(); i<size; i++)
+//        {
+//            Vector<Node*>* row = (_elementRenders[i]);
+//            float nextPosX = 0.0f;
+//            //nextPosY -= (maxHeights[i] + _defaults.at(KEY_VERTICAL_SPACE).asFloat());
+//            nextPosY -= (maxHeights[i] + 0);
+//            for (auto& iter : *row)
+//            {
+//                iter->setAnchorPoint(Vec2::ZERO);
+//                iter->setPosition(nextPosX, nextPosY);
+//                this->addProtectedChild(iter, 1);
+//                nextPosX += iter->getContentSize().width;
+//            }
+//        }
+//        delete [] maxHeights;
+//    }
+//
+//    for (auto& iter : _elementRenders)
+//    {
+//        iter->clear();
+//        delete iter;
+//    }
+//    _elementRenders.clear();
+//
+//    if (_ignoreSize)
+//    {
+//        Size s = getVirtualRendererSize();
+//        this->setContentSize(s);
+//    }
+//    else
+//    {
+//        this->setContentSize(_customSize);
+//    }
+//    updateContentSizeWithTextureSize(_contentSize);
+//}

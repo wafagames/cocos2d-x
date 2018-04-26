@@ -15,6 +15,7 @@
 #include "ui/GUIExport.h"
 #include "base/CCValue.h"
 #include "ui/UIRichText.h"
+#include "cocos/2d/CCDrawNode.h"
 
 
 class Label;
@@ -70,15 +71,15 @@ namespace ccsp {
          * @return XPRichText instance.
          */
         static XPRichText* create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug);
-        void insertElement(RichElement* element, int index);
+        //void insertElement(RichElement* element, int index);
         void pushBackElement(RichElement* element);
 
         void formatText();
-//        //override functions.
-        virtual void ignoreContentAdaptWithSize(bool ignore) override;
+        //override functions.
+        //virtual void ignoreContentAdaptWithSize(bool ignore) override;
         virtual std::string getDescription() const override;
 
-        //static void removeTagDescription(const std::string& tag);
+    
 
         void openUrl(const std::string& url);
 
@@ -89,23 +90,44 @@ namespace ccsp {
          */
         void setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl);
 
+        Node* getRenderByID(int);
+        void addClickEventForRenderer(int i,std::function<void (Node*,Point)> cb);
+        void setRenderString(int,std::string);
+        void setRenderTexture(int,std::string);
+        
     CC_CONSTRUCTOR_ACCESS:
         virtual bool init() override;
    
     protected:
         virtual void adaptRenderers() override;
         virtual void initRenderer() override;
-        void pushToContainer(Node* renderer);
-        void handleTextRenderer(const std::string& text, const std::string& fontName, float fontSize, const Color3B& color,
+        void pushToContainer(int index,Node* renderer);
+        int handleTextRenderer(int index,const std::string& text, const std::string& fontName, float fontSize, const Color3B& color,
                                 GLubyte opacity, uint32_t flags, const std::string& url="",
                                 const Color3B& outlineColor = Color3B::WHITE, int outlineSize = -1,
                                 const Color3B& shadowColor = Color3B::BLACK, const cocos2d::Size& shadowOffset = Size(2.0, -2.0), int shadowBlurRadius = 0,
                                 const Color3B& glowColor = Color3B::WHITE);
-        void handleImageRenderer(const std::string& filePath, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
-        void handleCustomRenderer(Node* renderer);
+        int handleImageRenderer(int index,const std::string& filePath, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
+        int handleCustomRenderer(int index,Node* renderer);
         void formarRenderers();
         void addNewLine();
         int findSplitPositionForWord(cocos2d::Label* label, const std::string& text);
+        
+        float _findMaxHeightInAllRenders();
+        float _getLineHeight(Vector<Node*>* arr);
+         float _getLineWidth(Vector<Node*>* arr);
+        float _findMaxLineWidth();
+        float _formatOneLine(Vector<Node*>* arr,TextHAlignment,TextVAlignment,float offsetY);
+        void _adjustPositionY(float);
+        void _addAllRenders();
+        
+        Node* _getHighestRenderInLine(Vector<Node*>* arr);
+        void _debugDrawOneLine(Vector<Node*>* arr,float offsetX,float offsetY);
+        void _debugDrawAllLines();
+        void _updateClickArea();
+        void _onClick();
+        void _initClick();
+        
         
         bool _formatTextDirty;
         Vector<RichElement*> _richElements;
@@ -115,12 +137,17 @@ namespace ccsp {
         ValueMap _defaults;             /*!< default values */
         OpenUrlHandler _handleOpenUrl;  /*!< the callback for open URL */
         
-        float _lineInner;
-        Size _fixedSize;
+        float _lineInner=0;
+        float _fixWidth=0;
+         float _fixHeight=0;
+        bool _clickEnabled=false;
+        
+        float _maxLineWidth=0;
+       
         TextHAlignment _alignH;
         TextVAlignment _alignV;
-        int _newLinePolicy;
-        bool _debug;
+        int _newLinePolicy=0;
+        bool _debug=false;
         DrawNode* _drawNode;
     };
     

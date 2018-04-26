@@ -10,6 +10,7 @@
 #include "scripting/js-bindings/auto/jsb_cocos2dx_ui_auto.hpp"
 #include "scripting/js-bindings/manual/cocos2d_specifics.hpp"
 #include "ui/CocosGUI.h"
+#include "extensions/ccsp/jsb/define.h"
 
 template<class T>
 static bool dummy_constructor(JSContext *cx, uint32_t argc, jsval *vp)
@@ -36,13 +37,27 @@ JSObject *jsb_XPRichText_prototype;
 bool js_XPRichText_create(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
-    if (argc == 0) {
-        auto ret = ccsp::XPRichText::create();
+    
+    if (argc != 6) {
+        JS_ReportError(cx, "js_XPRichText_create : wrong number of arguments: %d, was expecting %d", argc, 6);
+        return false;
+    }
+    
+    float arg0=ccsp::JSB::Util::toFloat(cx,&args,0);
+    Size arg1=ccsp::JSB::Util::toSize(cx,&args,1);
+    TextHAlignment arg2=(TextHAlignment)ccsp::JSB::Util::toInt32(cx,&args,2);
+    TextVAlignment arg3=(TextVAlignment)ccsp::JSB::Util::toInt32(cx,&args,3);
+    int arg4=ccsp::JSB::Util::toInt32(cx,&args,4);
+    bool arg5=ccsp::JSB::Util::toBool(cx,&args,5);
+    
+    auto ret = ccsp::XPRichText::create(arg0,arg1,arg2,arg3,arg4,arg5);
+
+        //auto ret = ccsp::XPRichText::create(0,Size(0,0),TextHAlignment::LEFT,TextVAlignment::CENTER,0,false);
         js_type_class_t *typeClass = js_get_type_from_native<ccsp::XPRichText>(ret);
         JS::RootedObject jsret(cx, jsb_ref_autoreleased_create_jsobject(cx, ret, typeClass, "ccsp::XPRichText"));
         args.rval().set(OBJECT_TO_JSVAL(jsret));
         return true;
-    }
+    
     JS_ReportError(cx, "js_XPRichText_create : wrong number of arguments");
     return false;
 }
@@ -51,7 +66,22 @@ static bool js_XPRichText_ctor(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
-    ccsp::XPRichText *nobj = new (std::nothrow) ccsp::XPRichText();
+    
+    if (argc != 6) {
+        JS_ReportError(cx, "js_XPRichText_ctor : wrong number of arguments: %d, was expecting %d", argc, 6);
+        return false;
+    }
+    
+    float arg0=ccsp::JSB::Util::toFloat(cx,&args,0);
+    Size arg1=ccsp::JSB::Util::toSize(cx,&args,1);
+    TextHAlignment arg2=(TextHAlignment)ccsp::JSB::Util::toInt32(cx,&args,2);
+    TextVAlignment arg3=(TextVAlignment)ccsp::JSB::Util::toInt32(cx,&args,3);
+    int arg4=ccsp::JSB::Util::toInt32(cx,&args,4);
+    bool arg5=ccsp::JSB::Util::toBool(cx,&args,5);
+    
+    ccsp::XPRichText* nobj = new (std::nothrow) ccsp::XPRichText(arg0,arg1,arg2,arg3,arg4,arg5);
+    
+    //ccsp::XPRichText* nobj = new (std::nothrow) ccsp::XPRichText(0,Size(0,0),TextHAlignment::LEFT,TextVAlignment::CENTER,0,false);
     js_proxy_t* p = jsb_new_proxy(nobj, obj);
     jsb_ref_init(cx, &p->obj, nobj, "ccsp::XPRichText");
     bool isFound = false;
@@ -65,39 +95,57 @@ bool js_XPRichText_constructor(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     bool ok = true;
-    ccsp::XPRichText* cobj = new (std::nothrow) ccsp::XPRichText();
+    if (argc != 6) {
+        JS_ReportError(cx, "js_XPRichText_constructor : wrong number of arguments: %d, was expecting %d", argc, 6);
+        return false;
+    }
     
-    js_type_class_t *typeClass = js_get_type_from_native<ccsp::XPRichText>(cobj);
-    
-    // link the native object with the javascript object
-    JS::RootedObject jsobj(cx, jsb_ref_create_jsobject(cx, cobj, typeClass, "ccsp::XPRichText"));
-    args.rval().set(OBJECT_TO_JSVAL(jsobj));
-    if (JS_HasProperty(cx, jsobj, "_ctor", &ok) && ok)
-        ScriptingCore::getInstance()->executeFunctionWithOwner(OBJECT_TO_JSVAL(jsobj), "_ctor", args);
-    return true;
+    float arg0=ccsp::JSB::Util::toFloat(cx,&args,0);
+    Size arg1=ccsp::JSB::Util::toSize(cx,&args,1);
+    TextHAlignment arg2=(TextHAlignment)ccsp::JSB::Util::toInt32(cx,&args,2);
+    TextVAlignment arg3=(TextVAlignment)ccsp::JSB::Util::toInt32(cx,&args,3);
+    int arg4=ccsp::JSB::Util::toInt32(cx,&args,4);
+    bool arg5=ccsp::JSB::Util::toBool(cx,&args,5);
+
+    ccsp::XPRichText* cobj = new (std::nothrow) ccsp::XPRichText(arg0,arg1,arg2,arg3,arg4,arg5);
+
+        js_type_class_t *typeClass = js_get_type_from_native<ccsp::XPRichText>(cobj);
+
+        // link the native object with the javascript object
+        JS::RootedObject jsobj(cx, jsb_ref_create_jsobject(cx, cobj, typeClass, "ccsp::XPRichText"));
+        args.rval().set(OBJECT_TO_JSVAL(jsobj));
+        if (JS_HasProperty(cx, jsobj, "_ctor", &ok) && ok)
+            ScriptingCore::getInstance()->executeFunctionWithOwner(OBJECT_TO_JSVAL(jsobj), "_ctor", args);
+        return true;
 }
 
 
 bool js_XPRichText_pushBackElement(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
-    bool ok = true;
+    //bool ok = true;
     JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
     js_proxy_t *proxy = jsb_get_js_proxy(obj);
     ccsp::XPRichText* cobj = (ccsp::XPRichText *)(proxy ? proxy->ptr : NULL);
     JSB_PRECONDITION2( cobj, cx, false, "js_XPRichText_pushBackElement : Invalid Native Object");
     if (argc == 1) {
         cocos2d::ui::RichElement* arg0 = nullptr;
-        do {
-            if (args.get(0).isNull()) { arg0 = nullptr; break; }
-            if (!args.get(0).isObject()) { ok = false; break; }
-            js_proxy_t *jsProxy;
-            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
-            jsProxy = jsb_get_js_proxy(tmpObj);
-            arg0 = (cocos2d::ui::RichElement*)(jsProxy ? jsProxy->ptr : NULL);
-            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
-        } while (0);
-        JSB_PRECONDITION2(ok, cx, false, "js_XPRichText_pushBackElement : Error processing arguments");
+//        do {
+//            if (args.get(0).isNull()) { arg0 = nullptr; break; }
+//            if (!args.get(0).isObject()) { ok = false; break; }
+//            js_proxy_t *jsProxy;
+//            JS::RootedObject tmpObj(cx, args.get(0).toObjectOrNull());
+//            jsProxy = jsb_get_js_proxy(tmpObj);
+//            arg0 = (cocos2d::ui::RichElement*)(jsProxy ? jsProxy->ptr : NULL);
+//            JSB_PRECONDITION2( arg0, cx, false, "Invalid Native Object");
+//        } while (0);
+        
+        arg0=(cocos2d::ui::RichElement*)ccsp::JSB::Util::toObject(cx,&args,0);
+        if(arg0==nullptr){
+            JS_ReportError(cx, "js_XPRichText_pushBackElement : Error processing arguments");
+            return false;
+        }
+        //JSB_PRECONDITION2(ok, cx, false, "js_XPRichText_pushBackElement : Error processing arguments");
         cobj->pushBackElement(arg0);
         args.rval().setUndefined();
         return true;
@@ -126,7 +174,7 @@ void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
     };
     
     static JSFunctionSpec funcs[] = {
-         JS_FN("ctor", js_XPRichText_ctor, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("ctor", js_XPRichText_ctor, 6, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("pushBackElement", js_XPRichText_pushBackElement, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FS_END
         
@@ -177,7 +225,7 @@ void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
     };
     
     static JSFunctionSpec st_funcs[] = {
-        JS_FN("create", js_XPRichText_create, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+        JS_FN("create", js_XPRichText_create, 6, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         //JS_FN("createWithXML", js_cocos2dx_ui_RichText_createWithXML, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FS_END
     };

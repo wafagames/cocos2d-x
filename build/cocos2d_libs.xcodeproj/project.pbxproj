@@ -5875,6 +5875,10 @@
 		D8012B0B1F42BAC80097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
 		D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
 		D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
+		D805485D2091B6A6007D697C /* StrUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D805485B2091B6A6007D697C /* StrUtil.h */; };
+		D805485E2091B6A6007D697C /* StrUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D805485B2091B6A6007D697C /* StrUtil.h */; };
+		D805485F2091B6A6007D697C /* StrUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D805485C2091B6A6007D697C /* StrUtil.cpp */; };
+		D80548602091B6A6007D697C /* StrUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D805485C2091B6A6007D697C /* StrUtil.cpp */; };
 		D82F6061208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6062208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6063208F88DA00A910AB /* XPRichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* XPRichText.h */; };
@@ -7997,6 +8001,9 @@
 		D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyPool.h; sourceTree = "<group>"; };
 		D8012B081F42BAC80097FA3E /* UIUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UIUtil.cpp; path = ccsp/UIUtil.cpp; sourceTree = "<group>"; };
 		D8012B091F42BAC80097FA3E /* UIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIUtil.h; path = ccsp/UIUtil.h; sourceTree = "<group>"; };
+		D805483320918688007D697C /* Util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
+		D805485B2091B6A6007D697C /* StrUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrUtil.h; path = ccsp/StrUtil.h; sourceTree = "<group>"; };
+		D805485C2091B6A6007D697C /* StrUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrUtil.cpp; path = ccsp/StrUtil.cpp; sourceTree = "<group>"; };
 		D82F605F208F88DA00A910AB /* XPRichText.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XPRichText.cpp; path = ccsp/XPRichText.cpp; sourceTree = "<group>"; };
 		D82F6060208F88DA00A910AB /* XPRichText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XPRichText.h; path = ccsp/XPRichText.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
@@ -8117,6 +8124,7 @@
 		1551A334158F2AB200E66CFE = {
 			isa = PBXGroup;
 			children = (
+				D805483320918688007D697C /* Util.cpp */,
 				46A15FCC1807A544005B8026 /* AUTHORS */,
 				1A57FFF7180BC5160088DEC7 /* CHANGELOG */,
 				50272539190BF1B900AAF4ED /* cocos2d.cpp */,
@@ -11675,6 +11683,8 @@
 		D8D72DD01E95E271007341AF /* ccsp */ = {
 			isa = PBXGroup;
 			children = (
+				D805485C2091B6A6007D697C /* StrUtil.cpp */,
+				D805485B2091B6A6007D697C /* StrUtil.h */,
 				D8FB28011FEA8D5800EF0F64 /* JsonUtil.cpp */,
 				D8FB28001FEA8D5700EF0F64 /* JsonUtil.h */,
 				D8347E901EBC673000616927 /* TextureUtil.cpp */,
@@ -12774,6 +12784,7 @@
 				1A40D1181E8E56C7002E363A /* en.h in Headers */,
 				15AE190219AAD35000C27E9E /* CCComController.h in Headers */,
 				B6CAB37F1AF9AA1A00B9B856 /* btManifoldPoint.h in Headers */,
+				D805485D2091B6A6007D697C /* StrUtil.h in Headers */,
 				15AE18DE19AAD35000C27E9E /* TriggerObj.h in Headers */,
 				15AE183E19AAD2F700C27E9E /* CCSkeleton3D.h in Headers */,
 				507003231B69735300E83DDD /* HttpConnection-winrt.h in Headers */,
@@ -14521,6 +14532,7 @@
 				B6CAB2261AF9AA1A00B9B856 /* btCollisionCreateFunc.h in Headers */,
 				15AE194419AAD35100C27E9E /* CCComBase.h in Headers */,
 				15AE1A3B19AAD3D500C27E9E /* b2BroadPhase.h in Headers */,
+				D805485E2091B6A6007D697C /* StrUtil.h in Headers */,
 				15AE195619AAD35100C27E9E /* CCDisplayManager.h in Headers */,
 				15AE1B8719AADA9A00C27E9E /* UIButton.h in Headers */,
 				38F526411A48363B000DB7F7 /* ArmatureNodeReader.h in Headers */,
@@ -15365,6 +15377,7 @@
 				15AE1A7A19AAD40300C27E9E /* b2PolygonContact.cpp in Sources */,
 				3823842F1A259112002C4610 /* ParticleReader.cpp in Sources */,
 				C503066B1B60B583001E6D43 /* CCSkeletonNode.cpp in Sources */,
+				D805485F2091B6A6007D697C /* StrUtil.cpp in Sources */,
 				15AE191119AAD35000C27E9E /* CCProcessBase.cpp in Sources */,
 				B6CAB2B31AF9AA1A00B9B856 /* btConvexShape.cpp in Sources */,
 				15AE18EE19AAD35000C27E9E /* CCArmature.cpp in Sources */,
@@ -17702,6 +17715,7 @@
 				D8D72DE61E95ED62007341AF /* FileUtil.cpp in Sources */,
 				D8D72DE71E95ED62007341AF /* LogUtil.cpp in Sources */,
 				D8D72DE81E95ED62007341AF /* TimeUtil.cpp in Sources */,
+				D80548602091B6A6007D697C /* StrUtil.cpp in Sources */,
 				D8D72DE91E95ED62007341AF /* ZipUtil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
