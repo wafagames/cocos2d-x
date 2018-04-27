@@ -6,11 +6,12 @@
 //
 //
 
-#ifndef StrUtil_hpp
-#define StrUtil_hpp
+#ifndef StrUtil_h
+#define StrUtil_h
 
 #include <stdio.h>
 #include <map>
+#include <vector>
 
 namespace ccsp{
     class StrUtil

@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 #include "ui/UIWidget.h"
 #include "ui/GUIExport.h"
@@ -93,7 +94,8 @@ namespace ccsp {
 
         Node* getRenderByID(int);
         void addClickEventForRenderer(int i,std::function<void (Node*,Point)> cb);
-        void setRenderString(int,std::string);
+        void setRenderString(int,std::string,Color4B);
+         void setRenderString(int,std::string);
         void setRenderTexture(int,std::string);
         
     CC_CONSTRUCTOR_ACCESS:
@@ -126,7 +128,7 @@ namespace ccsp {
         void _debugDrawOneLine(Vector<Node*>* arr,float offsetX,float offsetY);
         void _debugDrawAllLines();
         void _updateClickArea();
-        void _onClick();
+        void _onClick(Ref* sender);
         void _initClick();
         
         
@@ -151,6 +153,7 @@ namespace ccsp {
         bool _debug=false;
         LayerColor* _backLayer;
         DrawNode* _drawNode;
+        std::vector<std::tuple<Rect,std::function<void(Node*,Point)>,Node*,int>> _clickAreaArr;
     };
     
 }

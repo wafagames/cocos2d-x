@@ -155,6 +155,82 @@ bool js_XPRichText_pushBackElement(JSContext *cx, uint32_t argc, jsval *vp)
     return false;
 }
 
+bool js_XPRichText_getRenderByID(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc == 1) {
+        int index=ccsp::JSB::Util::toInt32(cx,&args,0);
+        if(index<0){
+            JS_ReportError(cx, "js_XPRichText_getRenderByID : Error processing arguments");
+            return false;
+        }
+        ccsp::XPRichText* cobj=(ccsp::XPRichText*)ccsp::JSB::Util::getThis(cx,&args);
+        ccsp::JSB::Util::returnNode(cx,&args,cobj->getRenderByID(index));
+        return true;
+    }
+    JS_ReportError(cx, "js_XPRichText_getRenderByID : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
+
+bool js_XPRichText_setRenderString(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc >=2) {
+        int index=ccsp::JSB::Util::toInt32(cx,&args,0);
+        if(index<0){
+            JS_ReportError(cx, "js_XPRichText_setRenderString : Error processing arguments");
+            return false;
+        }
+        ccsp::XPRichText* richText=(ccsp::XPRichText*)ccsp::JSB::Util::getThis(cx,&args);
+        std::string str=ccsp::JSB::Util::toString(cx,&args,1);
+        Color4B color;
+        if(argc==2){
+            richText->setRenderString(index,str);
+        }
+        else if(argc==3){
+            color=ccsp::JSB::Util::toColor4B(cx, &args,2);
+            richText->setRenderString(index, str, color);
+        }
+        return true;
+    }
+    JS_ReportError(cx, "js_XPRichText_setRenderString : wrong number of arguments: %d, was expecting >=%d", argc, 2);
+    return false;
+}
+
+bool js_XPRichText_setRenderTexture(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==2) {
+        int index=ccsp::JSB::Util::toInt32(cx,&args,0);
+        if(index<0){
+            JS_ReportError(cx, "js_XPRichText_setRenderTexture : Error processing arguments");
+            return false;
+        }
+        ccsp::XPRichText* richText=(ccsp::XPRichText*)ccsp::JSB::Util::getThis(cx,&args);
+        std::string str=ccsp::JSB::Util::toString(cx,&args,1);
+        richText->setRenderTexture(index, str);
+        return true;
+    }
+    JS_ReportError(cx, "js_XPRichText_setRenderTexture : wrong number of arguments: %d, was expecting >=%d", argc, 2);
+    return false;
+}
+
+bool js_XPRichText_addClickEventForRenderer(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==2) {
+        int index=ccsp::JSB::Util::toInt32(cx,&args,0);
+        if(index<0){
+            JS_ReportError(cx, "js_XPRichText_addClickEventForRenderer : Error processing arguments");
+            return false;
+        }
+        ccsp::XPRichText* richText=(ccsp::XPRichText*)ccsp::JSB::Util::getThis(cx,&args);
+        std::string str=ccsp::JSB::Util::toString(cx,&args,1);
+        std::function<void(cocos2d::Node*,Point)> callback=ccsp::JSB::Util::toCallbackNodePoint(cx, &args, 1);
+        richText->addClickEventForRenderer(index, callback);
+        return true;
+    }
+    JS_ReportError(cx, "js_XPRichText_addClickEventForRenderer : wrong number of arguments: %d, was expecting >=%d", argc, 2);
+    return false;
+}
+
+
 extern JSObject *jsb_cocos2d_ui_Widget_prototype;
 
 void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
@@ -176,6 +252,10 @@ void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
     static JSFunctionSpec funcs[] = {
          JS_FN("ctor", js_XPRichText_ctor, 6, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("pushBackElement", js_XPRichText_pushBackElement, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("getRenderByID", js_XPRichText_getRenderByID, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("addClickEventForRenderer", js_XPRichText_addClickEventForRenderer, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("setRenderString", js_XPRichText_setRenderString, 3, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("setRenderTexture", js_XPRichText_setRenderTexture, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FS_END
         
 //        JS_FN("insertElement", js_cocos2dx_ui_RichText_insertElement, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),

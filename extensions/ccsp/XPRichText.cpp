@@ -76,13 +76,10 @@ XPRichText* XPRichText::create(float linneInner,Size fixedSize,TextHAlignment al
     return nullptr;
 }
 
-
 bool XPRichText::init()
 {
     if (Widget::init())
-    {
         return true;
-    }
     return false;
 }
 
@@ -113,14 +110,11 @@ void XPRichText::addNewLine()
     _elementRenders.push_back(new Vector<Node*>());
 }
 
-
 void XPRichText::pushBackElement(RichElement *element)
 {
     _richElements.pushBack(element);
     _formatTextDirty = true;
 }
-
-
 
 void XPRichText::formatText()
 {
@@ -752,17 +746,56 @@ void XPRichText::adaptRenderers()
 }
 
 void XPRichText::_updateClickArea(){
-    
+    for(auto info:_clickAreaArr){
+//        auto renderer=std::get<2>(info);
+//        if(renderer==nullptr || !renderer->isVisible())
+//            continue;
+//        auto area=std::get<0>(info);
+//        if(!area.size.width || !area.size.height)
+//            continue;
+//        if(area.containsPoint(pos2))
+//            std::get<1>(info)(renderer,pos2);
+        auto obj=getRenderByID(std::get<3>(info));
+        std::get<0>(info).size=obj->getContentSize();
+         std::get<0>(info).origin=obj->getPosition();
+        std::get<2>(info)=obj;
+    }
 }
-void XPRichText::_onClick(){
-    
+void XPRichText::_onClick(Ref* sender){
+    Point pos=getTouchEndPosition();
+    Point pos2=convertToNodeSpace(pos);
+    for(auto info:_clickAreaArr){
+        Rect area;
+        std::function<void(Node* node,Point p)> cb;
+        Node* renderer;
+        int index;
+        
+        std::tie(area,cb,renderer,index);
+        
+        //auto renderer=std::get<2>(info);
+        if(renderer==nullptr || !renderer->isVisible())
+            continue;
+        //auto area=std::get<0>(info);
+        if(!area.size.width || !area.size.height)
+            continue;
+        if(area.containsPoint(pos2))
+            //std::get<1>(info)(renderer,pos2);
+            cb(renderer,pos2);
+    }
 }
+
 void XPRichText::_initClick(){
-    
+    if(!_clickEnabled){
+        _clickEnabled=true;
+        setTouchEnabled(true);
+        addClickEventListener(CC_CALLBACK_1(XPRichText::_onClick,this));
+    }
 }
 
 void XPRichText::addClickEventForRenderer(int i, std::function<void(Node* node,Point p)> cb){
-    
+    if(!_clickEnabled)
+        _initClick();
+    _clickAreaArr.push_back(std::make_tuple(Rect(0,0,0,0),cb,nullptr,i));
 }
 
 void XPRichText::setRenderString(int index, std::string str){
@@ -775,14 +808,36 @@ void XPRichText::setRenderString(int index, std::string str){
     Size oldSize=obj->getContentSize();
     obj->setString(str);
     Size newSize=obj->getContentSize();
-    
-    if(oldSize.equals(newSize))
+
+    if(!oldSize.equals(newSize)){
+        if(_alignH==TextHAlignment::CENTER){
+            obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width)/2);
+        }else if(_alignH==TextHAlignment::RIGHT){
+            obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width));
+        }
+    }
+}
+
+void XPRichText::setRenderString(int index, std::string str,Color4B color){
+    Node* node=getRenderByID(index);
+    cocos2d::Label* obj=dynamic_cast<cocos2d::Label*>(node);
+    if(!obj){
+        CCLOG("richText.setRenderString:cannot find render by given index %d",index);
         return;
+    }
+    Size oldSize=obj->getContentSize();
+    obj->setString(str);
+    Size newSize=obj->getContentSize();
     
-    if(_alignH==TextHAlignment::CENTER){
-        obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width)/2);
-    }else if(_alignH==TextHAlignment::RIGHT){
-        obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width));
+    if(color!=obj->getTextColor())
+        obj->setTextColor(color);
+    
+    if(!oldSize.equals(newSize)){
+        if(_alignH==TextHAlignment::CENTER){
+            obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width)/2);
+        }else if(_alignH==TextHAlignment::RIGHT){
+            obj->setPositionX(obj->getPositionX()-(newSize.width-oldSize.width));
+        }
     }
 }
 

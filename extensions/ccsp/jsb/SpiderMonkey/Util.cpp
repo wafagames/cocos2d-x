@@ -8,8 +8,18 @@
 
 
 #include "Util.h"
+#include "cocos/scripting/js-bindings/manual/cocos2d_specifics.hpp"
+
 using namespace cocos2d;
 using namespace ccsp::JSB;
+
+void* Util::getThis(JSContext *cx, JS::CallArgs *args){
+    JS::RootedObject obj(cx, args->thisv().toObjectOrNull());
+    js_proxy_t *proxy = jsb_get_js_proxy(obj);
+    if(!proxy)
+        return NULL;
+    return proxy->ptr;
+}
 
 int Util::toInt32 (JSContext* cx, JS::CallArgs* args,int index)
 {
@@ -74,9 +84,39 @@ Point Util::toPoint (JSContext* cx, JS::CallArgs* args,int index)
 {
     Point p;
     if(!jsval_to_ccpoint(cx, args->get(index), &p))
-        return Point(0,0);
+        JS_ReportError(cx,"toPoint : jsval_to_ccpoint failed,arg index %d",index);
     
     return p;
+}
+
+Color4B  Util::toColor4B(JSContext* cx, JS::CallArgs* args,int index)
+{
+    Color4B color;
+    if(!jsval_to_cccolor4b(cx, args->get(index), &color))
+         JS_ReportError(cx,"toColor4B : jsval_to_cccolor4b failed,arg index %d",index);
+    return color;
+}
+
+std::function<void(cocos2d::Node*,Point)> Util::toCallbackNodePoint(JSContext* cx,JS::CallArgs*args,int index){
+        //std::function<void (cocos2d::Ref *)> callback=nullptr;
+        if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
+        {
+            JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
+            std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index), args->thisv()));
+            return [=](cocos2d::Node* sender,Point point) -> void {
+                JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+                jsval largv[2];
+                largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)sender));
+                largv[1] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Point>(cx, (cocos2d::Point*)&point));
+                
+                JS::RootedValue rval(cx);
+                bool succeed = func->invoke(1, &largv[0], &rval);
+                if (!succeed && JS_IsExceptionPending(cx)) {
+                    JS_ReportPendingException(cx);
+                }
+            };
+        }
+        return nullptr;
 }
 
 int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
@@ -91,4 +131,14 @@ int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* mems
     
     return size*sizeof(uint8_t);
 }
-               
+
+void Util::returnNode(JSContext* cx, JS::CallArgs* args,Node* node){
+    JS::RootedValue jsret(cx);
+    if (node) {
+        jsret = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)node));
+    } else {
+        jsret = JSVAL_NULL;
+    }
+    args->rval().set(jsret);
+}
+
