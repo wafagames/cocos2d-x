@@ -35,9 +35,22 @@ namespace ccsp{
                 static void* toObject(JSContext* cx, JS::CallArgs* args,int index);
                 static std::function<void(cocos2d::Node*,Point)> toCallbackNodePoint(JSContext* cx,JS::CallArgs*args,int index);
                 
+                void returnRect(JSContext* cx, JS::CallArgs* args,Rect v);
+                void returnInt(JSContext* cx, JS::CallArgs* args,int v);
+                void returnString(JSContext* cx, JS::CallArgs* args,std::string& v);
+                void returnCStr(JSContext* cx, JS::CallArgs* args,char* v);
+                static void returnPos(JSContext* cx, JS::CallArgs* args,Point p);
+                static void returnSize(JSContext* cx, JS::CallArgs* args,Size p);
+                void returnColor3B(JSContext* cx, JS::CallArgs* args,Color3B c);
+                 void returnColor4B(JSContext* cx, JS::CallArgs* args,Color4B c);
                 static void returnNode(JSContext* cx, JS::CallArgs* args,Node* node);
+                
                 static int returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
-               
+                static int returnUInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
+               static int returnInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
+                static int returnUInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
+                static int returnInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
+                static int returnUInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size);
             };
         //}
     }

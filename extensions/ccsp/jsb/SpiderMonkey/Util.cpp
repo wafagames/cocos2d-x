@@ -107,10 +107,11 @@ std::function<void(cocos2d::Node*,Point)> Util::toCallbackNodePoint(JSContext* c
                 JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
                 jsval largv[2];
                 largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)sender));
-                largv[1] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Point>(cx, (cocos2d::Point*)&point));
-                
+                const Vec2 p=Vec2(point.x,point.y);
+                largv[1]=vector2_to_jsval(cx,p);
+              
                 JS::RootedValue rval(cx);
-                bool succeed = func->invoke(1, &largv[0], &rval);
+                bool succeed = func->invoke(2, &largv[0], &rval);
                 if (!succeed && JS_IsExceptionPending(cx)) {
                     JS_ReportPendingException(cx);
                 }
@@ -119,17 +120,17 @@ std::function<void(cocos2d::Node*,Point)> Util::toCallbackNodePoint(JSContext* c
         return nullptr;
 }
 
-int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
-     JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
-    if (nullptr == array)
-        return 0;
-            
-        uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
-        memcpy(bufdata, memsrc, size*sizeof(uint8_t));
-            
-        args->rval().set(OBJECT_TO_JSVAL(array));
-    
-    return size*sizeof(uint8_t);
+
+void Util::returnInt(JSContext* cx, JS::CallArgs* args,int v){
+    args->rval().set(int32_to_jsval(cx,v));
+}
+
+void Util::returnString(JSContext* cx, JS::CallArgs* args,std::string& v){
+    args->rval().set(std_string_to_jsval(cx,v));
+}
+
+void Util::returnCStr(JSContext* cx, JS::CallArgs* args,char* v){
+    args->rval().set(c_string_to_jsval(cx,v));
 }
 
 void Util::returnNode(JSContext* cx, JS::CallArgs* args,Node* node){
@@ -142,3 +143,80 @@ void Util::returnNode(JSContext* cx, JS::CallArgs* args,Node* node){
     args->rval().set(jsret);
 }
 
+void Util::returnPos(JSContext* cx, JS::CallArgs* args,Point v){
+    args->rval().set(vector2_to_jsval(cx,v));
+}
+
+void Util::returnSize(JSContext* cx, JS::CallArgs* args,Size v){
+    args->rval().set(ccsize_to_jsval(cx,v));
+}
+
+void Util::returnColor3B(JSContext* cx, JS::CallArgs* args,Color3B v){
+    args->rval().set(cccolor3b_to_jsval(cx,v));
+}
+
+void Util::returnColor4B(JSContext* cx, JS::CallArgs* args,Color4B v){
+    args->rval().set(cccolor4b_to_jsval(cx,v));
+}
+
+void Util::returnRect(JSContext* cx, JS::CallArgs* args,Rect v){
+    args->rval().set(ccrect_to_jsval(cx,v));
+}
+
+int Util::returnUInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(uint8_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(uint8_t);
+}
+int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewInt8Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    int8_t* bufdata = (int8_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(int8_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(int8_t);
+}
+
+int Util::returnUInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewUint16Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    uint16_t* bufdata = (uint16_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(uint16_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(uint16_t);
+}
+int Util::returnInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewInt16Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    int16_t* bufdata = (int16_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(int16_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(int16_t);
+}
+
+int Util::returnUInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewUint32Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    uint32_t* bufdata = (uint32_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(uint32_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(uint8_t);
+}
+
+int Util::returnInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewInt32Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    int32_t* bufdata = (int32_t*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size*sizeof(int32_t));
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size*sizeof(int32_t);
+}

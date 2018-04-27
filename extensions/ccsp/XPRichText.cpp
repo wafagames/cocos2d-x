@@ -746,20 +746,16 @@ void XPRichText::adaptRenderers()
 }
 
 void XPRichText::_updateClickArea(){
+    std::vector<std::tuple<Rect,std::function<void(Node*,Point)>,Node*,int>> updatedClickArea;
     for(auto info:_clickAreaArr){
-//        auto renderer=std::get<2>(info);
-//        if(renderer==nullptr || !renderer->isVisible())
-//            continue;
-//        auto area=std::get<0>(info);
-//        if(!area.size.width || !area.size.height)
-//            continue;
-//        if(area.containsPoint(pos2))
-//            std::get<1>(info)(renderer,pos2);
-        auto obj=getRenderByID(std::get<3>(info));
-        std::get<0>(info).size=obj->getContentSize();
-         std::get<0>(info).origin=obj->getPosition();
-        std::get<2>(info)=obj;
+        int i=std::get<3>(info);
+        auto obj=getRenderByID(i);
+        Size size=obj->getContentSize();
+        Point pos=obj->getPosition();
+        updatedClickArea.push_back(std::make_tuple(Rect(pos.x,pos.y,size.width,size.height), std::get<1>(info),obj,i));
     }
+    _clickAreaArr.clear();
+    _clickAreaArr=updatedClickArea;
 }
 void XPRichText::_onClick(Ref* sender){
     Point pos=getTouchEndPosition();
@@ -770,7 +766,7 @@ void XPRichText::_onClick(Ref* sender){
         Node* renderer;
         int index;
         
-        std::tie(area,cb,renderer,index);
+        std::tie(area,cb,renderer,index)=info;
         
         //auto renderer=std::get<2>(info);
         if(renderer==nullptr || !renderer->isVisible())
@@ -795,6 +791,15 @@ void XPRichText::_initClick(){
 void XPRichText::addClickEventForRenderer(int i, std::function<void(Node* node,Point p)> cb){
     if(!_clickEnabled)
         _initClick();
+    Node* node=getRenderByID(i);
+    if(node){
+        Point pos=node->getPosition();
+        Size size=node->getContentSize();
+        if(size.width && size.height){
+            _clickAreaArr.push_back(std::make_tuple(Rect(pos.x,pos.y,size.width,size.height),cb,node,i));
+            return;
+        }
+    }
     _clickAreaArr.push_back(std::make_tuple(Rect(0,0,0,0),cb,nullptr,i));
 }
 
@@ -850,9 +855,9 @@ void XPRichText::setRenderTexture(int index, std::string texturePath){
     }
     
     if(texturePath[0]=='#')
-        obj->initWithSpriteFrameName(texturePath.substr(1,texturePath.length()-1));
+        obj->setSpriteFrame(texturePath.substr(1,texturePath.length()-1));
     else
-        obj->initWithFile(texturePath);
+        obj->setTexture(texturePath);
 }
 
 std::string XPRichText::getDescription() const
