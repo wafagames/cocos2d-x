@@ -58,7 +58,8 @@ namespace ccsp {
          * @js ctor
          * @lua new
          */
-        XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug);
+        XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,
+                   std::function<void(Node*,Size)>,bool debug);
         
         /**
          * @brief Default destructor.
@@ -72,7 +73,7 @@ namespace ccsp {
          *
          * @return XPRichText instance.
          */
-        static XPRichText* create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug);
+        static XPRichText* create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,std::function<void(Node*,Size)>,bool debug);
         //void insertElement(RichElement* element, int index);
         void pushBackElement(RichElement* element);
 
@@ -154,6 +155,8 @@ namespace ccsp {
         LayerColor* _backLayer;
         DrawNode* _drawNode;
         std::vector<std::tuple<Rect,std::function<void(Node*,Point)>,Node*,int>> _clickAreaArr;
+        std::function<void(Node*,Size)> _onRenderingEnd;
+        bool _onRenderingEndCalled=false;
     };
     
 }

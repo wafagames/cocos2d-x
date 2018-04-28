@@ -34,7 +34,7 @@ namespace ccsp{
                 static Color4B toColor4B (JSContext* cx, JS::CallArgs* args,int index);
                 static void* toObject(JSContext* cx, JS::CallArgs* args,int index);
                 static std::function<void(cocos2d::Node*,Point)> toCallbackNodePoint(JSContext* cx,JS::CallArgs*args,int index);
-                
+                 static std::function<void(cocos2d::Node*,Size)> toCallbackNodeSize(JSContext* cx,JS::CallArgs*args,int index);
                 void returnRect(JSContext* cx, JS::CallArgs* args,Rect v);
                 void returnInt(JSContext* cx, JS::CallArgs* args,int v);
                 void returnString(JSContext* cx, JS::CallArgs* args,std::string& v);

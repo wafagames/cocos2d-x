@@ -39,7 +39,7 @@ using namespace cocos2d::ui;
 using namespace ccsp;
 
 
-XPRichText::XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug)
+XPRichText::XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,std::function<void(Node*,Size)> cb,bool debug)
 : _formatTextDirty(true)
 , _leftSpaceWidth(0.0f)
 {
@@ -49,6 +49,7 @@ XPRichText::XPRichText(float linneInner,Size fixedSize,TextHAlignment alignH,Tex
     _alignH=alignH;
     _alignV=alignV;
     _newLinePolicy=newLinePolicy;
+    _onRenderingEnd=cb;
     _debug=debug;
 }
 
@@ -64,9 +65,9 @@ XPRichText::~XPRichText()
     _elementRenders.clear();
 }
 
-XPRichText* XPRichText::create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,bool debug)
+XPRichText* XPRichText::create(float linneInner,Size fixedSize,TextHAlignment alignH,TextVAlignment alignV,int newLinePolicy,std::function<void(Node*,Size)> cb,bool debug)
 {
-    XPRichText* widget = new (std::nothrow) XPRichText(linneInner,fixedSize,alignH,alignV,newLinePolicy,debug);
+    XPRichText* widget = new (std::nothrow) XPRichText(linneInner,fixedSize,alignH,alignV,newLinePolicy,cb,debug);
     if (widget && widget->init())
     {
         widget->autorelease();
@@ -283,6 +284,11 @@ void XPRichText::formatText()
             }
         }
         formarRenderers();
+        if(_onRenderingEnd && !_onRenderingEndCalled ){
+            _onRenderingEndCalled=false;
+            _onRenderingEnd(this,getContentSize());
+            _onRenderingEnd=nullptr;
+        }
         _formatTextDirty = false;
     }
 }
