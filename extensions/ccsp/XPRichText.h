@@ -95,6 +95,7 @@ namespace ccsp {
 
         Node* getRenderByID(int);
         void addClickEventForRenderer(int i,std::function<void (Node*,Point)> cb);
+        void setOnRenrderEnd(std::function<void(Node*,Size)>);
         void setRenderString(int,std::string,Color4B);
          void setRenderString(int,std::string);
         void setRenderTexture(int,std::string);

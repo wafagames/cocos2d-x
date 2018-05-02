@@ -131,7 +131,55 @@ std::function<void(cocos2d::Node*,Size)> Util::toCallbackNodeSize(JSContext* cx,
             jsval largv[2];
             largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)sender));
             //const Size p=Vec2(point.x,point.y);
-            largv[1]=ccsize_to_jsval(cx,size);
+            const Size s=Size(size.width,size.height);
+            largv[1]=ccsize_to_jsval(cx,s);
+            
+            JS::RootedValue rval(cx);
+            bool succeed = func->invoke(2, &largv[0], &rval);
+            if (!succeed && JS_IsExceptionPending(cx)) {
+                JS_ReportPendingException(cx);
+            }
+        };
+    }
+    return nullptr;
+}
+
+std::function<void(cocos2d::Node*,Size)> Util::toCallbackNodeSize(JSContext* cx,JS::CallArgs*args,int index,JS::HandleValue thisObj){
+    //std::function<void (cocos2d::Ref *)> callback=nullptr;
+    if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
+    {
+        JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
+        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index), thisObj));
+        return [=](cocos2d::Node* sender,Size size) -> void {
+            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+            jsval largv[2];
+            largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)sender));
+            //const Size p=Vec2(point.x,point.y);
+            const Size s=Size(size.width,size.height);
+            largv[1]=ccsize_to_jsval(cx,s);
+            
+            JS::RootedValue rval(cx);
+            bool succeed = func->invoke(2, &largv[0], &rval);
+            if (!succeed && JS_IsExceptionPending(cx)) {
+                JS_ReportPendingException(cx);
+            }
+        };
+    }
+    return nullptr;
+}
+std::function<void(cocos2d::Node*,Size)> Util::toCallbackNodeSizeWithoutThis(JSContext* cx,JS::CallArgs*args,int index,JS::RootedObject jstarget){
+    //std::function<void (cocos2d::Ref *)> callback=nullptr;
+    if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
+    {
+        //JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
+        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index)));
+        return [=](cocos2d::Node* sender,Size size) -> void {
+            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+            jsval largv[2];
+            largv[0] = OBJECT_TO_JSVAL(js_get_or_create_jsobject<cocos2d::Node>(cx, (cocos2d::Node*)sender));
+            //const Size p=Vec2(point.x,point.y);
+            const Size s=Size(size.width,size.height);
+            largv[1]=ccsize_to_jsval(cx,s);
             
             JS::RootedValue rval(cx);
             bool succeed = func->invoke(2, &largv[0], &rval);

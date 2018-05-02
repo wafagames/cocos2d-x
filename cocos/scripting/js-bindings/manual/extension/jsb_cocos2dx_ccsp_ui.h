@@ -26,7 +26,7 @@ bool js_XPRichText_getRenderByID(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_XPRichText_addClickEventForRenderer(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_XPRichText_setRenderString(JSContext *cx, uint32_t argc, jsval *vp);
 bool js_XPRichText_setRenderTexture(JSContext *cx, uint32_t argc, jsval *vp);
-
+bool js_XPRichText_setOnRenderEnd(JSContext *cx, uint32_t argc, jsval *vp);
 //void register_all_cocos2dx_ui(JSContext* cx, JS::HandleObject obj);
 //bool js_cocos2dx_ui_RichText_formatText(JSContext *cx, uint32_t argc, jsval *vp);
 //bool js_cocos2dx_ui_RichText_openUrl(JSContext *cx, uint32_t argc, jsval *vp);

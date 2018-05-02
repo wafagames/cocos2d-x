@@ -285,9 +285,9 @@ void XPRichText::formatText()
         }
         formarRenderers();
         if(_onRenderingEnd && !_onRenderingEndCalled ){
-            _onRenderingEndCalled=false;
+            _onRenderingEndCalled=true;
             _onRenderingEnd(this,getContentSize());
-            _onRenderingEnd=nullptr;
+            //_onRenderingEnd=nullptr;
         }
         _formatTextDirty = false;
     }
@@ -807,6 +807,10 @@ void XPRichText::addClickEventForRenderer(int i, std::function<void(Node* node,P
         }
     }
     _clickAreaArr.push_back(std::make_tuple(Rect(0,0,0,0),cb,nullptr,i));
+}
+
+void XPRichText::setOnRenrderEnd(std::function<void(Node* node,Size p)> cb){
+    _onRenderingEnd=cb;
 }
 
 void XPRichText::setRenderString(int index, std::string str){
