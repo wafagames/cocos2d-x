@@ -18,7 +18,7 @@ namespace ccsp{
     public:
         static DataUtil* getInstance();
         DataUtil();
-        void store(const std::string &key,unsigned char* buf,int length);
+        int store(const std::string &key,unsigned char* buf,int length);
         unsigned char* getBuf(const std::string &key);
         int getLength(const std::string &key);
         void freeBuf(const std::string &key);

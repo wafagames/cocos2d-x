@@ -17,6 +17,8 @@
 //#include <thread>
 #include "jsb_cocos2dx_ccsp_ui.h"
 
+#include "extensions/ccsp/jsb/define.h"
+
 USING_NS_CC;
 USING_NS_CC_EXT;
 
@@ -242,40 +244,321 @@ bool js_texture_print_sprite_frames_info(JSContext *cx, uint32_t argc, jsval *vp
     return  true;
 }
 
-bool js_DataUtil_getBuf(JSContext *cx, uint32_t argc, jsval *vp)
+//bool js_DataUtil_getBuf(JSContext *cx, uint32_t argc, jsval *vp)
+//{
+//    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+//    bool ok = true;
+//    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+//    if (argc == 1)
+//    {
+//        do{
+//            std::string arg0;
+//            ok &= jsval_to_std_string(cx, args.get(0), &arg0);
+//            JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_DataUtil_getBuf : Error processing arguments");
+//            unsigned char* buf = ccsp::DataUtil::getInstance()->getBuf(arg0);
+//            int size = ccsp::DataUtil::getInstance()->getLength(arg0);
+//            if(!buf || !size){
+//                JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : no data %s saved in DataUtil", arg0.c_str());
+//                break;
+//            }
+//
+//            JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
+//            if (nullptr == array)
+//                break;
+//
+//            uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
+//            memcpy(bufdata, buf, size*sizeof(uint8_t));
+//
+//            args.rval().set(OBJECT_TO_JSVAL(array));
+//            return true;
+//        }while(false);
+//    }
+//    JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : wrong number of arguments: %d, was expecting %d", argc, 1);
+//    return false;
+//}
+
+bool js_DataUtil_getBufUint8(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
-    bool ok = true;
-    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
-//    js_proxy_t *proxy = jsb_get_js_proxy(obj);
-//    ccsp::DataUtil* cobj = (ccsp::DataUtil *)(proxy ? proxy->ptr : NULL);
-//    JSB_PRECONDITION2( cobj, cx, false, "js_cocos2dx_DataUtil_getBuf : Invalid Native Object");
-    if (argc == 1)
-    {
-        do{
-            std::string arg0;
-            ok &= jsval_to_std_string(cx, args.get(0), &arg0);
-            JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_DataUtil_getBuf : Error processing arguments");
-            unsigned char* buf = ccsp::DataUtil::getInstance()->getBuf(arg0);
-            int size = ccsp::DataUtil::getInstance()->getLength(arg0);
-            if(!buf || !size){
-                JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : no data %s saved in DataUtil", arg0.c_str());
-                break;
-            }
-            
-            JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
-            if (nullptr == array)
-                break;
-            
-            uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
-            memcpy(bufdata, buf, size*sizeof(uint8_t));
-            
-            args.rval().set(OBJECT_TO_JSVAL(array));
-            return true;
-        }while(false);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufUint8 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
     }
-    JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : wrong number of arguments: %d, was expecting %d", argc, 1);
-    return false;
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufUint8 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnUInt8Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufUint16(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufUint16 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufUint16 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnUInt16Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufUint32(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufUint32 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufUint32 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnUInt32Array(cx, &args,buf, size);
+    return true;
+}
+
+bool js_DataUtil_getBufInt8(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufInt8 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufInt8 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnInt8Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufInt16(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufInt16 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufInt16 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnInt16Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufInt32(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufInt32 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufInt32 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnInt32Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufFloat32(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufFloat32 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufFloat32 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnFloat32Array(cx, &args,buf, size);
+    return true;
+}
+bool js_DataUtil_getBufFloat64(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if(argc!=1){
+        JS_ReportError(cx, "js_DataUtil_getBufFloat64 : wrong number of arguments: %d, was expecting %d", argc, 1);
+        return false;
+    }
+    std::string key=ccsp::JSB::Util::toString(cx,&args,0);
+    void* buf =(void*) ccsp::DataUtil::getInstance()->getBuf(key);
+    int size = ccsp::DataUtil::getInstance()->getLength(key);
+    if(!buf || !size){
+        JS_ReportError(cx, "js_DataUtil_getBufFloat64 : no data %s saved in DataUtil", key.c_str());
+        return false;
+    }
+    ccsp::JSB::Util::returnFloat64Array(cx, &args,buf, size);
+    return true;
+}
+
+bool js_DataUtil_storeUint8(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeUint8 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromUint8Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+bool js_DataUtil_storeUint16(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeUint16 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromUint16Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+     size*=2;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+bool js_DataUtil_storeUint32(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeUint32 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromUint32Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    size*=4;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+
+bool js_DataUtil_storeInt8(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeInt8 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromInt8Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+bool js_DataUtil_storeInt16(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeInt16 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromInt16Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    size*=2;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+bool js_DataUtil_storeInt32(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeInt32 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromInt32Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    size*=4;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+
+bool js_DataUtil_storeFloat32(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeFloat32 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromFloat32Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    size*=4;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
+}
+
+bool js_DataUtil_storeFloat64(JSContext *cx, uint32_t argc, jsval *vp){
+    if(argc!=2){
+        JS_ReportError(cx, "js_DataUtil_storeFloat64 : wrong number of arguments: %d, was expecting %d", argc, 2);
+        return false;
+    }
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    std::string name=ccsp::JSB::Util::toString(cx, &args,0);
+    int size=0;
+    void* buf=ccsp::JSB::Util::toVoidMemoryFromFloat64Array(cx,&args,1,&size);
+    if(!buf || !size){
+        ccsp::JSB::Util::returnInt(cx,&args,0);
+        return false;
+    }
+    size*=8;
+    ccsp::DataUtil::getInstance()->store(name,(unsigned char*)buf,size);
+    ccsp::JSB::Util::returnInt(cx,&args,size);
+    return true;
 }
 
 bool js_DataUtil_freeBuf(JSContext *cx, uint32_t argc, jsval *vp)
@@ -414,7 +697,27 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS_DefineFunction(cx,textureUtilObj, "printPlistInfo", js_texture_print_plist_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,textureUtilObj, "printSpriteFramesInfo", js_texture_print_sprite_frames_info, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     
-     JS_DefineFunction(cx, dataUtilObj, "getBuf", js_DataUtil_getBuf, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeUint8", js_DataUtil_storeUint8, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeUint16", js_DataUtil_storeUint16, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeUint32", js_DataUtil_storeUint32, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeInt8", js_DataUtil_storeInt8, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeInt16", js_DataUtil_storeInt16, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeInt32", js_DataUtil_storeInt32, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    
+    JS_DefineFunction(cx, dataUtilObj, "storeFloat32", js_DataUtil_storeFloat32, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "storeFloat64", js_DataUtil_storeFloat64, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+
+    
+    JS_DefineFunction(cx, dataUtilObj, "getBufUint8", js_DataUtil_getBufUint8, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufUint16", js_DataUtil_getBufUint16, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufUint32", js_DataUtil_getBufUint32, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufInt8", js_DataUtil_getBufInt8, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufInt16", js_DataUtil_getBufInt16, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufInt32", js_DataUtil_getBufInt32, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+ 
+    JS_DefineFunction(cx, dataUtilObj, "getBufFloat32", js_DataUtil_getBufFloat32, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, dataUtilObj, "getBufFloat64", js_DataUtil_getBufFloat64, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    
     JS_DefineFunction(cx, dataUtilObj, "freeBuf", js_DataUtil_freeBuf, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     
     JS_DefineFunction(cx,uiUtilObj, "seekNodeByName", js_UIUtil_seekNodeByName, 2, JSPROP_READONLY | JSPROP_PERMANENT);

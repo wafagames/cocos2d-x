@@ -1,11 +1,8 @@
 //
-//  FileUtil.cpp
+//  Util.cpp
 //  cocos2d_libs
 //
-//  Created by Joe on 2016/11/12.
-//
-//
-
+//  Created by Joe on 2019/4/12.
 
 #include "Util.h"
 #include "cocos/scripting/js-bindings/manual/cocos2d_specifics.hpp"
@@ -71,6 +68,78 @@ void* Util::toObject(JSContext *cx, JS::CallArgs *args, int index){
     return jsProxy->ptr;
 }
 
+void* Util::toVoidMemoryFromUint8Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Uint8)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromUint16Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Uint16)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromUint32Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Uint32)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromInt8Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Int8)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromInt16Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Int16)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromInt32Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Int32)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromFloat32Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Float32)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
+void* Util::toVoidMemoryFromFloat64Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
+    GLsizei count;
+    void* buf;
+    if(JSB_jsval_typedarray_to_dataptr(cx, args->get(index), &count, &buf, js::Scalar::Float64)){
+        *size=count;
+        return buf;
+    }
+    return  nullptr;
+}
 Size Util::toSize (JSContext* cx, JS::CallArgs* args,int index)
 {
     Size size;
@@ -233,60 +302,79 @@ void Util::returnRect(JSContext* cx, JS::CallArgs* args,Rect v){
     args->rval().set(ccrect_to_jsval(cx,v));
 }
 
-int Util::returnUInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnUInt8Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
     if (nullptr == array)
         return 0;
     uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(uint8_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size*sizeof(uint8_t);
 }
-int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnInt8Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewInt8Array(cx, size));
     if (nullptr == array)
         return 0;
     int8_t* bufdata = (int8_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(int8_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size*sizeof(int8_t);
 }
 
-int Util::returnUInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnUInt16Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewUint16Array(cx, size));
     if (nullptr == array)
         return 0;
     uint16_t* bufdata = (uint16_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(uint16_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
-    return size*sizeof(uint16_t);
+    return size;
 }
-int Util::returnInt16Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnInt16Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewInt16Array(cx, size));
     if (nullptr == array)
         return 0;
     int16_t* bufdata = (int16_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(int16_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
-    return size*sizeof(int16_t);
+    return size;
 }
 
-int Util::returnUInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnUInt32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewUint32Array(cx, size));
     if (nullptr == array)
         return 0;
     uint32_t* bufdata = (uint32_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(uint32_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
-    return size*sizeof(uint8_t);
+    return size;
 }
 
-int Util::returnInt32Array(JSContext* cx, JS::CallArgs* args,int index,void* memsrc,int size){
+int Util::returnInt32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
     JS::RootedObject array(cx, JS_NewInt32Array(cx, size));
     if (nullptr == array)
         return 0;
     int32_t* bufdata = (int32_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size*sizeof(int32_t));
+    memcpy(bufdata, memsrc, size);
     args->rval().set(OBJECT_TO_JSVAL(array));
-    return size*sizeof(int32_t);
+    return size;
+}
+
+int Util::returnFloat32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewFloat32Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    float* bufdata = (float*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size);
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size;
+}
+int Util::returnFloat64Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int size){
+    JS::RootedObject array(cx, JS_NewFloat64Array(cx, size));
+    if (nullptr == array)
+        return 0;
+    float* bufdata = (float*)JS_GetArrayBufferViewData(array);
+    memcpy(bufdata, memsrc, size);
+    args->rval().set(OBJECT_TO_JSVAL(array));
+    return size;
 }

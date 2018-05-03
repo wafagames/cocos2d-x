@@ -444,7 +444,9 @@ bool JSB_jsval_typedarray_to_dataptr( JSContext *cx, JS::HandleValue vp, GLsizei
             case js::Scalar::Float32:
                 *data = JS_GetFloat32ArrayData(jsobj);
                 break;
-
+            case js::Scalar::Float64:
+                *data = JS_GetFloat64ArrayData(jsobj);
+                break;
             default:
                 JSB_PRECONDITION2(false, cx, false, "Unsupported typedarray type");
                 break;

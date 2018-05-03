@@ -24,10 +24,12 @@ DataUtil::DataUtil(){
    
 }
 
-void DataUtil::store(const std::string &key,unsigned char* buf,int length){
+int DataUtil::store(const std::string &key,unsigned char* buf,int length){
     if(length<=0)
-        return;
+        return 0;
     unsigned char* newBuf=(unsigned char*)malloc(length);
+    if(!newBuf)
+        return 0;
     memcpy(newBuf,buf,length);
     unsigned char* oldBuf=_map_data[key];
     if(oldBuf){
@@ -35,6 +37,7 @@ void DataUtil::store(const std::string &key,unsigned char* buf,int length){
     }
     _map_data[key]=newBuf;
     _map_len[key]=length;
+    return length;
 }
 
 unsigned char* DataUtil::getBuf(const std::string &key){
