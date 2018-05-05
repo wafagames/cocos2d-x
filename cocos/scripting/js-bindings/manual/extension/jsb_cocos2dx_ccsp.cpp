@@ -244,39 +244,6 @@ bool js_texture_print_sprite_frames_info(JSContext *cx, uint32_t argc, jsval *vp
     return  true;
 }
 
-//bool js_DataUtil_getBuf(JSContext *cx, uint32_t argc, jsval *vp)
-//{
-//    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
-//    bool ok = true;
-//    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
-//    if (argc == 1)
-//    {
-//        do{
-//            std::string arg0;
-//            ok &= jsval_to_std_string(cx, args.get(0), &arg0);
-//            JSB_PRECONDITION2(ok, cx, false, "js_cocos2dx_DataUtil_getBuf : Error processing arguments");
-//            unsigned char* buf = ccsp::DataUtil::getInstance()->getBuf(arg0);
-//            int size = ccsp::DataUtil::getInstance()->getLength(arg0);
-//            if(!buf || !size){
-//                JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : no data %s saved in DataUtil", arg0.c_str());
-//                break;
-//            }
-//
-//            JS::RootedObject array(cx, JS_NewUint8Array(cx, size));
-//            if (nullptr == array)
-//                break;
-//
-//            uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
-//            memcpy(bufdata, buf, size*sizeof(uint8_t));
-//
-//            args.rval().set(OBJECT_TO_JSVAL(array));
-//            return true;
-//        }while(false);
-//    }
-//    JS_ReportError(cx, "js_cocos2dx_DataUtil_getBuf : wrong number of arguments: %d, was expecting %d", argc, 1);
-//    return false;
-//}
-
 bool js_DataUtil_getBufUint8(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -308,7 +275,7 @@ bool js_DataUtil_getBufUint16(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufUint16 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnUInt16Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnUInt16Array(cx, &args,buf, size/2);
     return true;
 }
 bool js_DataUtil_getBufUint32(JSContext *cx, uint32_t argc, jsval *vp)
@@ -325,7 +292,7 @@ bool js_DataUtil_getBufUint32(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufUint32 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnUInt32Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnUInt32Array(cx, &args,buf, size/4);
     return true;
 }
 
@@ -360,7 +327,7 @@ bool js_DataUtil_getBufInt16(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufInt16 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnInt16Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnInt16Array(cx, &args,buf, size/2);
     return true;
 }
 bool js_DataUtil_getBufInt32(JSContext *cx, uint32_t argc, jsval *vp)
@@ -377,7 +344,7 @@ bool js_DataUtil_getBufInt32(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufInt32 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnInt32Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnInt32Array(cx, &args,buf, size/4);
     return true;
 }
 bool js_DataUtil_getBufFloat32(JSContext *cx, uint32_t argc, jsval *vp)
@@ -394,7 +361,7 @@ bool js_DataUtil_getBufFloat32(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufFloat32 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnFloat32Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnFloat32Array(cx, &args,buf, size/4);
     return true;
 }
 bool js_DataUtil_getBufFloat64(JSContext *cx, uint32_t argc, jsval *vp)
@@ -411,7 +378,7 @@ bool js_DataUtil_getBufFloat64(JSContext *cx, uint32_t argc, jsval *vp)
         JS_ReportError(cx, "js_DataUtil_getBufFloat64 : no data %s saved in DataUtil", key.c_str());
         return false;
     }
-    ccsp::JSB::Util::returnFloat64Array(cx, &args,buf, size);
+    ccsp::JSB::Util::returnFloat64Array(cx, &args,buf, size/8);
     return true;
 }
 

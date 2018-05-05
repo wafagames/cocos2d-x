@@ -165,6 +165,10 @@ ccs._parser = cc.Class.extend({
 
     registerParser: function(widget, parse){
         this.parsers[widget] = parse;
+    },
+
+    getParser:function (key) {
+        return this.parsers[key];
     }
 });
 

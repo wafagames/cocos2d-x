@@ -345,5 +345,5 @@ void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
     JS_SetProperty(cx, proto, "__is_ref", JS::TrueHandleValue);
     // add the proto and JSClass to the type->js info hash table
     jsb_register_class<ccsp::XPRichText>(cx, jsb_XPRichText_class, proto, parent_proto);
-    anonEvaluate(cx, global, "(function () { ccsp.ui.XPRichText.extend = cc.Class.extend; })()");
+    anonEvaluate(cx, global, "(function () { jsb.XPRichText.extend = cc.Class.extend; })()");
 }

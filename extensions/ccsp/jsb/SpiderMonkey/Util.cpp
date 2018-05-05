@@ -326,7 +326,7 @@ int Util::returnUInt16Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int s
     if (nullptr == array)
         return 0;
     uint16_t* bufdata = (uint16_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*2);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }
@@ -335,7 +335,7 @@ int Util::returnInt16Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int si
     if (nullptr == array)
         return 0;
     int16_t* bufdata = (int16_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*2);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }
@@ -345,7 +345,7 @@ int Util::returnUInt32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int s
     if (nullptr == array)
         return 0;
     uint32_t* bufdata = (uint32_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*4);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }
@@ -355,7 +355,7 @@ int Util::returnInt32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int si
     if (nullptr == array)
         return 0;
     int32_t* bufdata = (int32_t*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*4);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }
@@ -365,7 +365,7 @@ int Util::returnFloat32Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int 
     if (nullptr == array)
         return 0;
     float* bufdata = (float*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*4);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }
@@ -374,7 +374,7 @@ int Util::returnFloat64Array(JSContext* cx, JS::CallArgs* args,void* memsrc,int 
     if (nullptr == array)
         return 0;
     float* bufdata = (float*)JS_GetArrayBufferViewData(array);
-    memcpy(bufdata, memsrc, size);
+    memcpy(bufdata, memsrc, size*8);
     args->rval().set(OBJECT_TO_JSVAL(array));
     return size;
 }

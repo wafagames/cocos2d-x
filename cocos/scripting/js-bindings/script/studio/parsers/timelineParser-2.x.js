@@ -287,7 +287,7 @@
 
         widget.setUnifySizeEnabled(false);
         //widget.setLayoutComponentEnabled(true);
-        widget.ignoreContentAdaptWithSize(false);
+        widget.ignoreContentAdaptWithSize(enableContent);  //edit by flyingkisser
         !enableContent && setContentSize(widget, json["Size"]);
 
         var name = json["Name"];

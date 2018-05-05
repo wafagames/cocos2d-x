@@ -627,7 +627,7 @@ void ScriptingCore::createGlobalContext() {
     JS_SetSecurityCallbacks(_rt, &securityCallbacks);
     JS_SetNativeStackQuota(_rt, JSB_MAX_STACK_QUOTA);
 
-    _cx = JS_NewContext(_rt, 32 * 1024);
+    _cx = JS_NewContext(_rt, 128 * 1024);
 
     JS::RuntimeOptionsRef(_rt).setIon(true);
     JS::RuntimeOptionsRef(_rt).setBaseline(true);
