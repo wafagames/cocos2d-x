@@ -5890,6 +5890,8 @@
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
 		D8347E951EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
+		D85C62DB20D0009F00197087 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D85C62D920D0009F00197087 /* FlowField.cpp */; };
+		D85C62DC20D0009F00197087 /* FlowField.h in Headers */ = {isa = PBXBuildFile; fileRef = D85C62DA20D0009F00197087 /* FlowField.h */; };
 		D8D72DD91E95E27C007341AF /* FileUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD11E95E27C007341AF /* FileUtil.cpp */; };
 		D8D72DDA1E95E27C007341AF /* FileUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8D72DD21E95E27C007341AF /* FileUtil.h */; };
 		D8D72DDB1E95E27C007341AF /* LogUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD31E95E27C007341AF /* LogUtil.cpp */; };
@@ -8014,6 +8016,8 @@
 		D82F608520924A4900A910AB /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
+		D85C62D920D0009F00197087 /* FlowField.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FlowField.cpp; path = ccsp/FlowField.cpp; sourceTree = "<group>"; };
+		D85C62DA20D0009F00197087 /* FlowField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlowField.h; path = ccsp/FlowField.h; sourceTree = "<group>"; };
 		D8D72DD11E95E27C007341AF /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ccsp/FileUtil.cpp; sourceTree = "<group>"; };
 		D8D72DD21E95E27C007341AF /* FileUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileUtil.h; path = ccsp/FileUtil.h; sourceTree = "<group>"; };
 		D8D72DD31E95E27C007341AF /* LogUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogUtil.cpp; path = ccsp/LogUtil.cpp; sourceTree = "<group>"; };
@@ -11731,6 +11735,8 @@
 				D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */,
 				D82F605F208F88DA00A910AB /* XPRichText.cpp */,
 				D82F6060208F88DA00A910AB /* XPRichText.h */,
+				D85C62D920D0009F00197087 /* FlowField.cpp */,
+				D85C62DA20D0009F00197087 /* FlowField.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -11897,6 +11903,7 @@
 				15AE1BE519AAE01E00C27E9E /* CCTableView.h in Headers */,
 				B603F1AA1AC8EA0900A9579C /* CCTerrain.h in Headers */,
 				15AE1BD319AAE01E00C27E9E /* CCControlPotentiometer.h in Headers */,
+				D85C62DC20D0009F00197087 /* FlowField.h in Headers */,
 				15AE1B6E19AADA9900C27E9E /* UIHelper.h in Headers */,
 				B230ED7319B417AE00364AA8 /* CCTrianglesCommand.h in Headers */,
 				B6DD2FB11B04825B00E47F5F /* RecastDebugDraw.h in Headers */,
@@ -15436,6 +15443,7 @@
 				50ABBE491925AB6F00A911A9 /* CCEventAcceleration.cpp in Sources */,
 				B665E28E1AA80A6500DDB1C5 /* CCPUDynamicAttributeTranslator.cpp in Sources */,
 				3823843D1A259140002C4610 /* SingleNodeReader.cpp in Sources */,
+				D85C62DB20D0009F00197087 /* FlowField.cpp in Sources */,
 				1A5701C1180BCB5A0088DEC7 /* CCLabelBMFont.cpp in Sources */,
 				B665E30A1AA80A6500DDB1C5 /* CCPUNoise.cpp in Sources */,
 				15AE182C19AAD2F700C27E9E /* CCMeshVertexIndexData.cpp in Sources */,
