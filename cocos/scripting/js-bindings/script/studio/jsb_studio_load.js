@@ -42,17 +42,27 @@ ccs._load = (function(){
             return cc.log("%s load error, must be json file", file);
 
         var parse;
+        var parseKey="";
         if(!type){
-            if(json["widgetTree"])
+            if(json["widgetTree"]){
                 parse = parser["ccui"];
-            else if(json["nodeTree"])
+                parseKey="ccui";
+            }
+            else if(json["nodeTree"]){
                 parse = parser["timeline"];
-            else if(json["Content"] && json["Content"]["Content"])
+                parseKey="timeline";
+            }
+            else if(json["Content"] && json["Content"]["Content"]){
                 parse = parser["timeline"];
-            else if(json["gameobjects"])
+                parseKey="timeline";
+            }
+            else if(json["gameobjects"]){
                 parse = parser["scene"];
+                parseKey="scene";
+            }
         }else{
             parse = parser[type];
+            parseKey=type;
         }
 
         if(!parse){
@@ -71,7 +81,7 @@ ccs._load = (function(){
             cc.log("Can't find the parser : %s", file);
             return new cc.Node();
         }
-
+        cc.log("begin to parse use %s version %s",parseKey,version);
         return currentParser.parse(file, json, path) || null;
     };
 
@@ -88,13 +98,26 @@ ccs._load = (function(){
         if(!parser[name])
             parser[name] = {};
         parser[name][version] = target;
+        //console.log("load.registerParser "+name+" "+version);
     };
 
     load.getParser = function(name, version){
-        if(name && version)
+        if(name && version){
+            // if( parser[name] &&  parser[name][version])
+            //     console.log("load.getParser return "+name+" version "+version);
+            // else if(parser[name])
+            //     console.log("load.getParser return "+name+" no version "+version);
+            // else
+            //     console.log("load.getParser return undefined no "+name+" no version "+version);
             return parser[name] ? parser[name][version] : undefined;
-        if(name)
+        }
+
+        if(name){
+            //console.log("load.getParser return "+name);
             return parser[name];
+        }
+
+        //console.log("load.getParser return parser");
         return parser;
     };
 
@@ -108,12 +131,19 @@ ccs._load = (function(){
 
     var parserReg = /([^\.](\.\*)?)*$/;
     var getParser = function(parser, version){
-        if(parser[version])
+        if(parser[version]){
+            //console.log("getParser return "+version);
             return parser[version];
-        else if(version === "*")
+        }
+        else if(version === "*"){
+            //console.log("getParser return null");
             return null;
-        else
+        }
+        else{
+            //console.log("getParser call getParser "+version.replace(parserReg, "*"));
             return getParser(parser, version.replace(parserReg, "*"));
+        }
+
     };
 
     return load;
@@ -165,6 +195,7 @@ ccs._parser = cc.Class.extend({
 
     registerParser: function(widget, parse){
         this.parsers[widget] = parse;
+        //console.log("ccs._parser.registerParser:reg for "+widget);
     },
 
     getParser:function (key) {
