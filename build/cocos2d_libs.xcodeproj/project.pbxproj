@@ -5890,6 +5890,10 @@
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
 		D8347E951EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
+		D8910A2020D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
+		D8910A2120D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
+		D8910A2220D2A46C00728B20 /* FlowField.h in Headers */ = {isa = PBXBuildFile; fileRef = D8910A1F20D2A46C00728B20 /* FlowField.h */; };
+		D8910A2320D2A46C00728B20 /* FlowField.h in Headers */ = {isa = PBXBuildFile; fileRef = D8910A1F20D2A46C00728B20 /* FlowField.h */; };
 		D8D72DD91E95E27C007341AF /* FileUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD11E95E27C007341AF /* FileUtil.cpp */; };
 		D8D72DDA1E95E27C007341AF /* FileUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8D72DD21E95E27C007341AF /* FileUtil.h */; };
 		D8D72DDB1E95E27C007341AF /* LogUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8D72DD31E95E27C007341AF /* LogUtil.cpp */; };
@@ -8014,6 +8018,8 @@
 		D82F608520924A4900A910AB /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
+		D8910A1E20D2A46C00728B20 /* FlowField.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FlowField.cpp; path = ccsp/FlowField.cpp; sourceTree = "<group>"; };
+		D8910A1F20D2A46C00728B20 /* FlowField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlowField.h; path = ccsp/FlowField.h; sourceTree = "<group>"; };
 		D8D72DD11E95E27C007341AF /* FileUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileUtil.cpp; path = ccsp/FileUtil.cpp; sourceTree = "<group>"; };
 		D8D72DD21E95E27C007341AF /* FileUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileUtil.h; path = ccsp/FileUtil.h; sourceTree = "<group>"; };
 		D8D72DD31E95E27C007341AF /* LogUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogUtil.cpp; path = ccsp/LogUtil.cpp; sourceTree = "<group>"; };
@@ -11731,6 +11737,8 @@
 				D8FB27EB1FE92AAD00EF0F64 /* EventUtil.h */,
 				D82F605F208F88DA00A910AB /* XPRichText.cpp */,
 				D82F6060208F88DA00A910AB /* XPRichText.h */,
+				D8910A1E20D2A46C00728B20 /* FlowField.cpp */,
+				D8910A1F20D2A46C00728B20 /* FlowField.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -12337,6 +12345,7 @@
 				1A40D13F1E8E56C7002E363A /* stack.h in Headers */,
 				B665E2CC1AA80A6500DDB1C5 /* CCPUGravityAffectorTranslator.h in Headers */,
 				15AE189519AAD33D00C27E9E /* CCLayerLoader.h in Headers */,
+				D8910A2220D2A46C00728B20 /* FlowField.h in Headers */,
 				1A57028C180BCC900088DEC7 /* CCSpriteFrameCache.h in Headers */,
 				B6CAB21D1AF9AA1A00B9B856 /* btBoxBoxCollisionAlgorithm.h in Headers */,
 				B6CAAFEC1AF9A9E100B9B856 /* CCPhysics3DConstraint.h in Headers */,
@@ -14268,6 +14277,7 @@
 				B6CAB3161AF9AA1A00B9B856 /* btBoxCollision.h in Headers */,
 				5034CA2E191D591100CE6051 /* ccShader_PositionTextureA8Color.frag in Headers */,
 				B6CAB31A1AF9AA1A00B9B856 /* btCompoundFromGimpact.h in Headers */,
+				D8910A2320D2A46C00728B20 /* FlowField.h in Headers */,
 				15AE1A4F19AAD3D500C27E9E /* b2Shape.h in Headers */,
 				29394CF519B01DBA00D2DE1A /* UIWebViewImpl-ios.h in Headers */,
 				50ABBD5B1925AB0000A911A9 /* Vec2.h in Headers */,
@@ -15728,6 +15738,7 @@
 				B6CAB26D1AF9AA1A00B9B856 /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				B6CAB3251AF9AA1A00B9B856 /* btGImpactBvh.cpp in Sources */,
 				50FC3F9E1D74C0A3001C936A /* CCController.cpp in Sources */,
+				D8910A2020D2A46C00728B20 /* FlowField.cpp in Sources */,
 				B665E2721AA80A6500DDB1C5 /* CCPUDoPlacementParticleEventHandler.cpp in Sources */,
 				50ABBD3C1925AB0000A911A9 /* CCGeometry.cpp in Sources */,
 				B6CAB3C31AF9AA1A00B9B856 /* btHingeConstraint.cpp in Sources */,
@@ -17561,6 +17572,7 @@
 				15AE1B8019AADA9A00C27E9E /* UITextAtlas.cpp in Sources */,
 				15AE195919AAD35100C27E9E /* CCProcessBase.cpp in Sources */,
 				B6DD2FB81B04825B00E47F5F /* DetourAlloc.cpp in Sources */,
+				D8910A2120D2A46C00728B20 /* FlowField.cpp in Sources */,
 				B665E3FF1AA80A6600DDB1C5 /* CCPUSphereCollider.cpp in Sources */,
 				15AE18D319AAD33D00C27E9E /* CCParticleSystemQuadLoader.cpp in Sources */,
 				B6CAB4CE1AF9AA1A00B9B856 /* SpuContactResult.cpp in Sources */,
