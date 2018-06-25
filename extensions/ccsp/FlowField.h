@@ -16,7 +16,7 @@ namespace ccsp {
         static void doParseByPFTable(int xNum,int yNum,unsigned char* pfTable,int validTileCount);
         static void doParse(int xNum,int yNum,unsigned char* pfTable,int validTileCount,unsigned char* ffTable,
                             int startIndex,int count);
-    }
+    };
 }
 
 #endif /* FlowField_h */
