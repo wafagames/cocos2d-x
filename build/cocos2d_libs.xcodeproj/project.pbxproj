@@ -8012,7 +8012,6 @@
 		D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAllocatorStrategyPool.h; sourceTree = "<group>"; };
 		D8012B081F42BAC80097FA3E /* UIUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UIUtil.cpp; path = ccsp/UIUtil.cpp; sourceTree = "<group>"; };
 		D8012B091F42BAC80097FA3E /* UIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIUtil.h; path = ccsp/UIUtil.h; sourceTree = "<group>"; };
-		D805483320918688007D697C /* Util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
 		D805485B2091B6A6007D697C /* StrUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrUtil.h; path = ccsp/StrUtil.h; sourceTree = "<group>"; };
 		D805485C2091B6A6007D697C /* StrUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrUtil.cpp; path = ccsp/StrUtil.cpp; sourceTree = "<group>"; };
 		D824F81920E1E6EA00579E61 /* DeviceUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceUtil.cpp; sourceTree = "<group>"; };
@@ -8142,7 +8141,6 @@
 		1551A334158F2AB200E66CFE = {
 			isa = PBXGroup;
 			children = (
-				D805483320918688007D697C /* Util.cpp */,
 				46A15FCC1807A544005B8026 /* AUTHORS */,
 				1A57FFF7180BC5160088DEC7 /* CHANGELOG */,
 				50272539190BF1B900AAF4ED /* cocos2d.cpp */,

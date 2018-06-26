@@ -633,7 +633,7 @@ bool js_FlowField_doParseByPFTable(JSContext *cx, uint32_t argc, jsval *vp){
             JS_ReportError(cx, "js_FlowField_doParseByPFTable : Error processing arguments");
             return false;
         }
-        std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toInt322(cx, &args, 4);
+        std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toCallbackBufSize(cx, &args, 4);
         ccsp::FlowField::doParseByPFTable(xNum,yNum,validTileCount,pfTable,callback);
         return true;
     }
@@ -674,7 +674,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "dataUtil", &dataUtilObj);
     get_or_create_js_obj(cx, jsbObj, "uiUtil", &uiUtilObj);
     get_or_create_js_obj(cx, jsbObj, "eventUtil", &eventUtilObj);
-    get_or_create_js_obj(cx, jsbObj, "flowFiled", &flowFieldObj);
+    get_or_create_js_obj(cx, jsbObj, "flowField", &flowFieldObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);

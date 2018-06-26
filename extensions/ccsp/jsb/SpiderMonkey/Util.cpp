@@ -286,7 +286,7 @@ std::function<void(unsigned char*,int)> toCallbackBufSize(JSContext* cx,JS::Call
     return nullptr;
 }
 
-std::function<void(unsigned char*,int)> Util::toInt322 (JSContext* cx, JS::CallArgs* args,int index)
+std::function<void(unsigned char*,int)> Util::toCallbackBufSize (JSContext* cx, JS::CallArgs* args,int index)
 {
     if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
     {
