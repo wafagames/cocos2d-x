@@ -633,7 +633,7 @@ bool js_FlowField_doParseByPFTable(JSContext *cx, uint32_t argc, jsval *vp){
             JS_ReportError(cx, "js_FlowField_doParseByPFTable : Error processing arguments");
             return false;
         }
-        std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toCallbackBufSize(cx, &args, 4);
+        std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toInt322(cx, &args, 4);
         ccsp::FlowField::doParseByPFTable(xNum,yNum,validTileCount,pfTable,callback);
         return true;
     }

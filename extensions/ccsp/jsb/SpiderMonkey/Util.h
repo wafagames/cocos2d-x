@@ -26,6 +26,7 @@ namespace ccsp{
                 
                 static float toFloat (JSContext* cx, JS::CallArgs* args,int index);
                 static int toInt32 (JSContext* cx, JS::CallArgs* args,int index);
+                 static std::function<void(unsigned char*,int)> toInt322 (JSContext* cx, JS::CallArgs* args,int index);
                 static bool toBool (JSContext* cx, JS::CallArgs* args,int index);
                 static std::string toString (JSContext* cx, JS::CallArgs* args,int index);
                 static void* toVoidMemoryFromUint8Array(JSContext* cx,JS::CallArgs* args,int index,int* size);
