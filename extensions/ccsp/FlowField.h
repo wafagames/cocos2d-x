@@ -13,9 +13,11 @@
 namespace ccsp {
     class FlowField{
     public:
-        static void doParseByPFTable(int xNum,int yNum,unsigned char* pfTable,int validTileCount);
-        static void doParse(int xNum,int yNum,unsigned char* pfTable,int validTileCount,unsigned char* ffTable,
+        static void doParseByPFTable(int xNum,int yNum,int validTileCount,unsigned char* pfTable,
+                                     std::function<void (unsigned char*,int)> cb);
+        static void doParse(int xNum,int yNum,int validTileCount,unsigned char* pfTable,unsigned char* ffTable,
                             int startIndex,int count);
+        static void clean();
     };
 }
 

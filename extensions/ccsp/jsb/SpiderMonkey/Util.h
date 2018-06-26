@@ -45,6 +45,7 @@ namespace ccsp{
                 static std::function<void(cocos2d::Node*,Size)> toCallbackNodeSize(JSContext* cx,JS::CallArgs*args,int index);
                 static std::function<void(cocos2d::Node*,Size)> toCallbackNodeSize(JSContext* cx,JS::CallArgs*args,int index,JS::HandleValue thisObj);
                 static std::function<void(cocos2d::Node*,Size)> toCallbackNodeSizeWithoutThis(JSContext* cx,JS::CallArgs*args,int index,JS::RootedObject jstarget);
+                 static std::function<void(unsigned char*,int)> toCallbackBufSize(JSContext* cx,JS::CallArgs*args,int index);
                 static void returnRect(JSContext* cx, JS::CallArgs* args,Rect v);
                 static void returnInt(JSContext* cx, JS::CallArgs* args,int v);
                 static void returnString(JSContext* cx, JS::CallArgs* args,std::string& v);

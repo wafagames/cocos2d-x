@@ -5879,6 +5879,10 @@
 		D805485E2091B6A6007D697C /* StrUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D805485B2091B6A6007D697C /* StrUtil.h */; };
 		D805485F2091B6A6007D697C /* StrUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D805485C2091B6A6007D697C /* StrUtil.cpp */; };
 		D80548602091B6A6007D697C /* StrUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D805485C2091B6A6007D697C /* StrUtil.cpp */; };
+		D824F81B20E1E6EA00579E61 /* DeviceUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D824F81920E1E6EA00579E61 /* DeviceUtil.cpp */; };
+		D824F81C20E1E6EA00579E61 /* DeviceUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D824F81920E1E6EA00579E61 /* DeviceUtil.cpp */; };
+		D824F81D20E1E6EA00579E61 /* DeviceUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D824F81A20E1E6EA00579E61 /* DeviceUtil.h */; };
+		D824F81E20E1E6EA00579E61 /* DeviceUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D824F81A20E1E6EA00579E61 /* DeviceUtil.h */; };
 		D82F6061208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6062208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6063208F88DA00A910AB /* XPRichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* XPRichText.h */; };
@@ -8011,6 +8015,8 @@
 		D805483320918688007D697C /* Util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
 		D805485B2091B6A6007D697C /* StrUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrUtil.h; path = ccsp/StrUtil.h; sourceTree = "<group>"; };
 		D805485C2091B6A6007D697C /* StrUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrUtil.cpp; path = ccsp/StrUtil.cpp; sourceTree = "<group>"; };
+		D824F81920E1E6EA00579E61 /* DeviceUtil.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceUtil.cpp; sourceTree = "<group>"; };
+		D824F81A20E1E6EA00579E61 /* DeviceUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceUtil.h; sourceTree = "<group>"; };
 		D82F605F208F88DA00A910AB /* XPRichText.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = XPRichText.cpp; path = ccsp/XPRichText.cpp; sourceTree = "<group>"; };
 		D82F6060208F88DA00A910AB /* XPRichText.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XPRichText.h; path = ccsp/XPRichText.h; sourceTree = "<group>"; };
 		D82F608220924A4900A910AB /* define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = define.h; sourceTree = "<group>"; };
@@ -11739,6 +11745,8 @@
 				D82F6060208F88DA00A910AB /* XPRichText.h */,
 				D8910A1E20D2A46C00728B20 /* FlowField.cpp */,
 				D8910A1F20D2A46C00728B20 /* FlowField.h */,
+				D824F81920E1E6EA00579E61 /* DeviceUtil.cpp */,
+				D824F81A20E1E6EA00579E61 /* DeviceUtil.h */,
 			);
 			name = ccsp;
 			sourceTree = "<group>";
@@ -12501,6 +12509,7 @@
 				15AE1B7119AADA9900C27E9E /* CocosGUI.h in Headers */,
 				B665E2381AA80A6500DDB1C5 /* CCPUBoxEmitterTranslator.h in Headers */,
 				B6CAB4211AF9AA1A00B9B856 /* btMLCPSolver.h in Headers */,
+				D824F81D20E1E6EA00579E61 /* DeviceUtil.h in Headers */,
 				15AE1A2D19AAD3D500C27E9E /* b2DynamicTree.h in Headers */,
 				B6CAB3E31AF9AA1A00B9B856 /* btUniversalConstraint.h in Headers */,
 				B665E39C1AA80A6500DDB1C5 /* CCPUPointEmitterTranslator.h in Headers */,
@@ -14987,6 +14996,7 @@
 				B5A738991BB0051F00BAAEF8 /* UIPageViewIndicator.h in Headers */,
 				15AE1BED19AAE01E00C27E9E /* CCControlColourPicker.h in Headers */,
 				15AE195019AAD35100C27E9E /* CCDatas.h in Headers */,
+				D824F81E20E1E6EA00579E61 /* DeviceUtil.h in Headers */,
 				50864CEB1C7BC90A00B3BAB1 /* cpCompat62.h in Headers */,
 				15AE18B319AAD33D00C27E9E /* CCBReader.h in Headers */,
 				15AE18D219AAD33D00C27E9E /* CCNodeLoaderListener.h in Headers */,
@@ -15808,6 +15818,7 @@
 				38ACD1FC1A27111900C3093D /* WidgetCallBackHandlerProtocol.cpp in Sources */,
 				15FB209B1AE7C57D00C31518 /* sweep_context.cc in Sources */,
 				B6CAAFEE1AF9A9E100B9B856 /* CCPhysics3DDebugDrawer.cpp in Sources */,
+				D824F81B20E1E6EA00579E61 /* DeviceUtil.cpp in Sources */,
 				B6CAB5051AF9AA1A00B9B856 /* btGeometryUtil.cpp in Sources */,
 				15AE1A7619AAD40300C27E9E /* b2EdgeAndPolygonContact.cpp in Sources */,
 				D8012B0A1F42BAC80097FA3E /* UIUtil.cpp in Sources */,
@@ -16923,6 +16934,7 @@
 				B665E35B1AA80A6500DDB1C5 /* CCPUOnRandomObserver.cpp in Sources */,
 				50ABC0161926664800A911A9 /* CCImage.cpp in Sources */,
 				B665E3AB1AA80A6500DDB1C5 /* CCPURandomiserTranslator.cpp in Sources */,
+				D824F81C20E1E6EA00579E61 /* DeviceUtil.cpp in Sources */,
 				B6DD2FE21B04825B00E47F5F /* DetourPathCorridor.cpp in Sources */,
 				1A01C6A518F58F7500EFE3A6 /* CCNotificationCenter.cpp in Sources */,
 				292DB14E19B4574100A80320 /* UIEditBoxImpl-mac.mm in Sources */,

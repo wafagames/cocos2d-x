@@ -616,6 +616,35 @@ bool js_EventUtil_getUserDataAsJsonString(JSContext *cx, uint32_t argc, jsval *v
     return false;
 }
 
+/*
+ int xNum,int yNum,int validTileCount,unsigned char* pfTable,
+ std::function<void (unsigned char*,int)> cb
+ */
+
+bool js_FlowField_doParseByPFTable(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==5) {
+        int xNum=ccsp::JSB::Util::toInt32(cx,&args,0);
+        int yNum=ccsp::JSB::Util::toInt32(cx,&args,1);
+        int validTileCount=ccsp::JSB::Util::toInt32(cx,&args,2);
+        int size=0;
+        unsigned char* pfTable=(unsigned char*)ccsp::JSB::Util::toVoidMemoryFromUint8Array(cx,&args,3,&size);
+        if(!pfTable){
+            JS_ReportError(cx, "js_FlowField_doParseByPFTable : Error processing arguments");
+            return false;
+        }
+        std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toCallbackBufSize(cx, &args, 4);
+        ccsp::FlowField::doParseByPFTable(xNum,yNum,validTileCount,pfTable,callback);
+        return true;
+    }
+    JS_ReportError(cx, "js_FlowField_doParseByPFTable : wrong number of arguments: %d, was expecting >=%d", argc, 5);
+    return false;
+}
+bool js_FlowField_clean(JSContext *cx, uint32_t argc, jsval *vp){
+    ccsp::FlowField::clean();
+    return true;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -625,8 +654,9 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject zipUtilObj(cx);
  	JS::RootedObject dataUtilObj(cx);
     JS::RootedObject uiUtilObj(cx);
-     JS::RootedObject textureUtilObj(cx);
-     JS::RootedObject eventUtilObj(cx);
+    JS::RootedObject textureUtilObj(cx);
+    JS::RootedObject eventUtilObj(cx);
+    JS::RootedObject flowFieldObj(cx);
     
     JS::RootedObject tmpObj(cx);
    
@@ -644,6 +674,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "dataUtil", &dataUtilObj);
     get_or_create_js_obj(cx, jsbObj, "uiUtil", &uiUtilObj);
     get_or_create_js_obj(cx, jsbObj, "eventUtil", &eventUtilObj);
+    get_or_create_js_obj(cx, jsbObj, "flowFiled", &flowFieldObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -691,4 +722,6 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 
      JS_DefineFunction(cx,eventUtilObj, "getUserDataAsJsonString", js_EventUtil_getUserDataAsJsonString, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     
+    JS_DefineFunction(cx,flowFieldObj, "doParseByPFTable", js_FlowField_doParseByPFTable, 5, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx,flowFieldObj, "clean", js_FlowField_clean, 0, JSPROP_READONLY | JSPROP_PERMANENT);
 }
