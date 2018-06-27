@@ -11,6 +11,7 @@ LOCAL_SRC_FILES := \
 ccsp/DataUtil.cpp \
 ccsp/EventUtil.cpp \
 ccsp/FileUtil.cpp \
+ccsp/FlowField.cpp \
 ccsp/JsonUtil.cpp \
 ccsp/LogUtil.cpp \
 ccsp/StrUtil.cpp \
