@@ -261,37 +261,12 @@ std::function<void(cocos2d::Node*,Size)> Util::toCallbackNodeSizeWithoutThis(JSC
     return nullptr;
 }
 
-std::function<void(unsigned char*,int)> toCallbackBufSize(JSContext* cx,JS::CallArgs*args,int index){
-    if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
-    {
-        JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
-        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index), args->thisv()));
-        return [=](unsigned char* buf,int bufSize) -> void {
-            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
-            jsval largv[2];
-            JS::RootedObject array(cx, JS_NewUint8Array(cx, bufSize));
-            if (nullptr == array)
-                return;
-            uint8_t* bufdata = (uint8_t*)JS_GetArrayBufferViewData(array);
-            memcpy(bufdata, buf, bufSize);
-            largv[0] = OBJECT_TO_JSVAL(array);
-            largv[1]=int32_to_jsval(cx,bufSize);
-            JS::RootedValue rval(cx);
-            bool succeed = func->invoke(2, &largv[0], &rval);
-            if (!succeed && JS_IsExceptionPending(cx)) {
-                JS_ReportPendingException(cx);
-            }
-        };
-    }
-    return nullptr;
-}
-
 std::function<void(unsigned char*,int)> Util::toCallbackBufSize (JSContext* cx, JS::CallArgs* args,int index)
 {
     if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
     {
         JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
-        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index), args->thisv()));
+        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index),args->thisv()));
         return [=](unsigned char* buf,int bufSize) -> void {
             JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
             jsval largv[2];

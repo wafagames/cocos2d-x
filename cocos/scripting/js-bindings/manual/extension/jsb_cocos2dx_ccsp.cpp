@@ -616,11 +616,6 @@ bool js_EventUtil_getUserDataAsJsonString(JSContext *cx, uint32_t argc, jsval *v
     return false;
 }
 
-/*
- int xNum,int yNum,int validTileCount,unsigned char* pfTable,
- std::function<void (unsigned char*,int)> cb
- */
-
 bool js_FlowField_doParseByPFTable(JSContext *cx, uint32_t argc, jsval *vp){
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     if (argc ==5) {

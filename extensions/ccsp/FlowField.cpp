@@ -5,61 +5,101 @@
 //  Created by joe on 2018/6/14.
 //
 
-#include "FlowField.h"
-#include "DeviceUtil.h"
 #include <cstdio>
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include "FlowField.h"
+#include "DeviceUtil.h"
+#include  "cocos2d.h"
 
 using namespace ccsp;
+using namespace cocos2d;
+
 static int s_jobNum=0;
+static int s_jobDone=0;
 static std::mutex s_mtx;
 static std::condition_variable s_cv;
 static unsigned char* s_ffTable;
 static int s_bufSize=0;
 static std::function<void (unsigned char*,int)> s_cb;
+std::vector<std::thread> s_threadVector;
+//static void waitJob(){
+//    if(s_jobDone<s_jobNum){
+//         CCLOG("FlowField.waitJob:%d finished, %d total,wait threads",s_jobDone,s_jobNum);
+//        for(auto &thread:s_threadVector){
+//            if(thread.joinable())
+//                thread.join();
+//        }
+//    }else{
+//        CCLOG("FlowField.waitJob:job finished, no need to wait");
+//    }
+//    //job finished
+//    if(s_cb){
+//        CCLOG("FlowField.waitJob:all threads finished,performFunctionInCocosThread");
+//        Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
+//             s_cb(s_ffTable,s_bufSize);
+//        });
+//    }
+//}
 
-static void waitJob(){
-    std::unique_lock<std::mutex> lock(s_mtx);
-    int jobDone=0;
-    while(jobDone < s_jobNum){
-        s_cv.wait(lock);
-        jobDone++;
-    }
-    
-    //job finished
-    if(s_cb){
-        s_cb(s_ffTable,s_bufSize);
-    }
-}
-
-void FlowField::doParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
+static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
                                  std::function<void (unsigned char*,int)> cb){
     int cores=DeviceUtil::getCpuCoreNum();
+    //cores=1;
+    int c2=std::thread::hardware_concurrency();
+    CCLOG("FlowField.doParseByPFTable:cores from DeviceUtil %d, hardware_concurrency %d",cores,c2);
     int total=xNum*yNum;
-    if(s_bufSize && s_bufSize!=total){
-        free(s_ffTable);
-        s_bufSize=total;
-        s_ffTable=(unsigned char*)malloc(total);
+    s_threadVector.clear();
+    if(!s_ffTable){
+        s_bufSize=total*validTileCount;
+        s_ffTable=(unsigned char*)malloc(s_bufSize);
+        CCLOG("FlowField.doParseByPFTable:malloc %.2fM",((float)s_bufSize)/1024/1024);
     }
-    memset(s_ffTable,0,total);
+    if(s_bufSize && s_bufSize!=total*validTileCount){
+        free(s_ffTable);
+        s_bufSize=total*validTileCount;
+        s_ffTable=(unsigned char*)malloc(s_bufSize);
+        CCLOG("FlowField.doParseByPFTable:malloc %.2fM",((float)s_bufSize)/1024/1024);
+    }
+    memset(s_ffTable,0,s_bufSize);
     
     s_cb=cb;
     int count=total/cores;
     int checked=0;
     int needCheck=count;
     s_jobNum=0;
+    s_jobDone=0;
+
     while (checked<total) {
         s_jobNum++;
         std::thread jobThread(FlowField::doParse,xNum,yNum,validTileCount,pfTable,s_ffTable,checked,needCheck);
+        s_threadVector.push_back(std::move(jobThread));
         checked+=needCheck;
         if(checked+count>total)
             needCheck=total-checked;
+        if(!needCheck)
+            break;
     }
-    std::thread waitThread(waitJob);
+    CCLOG("FlowField.doParseByPFTable:%d threads created",s_jobNum);
+    for(auto &thread:s_threadVector){
+        thread.join();
+    }
+//    std::thread waitThread(waitJob);
+//    waitThread.detach();
+    if(s_cb){
+        CCLOG("FlowField.waitJob:all threads finished,performFunctionInCocosThread");
+        Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
+            s_cb(s_ffTable,s_bufSize);
+        });
+    }
 }
 
+void FlowField::doParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
+                                 std::function<void (unsigned char*,int)> cb){
+    std::thread doJob(threadParseByPFTable,xNum,yNum,validTileCount,pfTable,cb);
+    doJob.detach();
+}
 
 void FlowField::clean(){
     if(s_bufSize){
@@ -69,9 +109,13 @@ void FlowField::clean(){
     }
 }
 
+//static void printLog(int startIndex,int newIndex,int value,const char* d){
+//    CCLOG("round %d,index %d write value %d(%s)",startIndex,newIndex,value,d);
+//}
+
 void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *pfTable, 
                    unsigned char *ffTable, int index, int count){
-    std::unique_lock<std::mutex> lock(s_mtx);
+    //std::unique_lock<std::mutex> lock(s_mtx);
     int x=0;
     int y=0;
     int parseIndex=0;
@@ -105,11 +149,19 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
         x=parseIndex%xNum;
         y=parseIndex/xNum;
         startIndex=x+xNum*y;
+        if(startIndex==3){
+            arraySize=1024;
+        }
         xyArr1[0]=x;
-        xyArr2[1]=y;
+        xyArr1[1]=y;
         ffTable[offset+startIndex]=1;
         filled=1;
         xyArrLength=2;
+        if(offset+maxIndex>s_bufSize){
+            CCLOG("FlowField.doParse:exceed buf limit,error!!!! bufsize %d,offset %d,maxIndex %d",s_bufSize,offset,maxIndex);
+            break;
+        }
+       
         while(true){
             k=0;
             for(int i=0;i<xyArrLength;i+=2){
@@ -128,6 +180,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"left");
                 }
                 
                 //left down
@@ -144,6 +197,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"left_down");
                 }
                 
                 //down
@@ -156,6 +210,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"down");
                 }
                 
                 //right-down
@@ -172,6 +227,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"right_down");
                 }
                 
                 //right
@@ -184,6 +240,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"right");
                 }
                 
                 //right-up
@@ -200,6 +257,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"right_up");
                 }
                 
                 //up
@@ -212,6 +270,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"up");
                 }
                 
                 //left-up
@@ -228,6 +287,7 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
                     xyArr2[k]=newX;
                     xyArr2[k+1]=newY;
                     k+=2;
+                    //printLog(startIndex,newIndex,value+1,"left_up");
                 }
             }
             xyArrLength=k;
@@ -241,6 +301,8 @@ void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *p
             memcpy(xyArr1,xyArr2,arraySize);
         }
         offset+=maxIndex;
+        //CCLog("%d checked",parseIndex);
     }
-    s_cv.notify_one();
+    //s_cv.notify_one();
+    s_jobDone++;
 }
