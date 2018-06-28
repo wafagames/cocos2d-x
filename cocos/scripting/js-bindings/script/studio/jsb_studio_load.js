@@ -81,7 +81,7 @@ ccs._load = (function(){
             cc.log("Can't find the parser : %s", file);
             return new cc.Node();
         }
-        cc.log("begin to parse use %s version %s",parseKey,version);
+        //cc.log("begin to parse use %s version %s",parseKey,version);
         return currentParser.parse(file, json, path) || null;
     };
 

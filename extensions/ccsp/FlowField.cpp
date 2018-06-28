@@ -46,7 +46,6 @@ std::vector<std::thread> s_threadVector;
 static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
                                  std::function<void (unsigned char*,int)> cb){
     int cores=DeviceUtil::getCpuCoreNum();
-    //cores=1;
     int c2=std::thread::hardware_concurrency();
     CCLOG("FlowField.doParseByPFTable:cores from DeviceUtil %d, hardware_concurrency %d",cores,c2);
     int total=xNum*yNum;
@@ -60,7 +59,7 @@ static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned
         free(s_ffTable);
         s_bufSize=total*validTileCount;
         s_ffTable=(unsigned char*)malloc(s_bufSize);
-        CCLOG("FlowField.doParseByPFTable:malloc %.2fM",((float)s_bufSize)/1024/1024);
+        CCLOG("FlowField.doParseByPFTable:free and re-alloc %.2fM",((float)s_bufSize)/1024/1024);
     }
     memset(s_ffTable,0,s_bufSize);
     

@@ -9,6 +9,7 @@ LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
 ccsp/DataUtil.cpp \
+ccsp/DeviceUtil.cpp \
 ccsp/EventUtil.cpp \
 ccsp/FileUtil.cpp \
 ccsp/FlowField.cpp \
