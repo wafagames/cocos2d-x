@@ -329,7 +329,7 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     for(int idx = (int)text.size()-1; idx >=0; )
     {
         int newidx = getPrevWord(text, idx);
-        if (newidx >=0)
+        if (newidx >0)
         {
             idx = newidx;
             auto leftStr = Helper::getSubStringOfUTF8String(text, 0, idx);
@@ -337,6 +337,8 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
             if (label->getContentSize().width <= originalLeftSpaceWidth)
                 return idx;
         }
+        else if(newidx==0)
+            return 0;
         else
         {
             if (startingNewLine)
@@ -348,6 +350,59 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     // no spaces... return the original label + size
     label->setString(text);
     return (int)text.size();
+}
+
+int XPRichText::findSplitPositionForChar(cocos2d::Label* label, const std::string& text)
+{
+    float textRendererWidth = label->getContentSize().width;
+
+    float overstepPercent = (-_leftSpaceWidth) / textRendererWidth;
+    std::string curText = text;
+    size_t stringLength = StringUtils::getCharacterCountInUTF8String(text);
+
+    // rough estimate
+    int leftLength = stringLength * (1.0f - overstepPercent);
+
+    // The adjustment of the new line position
+    auto originalLeftSpaceWidth = _leftSpaceWidth + textRendererWidth;
+    auto leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+    label->setString(leftStr);
+    auto leftWidth = label->getContentSize().width;
+    if (originalLeftSpaceWidth < leftWidth) {
+        // Have protruding
+        for (;;) {
+            leftLength--;
+            leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            label->setString(leftStr);
+            leftWidth = label->getContentSize().width;
+            if (leftWidth <= originalLeftSpaceWidth) {
+                break;
+            }
+            else if (leftLength <= 0) {
+                break;
+            }
+        }
+    }
+    else if (leftWidth < originalLeftSpaceWidth) {
+        // A wide margin
+        for (;;) {
+            leftLength++;
+            leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            label->setString(leftStr);
+            leftWidth = label->getContentSize().width;
+            if (originalLeftSpaceWidth < leftWidth) {
+                leftLength--;
+                break;
+            }
+            else if (static_cast<int>(stringLength) <= leftLength) {
+                break;
+            }
+        }
+    }
+
+    if (leftLength < 0)
+        leftLength = (int)text.size()-1;
+    return leftLength;
 }
 
 int XPRichText::handleTextRenderer(int index,const std::string& text, const std::string& fontName, float fontSize, const Color3B &color,
@@ -396,6 +451,10 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
     {
         int leftLength = 0;
          leftLength = findSplitPositionForWord(textRenderer, text);
+        if(!leftLength)
+            leftLength = findSplitPositionForChar(textRenderer, text);
+        if(!leftLength)
+            leftLength=1;
         
 //        if (static_cast<RichText::WrapMode>(_defaults.at(KEY_WRAP_MODE).asInt()) == WRAP_PER_WORD)
 //            leftLength = findSplitPositionForWord(textRenderer, text);

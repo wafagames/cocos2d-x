@@ -117,7 +117,7 @@ namespace ccsp {
         void formarRenderers();
         void addNewLine();
         int findSplitPositionForWord(cocos2d::Label* label, const std::string& text);
-        
+        int findSplitPositionForChar(cocos2d::Label* label, const std::string& text);
         float _findMaxHeightInAllRenders();
         float _getLineHeight(Vector<Node*>* arr);
          float _getLineWidth(Vector<Node*>* arr);
