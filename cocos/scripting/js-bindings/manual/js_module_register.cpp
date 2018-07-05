@@ -56,13 +56,13 @@ int js_module_register()
     sc->addRegisterCallback(register_all_cocos2dx_extension_manual);
     
     // chipmunk can be commented out to reduce the package
-    sc->addRegisterCallback(jsb_register_chipmunk);
+    //joe//sc->addRegisterCallback(jsb_register_chipmunk);
     // opengl can be commented out to reduce the package
     sc->addRegisterCallback(JSB_register_opengl);
     
     // builder can be commented out to reduce the package
-    sc->addRegisterCallback(register_all_cocos2dx_builder);
-    sc->addRegisterCallback(register_CCBuilderReader);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_builder);
+    //joe//sc->addRegisterCallback(register_CCBuilderReader);
     
     // ui can be commented out to reduce the package, attention studio need ui module
     sc->addRegisterCallback(register_all_cocos2dx_ui);
@@ -77,7 +77,7 @@ int js_module_register()
     sc->addRegisterCallback(register_all_cocos2dx_spine_manual);
     
     // XmlHttpRequest can be commented out to reduce the package
-    sc->addRegisterCallback(MinXmlHttpRequest::_js_register);
+    //joe//sc->addRegisterCallback(MinXmlHttpRequest::_js_register);
     // websocket can be commented out to reduce the package
     sc->addRegisterCallback(register_jsb_websocket);
     // socket io can be commented out to reduce the package
@@ -86,16 +86,16 @@ int js_module_register()
     sc->addRegisterCallback(register_all_cocos2dx_network);
 
     // 3d can be commented out to reduce the package
-    sc->addRegisterCallback(register_all_cocos2dx_3d);
-    sc->addRegisterCallback(register_all_cocos2dx_3d_manual);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_3d);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_3d_manual);
     
     // 3d extension can be commented out to reduce the package
-    sc->addRegisterCallback(register_all_cocos2dx_3d_extension);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_3d_extension);
     
 #if CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION
     // Physics 3d can be commented out to reduce the package
-    sc->addRegisterCallback(register_all_cocos2dx_physics3d);
-    sc->addRegisterCallback(register_all_cocos2dx_physics3d_manual);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_physics3d);
+    //joe//sc->addRegisterCallback(register_all_cocos2dx_physics3d_manual);
 #endif
 
 #if CC_USE_NAVMESH

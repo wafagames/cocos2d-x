@@ -760,7 +760,7 @@ bool jsval_to_obb(JSContext *cx, JS::HandleValue v, cocos2d::OBB* ret)
     ret->_extentZ.set(extentz);
     return true;
 }
-
+/*//joe
 bool jsval_to_ray(JSContext *cx, JS::HandleValue v, cocos2d::Ray* ret)
 {
     JS::RootedObject tmp(cx);
@@ -780,6 +780,7 @@ bool jsval_to_ray(JSContext *cx, JS::HandleValue v, cocos2d::Ray* ret)
     ret->set(origin, direction);
     return true;
 }
+*/
 
 bool jsvals_variadic_to_ccarray( JSContext *cx, jsval *vp, int argc, __Array** ret)
 {
