@@ -13,9 +13,9 @@
 namespace ccsp {
     class HttpUtil {
         public :
-        static bool post(const char* szUrl,const char* szParam,const char* fileName,[=]<std::string retStr>());
+        static bool post(const char* szUrl,const char* fileName,std::function<void(int code,const char* strResponse)>);
         static bool postBinary(const char* szUrl,const char* szParam,void* buf,int len);
-        static bool get();
+        static bool get(const char* szUrl,std::function<void(int code,const char* strResponse)>);
     };
     
 }
