@@ -13,7 +13,7 @@
 using namespace ccsp;
 using namespace cocos2d;
 
-bool HttpUtil::post(const char *szUrl,const char* szFileName,std::function<void(int code,const char* strResponse)> cb){
+bool HttpUtil::upload(const char *szUrl,const char* szFileName,std::function<void(int code,const char* strResponse)> cb){
     std::string strFileName(szFileName);
     std::string baseName=strFileName.substr(strFileName.find_last_of('/')+1);
     long bufferSize = 0;
@@ -42,22 +42,19 @@ bool HttpUtil::post(const char *szUrl,const char* szFileName,std::function<void(
     body = body + "\r\n--" + boundary + "--\r\n";
     request->setRequestData(body.data(), body.size());
     //Just a tag...
-    request->setTag("ccsp_HttpUtil_post");
+    request->setTag("ccsp_HttpUtil_upload");
     //Check that everything went OK when the request response calls your app back:
     request->setResponseCallback( [=](network::HttpClient* client,network::HttpResponse* response)
                                  {
+                                     std::string strRet;
                                      int returnCode=(int)response->getResponseCode();
-                                      CCLOG("HttpUtil::post Response Code %d", returnCode);
                                      if (returnCode==200){
                                          std::vector<char> *buffer = response->getResponseData();
-                                         std::string strRet;
                                          strRet.assign(buffer->begin(),buffer->end());
+                                     }
+                                     Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
                                          cb(returnCode,strRet.c_str());
-                                     }
-                                     else{
-                                         CCLOG("HttpUtil::post failed");
-                                         cb(returnCode,"");
-                                     }
+                                     });
                                  }
     );
     //Finally send the request:
@@ -67,6 +64,31 @@ bool HttpUtil::post(const char *szUrl,const char* szFileName,std::function<void(
     return true;
 }
 
+bool HttpUtil::post(const char *szUrl,std::function<void(int code,const char* strResponse)> cb){
+    network::HttpRequest *request = new network::HttpRequest();
+    request->setUrl(szUrl);
+    request->setRequestType(cocos2d::network::HttpRequest::Type::POST);
+    request->setTag("ccsp_HttpUtil_post");
+    request->setResponseCallback( [=](network::HttpClient* client,network::HttpResponse* response)
+                                 {
+                                     std::string strRet;
+                                     int returnCode=(int)response->getResponseCode();
+                                     if (returnCode==200){
+                                         std::vector<char> *buffer = response->getResponseData();
+                                         strRet.assign(buffer->begin(),buffer->end());
+                                     }
+                                     Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+                                         cb(returnCode,strRet.c_str());
+                                     });
+                                 }
+                                 );
+  
+    cocos2d::network::HttpClient::getInstance()->send(request);
+    request->release();
+    return true;
+}
+
+
 bool HttpUtil::get(const char *szUrl,std::function<void(int code,const char* strResponse)> cb){
     network::HttpRequest *request = new network::HttpRequest();
     request->setUrl(szUrl);
@@ -74,22 +96,18 @@ bool HttpUtil::get(const char *szUrl,std::function<void(int code,const char* str
     request->setTag("ccsp_HttpUtil_get");
     request->setResponseCallback( [=](network::HttpClient* client,network::HttpResponse* response)
                                  {
+                                     std::string strRet;
                                      int returnCode=(int)response->getResponseCode();
-                                     printf("HttpUtil::get Response Code %d", returnCode);
                                      if (returnCode==200){
                                          std::vector<char> *buffer = response->getResponseData();
-                                         std::string strRet;
                                          strRet.assign(buffer->begin(),buffer->end());
+                                     }
+                                     Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
                                          cb(returnCode,strRet.c_str());
-                                     }
-                                     else{
-                                         cb(returnCode,"");
-                                     }
+                                     });
                                  }
                                  );
-    //Finally send the request:
     cocos2d::network::HttpClient::getInstance()->send(request);
-    //And then get rid of it:
     request->release();
     return true;
 }

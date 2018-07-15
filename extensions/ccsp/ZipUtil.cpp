@@ -37,10 +37,36 @@ int ZipUtil::unzip(std::string &zipFileName,std::string &unzipPath,std::string &
     _totalNum=0;
     _currentNum=0;
     _async=false;
+    _onProgress=NULL;
     
     return _unzip();
 }
-                   
+
+int ZipUtil::unzipAsyncWithCB(std::string zipFileName,std::string unzipPath,std::string password,std::function<void(int,int)> cb){
+    _fileName=zipFileName;
+    _unzipPath=unzipPath;
+    _password=password;
+    _totalNum=0;
+    _currentNum=0;
+    _async=true;
+    _onProgress=cb;
+     _cb_call_index=0;
+    
+    unz_global_info globalInfo = {0};
+    std::string fullFileName=FileUtils::getInstance()->fullPathForFilename(_fileName);
+    unzFile _unzFile = cocos2d::unzOpen(fullFileName.c_str());
+    if (_unzFile){
+        unzGetGlobalInfo(_unzFile, &globalInfo);
+        unzCloseCurrentFile(_unzFile);
+    }
+    
+    auto t = std::thread(&ZipUtil::_unzip, this);
+    t.detach();
+    
+    _totalNum=(int)globalInfo.number_entry;
+    return _totalNum;
+}
+
 int ZipUtil::unzipAsync(std::string &zipFileName,std::string &unzipPath,std::string &password){
     
    _fileName=zipFileName;
@@ -49,6 +75,7 @@ int ZipUtil::unzipAsync(std::string &zipFileName,std::string &unzipPath,std::str
    _totalNum=0;
    _currentNum=0;
    _async=true;
+    _onProgress=NULL;
    
    unz_global_info globalInfo = {0};
     std::string fullFileName=FileUtils::getInstance()->fullPathForFilename(_fileName);
@@ -61,8 +88,8 @@ int ZipUtil::unzipAsync(std::string &zipFileName,std::string &unzipPath,std::str
    auto t = std::thread(&ZipUtil::_unzip, this);
    t.detach();
    
-   _totalNum=globalInfo.number_entry;
-   return globalInfo.number_entry;
+   _totalNum=(int)globalInfo.number_entry;
+    return _totalNum;
 }
 
 int ZipUtil::_unzip(){
@@ -75,19 +102,19 @@ int ZipUtil::_unzip(){
    std::string fullFileName=FileUtils::getInstance()->fullPathForFilename(_fileName);
    unzFile _unzFile = cocos2d::unzOpen(fullFileName.c_str());
    if (!_unzFile){
-       CCLOG("ZipMgr::_unzip unzOpen %s failed",fullFileName.c_str());
+       CCLOG("ZipUtil::_unzip unzOpen %s failed",fullFileName.c_str());
        success=false;
        return 0;
    }
    
    if (unzGetGlobalInfo(_unzFile, &globalInfo) != UNZ_OK) {
-       CCLOG("ZipMgr::_unzip unzGetGlobalInfo %s failed",fullFileName.c_str());
+       CCLOG("ZipUtil::_unzip unzGetGlobalInfo %s failed",fullFileName.c_str());
        success=false;
        return 0;
    }
    
-   CCLOG("ZipMgr::_unzip zipfile %s have entry %lu, unzip to %s",_fileName.c_str(),globalInfo.number_entry,_unzipPath.c_str());
-   _totalNum=globalInfo.number_entry;
+   CCLOG("ZipUtil::_unzip zipfile %s have entry %lu, unzip to %s",_fileName.c_str(),globalInfo.number_entry,_unzipPath.c_str());
+   _totalNum=(int)globalInfo.number_entry;
    
    unzGoToFirstFile(_unzFile);
    do {
@@ -97,9 +124,9 @@ int ZipUtil::_unzip(){
            ret = unzOpenCurrentFilePassword(_unzFile, _password.c_str());
        if (ret != UNZ_OK) {
            if(!_password.size())
-               CCLOG("ZipMgr::_unzip unzOpenCurrentFile failed");
+               CCLOGERROR("ZipUtil::_unzip unzOpenCurrentFile failed");
            else
-               CCLOG("ZipMgr::_unzip unzOpenCurrentFilePassword failed");
+               CCLOGERROR("ZipUtil::_unzip unzOpenCurrentFilePassword failed");
            success = false;
            break;
        }
@@ -112,14 +139,14 @@ int ZipUtil::_unzip(){
        
        std::string fullPath = _unzipPath + StringUtils::format("%s",fileNameBuf);
        
-       int fileLen=strlen(fileNameBuf);
+       int fileLen=(int)strlen(fileNameBuf);
        if (fileNameBuf[fileLen - 1] == '/' || fileNameBuf[fileLen - 1] == '\\')
            FileUtils::getInstance()->createDirectory(fullPath.c_str());
        else
        {
            FILE* fp = fopen(fullPath.c_str(), "wb");
            if(!fp){
-               CCLOG("ZipMgr::_unzip fopen %s failed",fullPath.c_str());
+               CCLOGERROR("ZipUtil::_unzip fopen %s failed %d %s",fullPath.c_str(),errno,strerror(errno));
                success=false;
                break;
            }
@@ -136,25 +163,12 @@ int ZipUtil::_unzip(){
        unzCloseCurrentFile(_unzFile);
        ret = unzGoToNextFile(_unzFile);
        _currentNum++;
-//       if(!_async){
-//           onProgress();
-//       }
+       if(_onProgress){
+           Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
+               _onProgress(_cb_call_index,_totalNum);
+               _cb_call_index++;
+           });
+       }
    } while (ret == UNZ_OK);
    return  _totalNum;
 }
-
-//void ZipUtil::onProgress(){
-//   jsval valArr[2];
-//   valArr[0]=INT_TO_JSVAL(_currentNum);
-//   valArr[1]=INT_TO_JSVAL(_totalNum);
-//   
-//   JS::RootedObject global(_cx, ScriptingCore::getInstance()->getGlobalObject());
-//   JSAutoCompartment ac(_cx, global);
-//   
-//   JS::RootedValue callback(_cx, OBJECT_TO_JSVAL(_jsCallback));
-//   if (!callback.isNull())
-//   {
-//       JS::RootedValue retval(_cx);
-//       JS_CallFunctionValue(_cx, global, callback, JS::HandleValueArray::fromMarkedLocation(2, valArr), &retval);
-//   }
-//}
