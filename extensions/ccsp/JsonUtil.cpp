@@ -6,6 +6,7 @@
 //
 
 #include "JsonUtil.h"
+#include "cocos/editor-support/cocostudio/DictionaryHelper.h"
 //#include "cocos2d.h"
 using namespace ccsp;
 using namespace cocos2d;
@@ -80,4 +81,34 @@ std::string JsonUtil::toString(cocos2d::ValueMap* valueMap){
     std::string s=retStr;
 //    CCLOG("JsonUtil::toString %s",retStr);
     return s;
+}
+
+cocos2d::ValueMap JsonUtil::toObj(const char* str){
+    rapidjson::Document doc;
+    cocos2d::ValueMap retMap;
+    doc.Parse(str);
+    if (doc.HasParseError())
+    {
+        CCLOGERROR("GetParseError %d\n", doc.GetParseError());
+        return retMap;
+    }
+    for (rapidjson::Value::ConstMemberIterator itr = doc.MemberBegin(); itr != doc.MemberEnd(); ++itr){
+        //const char* type=itr->value.GetType();
+        if(itr->value.IsString()){
+            CCLOG("%s %s",itr->name.GetString(),itr->value.GetString());
+            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetString());
+        }
+        else if(itr->value.IsInt()){
+             CCLOG("%s %d",itr->name.GetString(),itr->value.GetInt());
+             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetInt());
+        }
+        else if(itr->value.IsFloat()){
+            CCLOG("%s %f",itr->name.GetString(),itr->value.GetFloat());
+             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetFloat());
+        }
+    }
+//    for(auto &i : retMap){
+//        CCLOG("%s %s",i.first.c_str(),i.second.asString().c_str());
+//    }
+    return retMap;
 }
