@@ -1,15 +1,16 @@
 //
-//  ZipUtil.hpp
+//  ZipUtil.h
 //  cocos2d_libs
 //
 //  Created by Joe on 2017/03/28.
 //
 //
 
-#ifndef ZipUtil_hpp
-#define ZipUtil_hpp
+#ifndef ZipUtil_h
+#define ZipUtil_h
 #include <stdio.h>
 #include <string>
+#include <functional>
 #include "external/unzip/unzip.h"
 namespace ccsp{
     class ZipUtil
@@ -42,4 +43,4 @@ namespace ccsp{
     };
 }
 
-#endif /* ZipUtil_hpp */
+#endif /* ZipUtil_h */

@@ -16,7 +16,7 @@ using namespace cocos2d;
 bool HttpUtil::upload(const char *szUrl,const char* szFileName,std::function<void(int code,const char* strResponse)> cb){
     std::string strFileName(szFileName);
     std::string baseName=strFileName.substr(strFileName.find_last_of('/')+1);
-    long bufferSize = 0;
+    ssize_t bufferSize = 0;
     unsigned char* pBuffer = FileUtils::getInstance()->getFileData(szFileName, "r", &bufferSize);
     //The same file stored as a string of "bytes" (it may contain zeroes)
     std::string data = std::string((const char*)pBuffer, bufferSize);

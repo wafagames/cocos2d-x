@@ -9,6 +9,7 @@
 #define HttpUtil_h
 
 #include <stdio.h>
+#include <functional>
 
 namespace ccsp {
     class HttpUtil {

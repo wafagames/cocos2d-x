@@ -8,11 +8,13 @@ LOCAL_MODULE_FILENAME := libextension
 LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
+ccsp/CurlUtil.cpp \
 ccsp/DataUtil.cpp \
 ccsp/DeviceUtil.cpp \
 ccsp/EventUtil.cpp \
 ccsp/FileUtil.cpp \
 ccsp/FlowField.cpp \
+ccsp/HttpUtil.cpp \
 ccsp/JsonUtil.cpp \
 ccsp/LogUtil.cpp \
 ccsp/StrUtil.cpp \
