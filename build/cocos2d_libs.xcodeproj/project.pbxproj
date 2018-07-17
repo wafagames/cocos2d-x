@@ -4160,7 +4160,6 @@
 		D0FD03601A3B51AA00825BB5 /* CCAllocatorStrategyPool.h in Headers */ = {isa = PBXBuildFile; fileRef = D0FD03461A3B51AA00825BB5 /* CCAllocatorStrategyPool.h */; };
 		D8012B0A1F42BAC80097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
 		D8012B0B1F42BAC80097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
-		D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
 		D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8012B091F42BAC80097FA3E /* UIUtil.h */; };
 		D805485D2091B6A6007D697C /* StrUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D805485B2091B6A6007D697C /* StrUtil.h */; };
 		D805485E2091B6A6007D697C /* StrUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D805485B2091B6A6007D697C /* StrUtil.h */; };
@@ -4178,6 +4177,7 @@
 		D82B39EE20F963AC00A62E91 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 292F1A5C1A5151CE00E479F8 /* libssl.a */; };
 		D82B39EF20F963AF00A62E91 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAF541C180E3B6A000584C8 /* libcurl.a */; };
 		D82B39F020F963B000A62E91 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAF541C180E3B6A000584C8 /* libcurl.a */; };
+		D82B3A1720FE4A7000A62E91 /* UIUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8012B081F42BAC80097FA3E /* UIUtil.cpp */; };
 		D82F6061208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6062208F88DA00A910AB /* XPRichText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D82F605F208F88DA00A910AB /* XPRichText.cpp */; };
 		D82F6063208F88DA00A910AB /* XPRichText.h in Headers */ = {isa = PBXBuildFile; fileRef = D82F6060208F88DA00A910AB /* XPRichText.h */; };
@@ -12445,7 +12445,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8012B0E1F42C1760097FA3E /* UIUtil.cpp in Sources */,
 				C5F5161F1C822D6D0013B695 /* UITabControl.cpp in Sources */,
 				C5F5161D1C822D400013B695 /* TabControlReader.cpp in Sources */,
 				D0FD03541A3B51AA00825BB5 /* CCAllocatorGlobalNewDelete.cpp in Sources */,
@@ -12749,6 +12748,7 @@
 				5020A1FF1D49912500E80C72 /* SkeletonRenderer.cpp in Sources */,
 				15AE1B8619AADA9A00C27E9E /* UIButton.cpp in Sources */,
 				1A570209180BCBDF0088DEC7 /* CCMotionStreak.cpp in Sources */,
+				D82B3A1720FE4A7000A62E91 /* UIUtil.cpp in Sources */,
 				1A570211180BCBF40088DEC7 /* CCProgressTimer.cpp in Sources */,
 				15AE193819AAD35100C27E9E /* CCArmatureAnimation.cpp in Sources */,
 				503DD8ED1926736A00CD74DD /* CCGLViewImpl-ios.mm in Sources */,
