@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 10
@@ -24,6 +24,15 @@ android {
         }
     }
 }
+
+// final SUPPORT_LIB_VER = '27.1.1'
+// configurations.all {
+//     resolutionStrategy {
+//         force "com.android.support:appcompat-v7:${SUPPORT_LIB_VER}"
+//         force "com.android.support:support-v4:${SUPPORT_LIB_VER}"
+//     }
+// }
+
 
 dependencies {
     compile fileTree(dir: '../java/libs', include: ['*.jar'])
