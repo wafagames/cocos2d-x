@@ -73,10 +73,13 @@ static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned
     while (checked<total) {
         s_jobNum++;
         std::thread jobThread(FlowField::doParse,xNum,yNum,validTileCount,pfTable,s_ffTable,checked,needCheck);
+        //CCLOG("FlowField.doParseByPFTable--1:%d checked,total %d",checked,total);
         s_threadVector.push_back(std::move(jobThread));
+         //CCLOG("FlowField.doParseByPFTable--2:%d checked,total %d",checked,total);
         checked+=needCheck;
         if(checked+count>total)
             needCheck=total-checked;
+        //CCLOG("FlowField.doParseByPFTable:%d checked,total %d",checked,total);
         if(!needCheck)
             break;
     }
@@ -115,6 +118,7 @@ void FlowField::clean(){
 void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *pfTable, 
                    unsigned char *ffTable, int index, int count){
     //std::unique_lock<std::mutex> lock(s_mtx);
+     //CCLOG("FlowField.doParse:begin,need to calculate %d",count);
     int x=0;
     int y=0;
     int parseIndex=0;
