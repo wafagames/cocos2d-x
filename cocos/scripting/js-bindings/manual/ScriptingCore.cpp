@@ -619,15 +619,25 @@ void ScriptingCore::createGlobalContext() {
         _jsInited = true;
     }
 
-    _rt = JS_NewRuntime(32L * 1024L * 1024L);
+    _rt = JS_NewRuntime(256L * 1024L * 1024L);
     JS_SetGCParameter(_rt, JSGCParamKey::JSGC_MAX_BYTES, 0xffffffff);
     JS_SetGCParameter(_rt, JSGCParamKey::JSGC_MODE, JSGC_MODE_COMPARTMENT);
 
     JS_SetTrustedPrincipals(_rt, &shellTrustedPrincipals);
     JS_SetSecurityCallbacks(_rt, &securityCallbacks);
     JS_SetNativeStackQuota(_rt, JSB_MAX_STACK_QUOTA);
-
-    _cx = JS_NewContext(_rt, 128 * 1024);
+/*
+ JS_NewContext creates a new JSContext in the runtime rt. On success, it returns a pointer to the new context. Otherwise it returns NULL.
+ For more details about contexts, see JSContext. For sample code that creates and initializes a JSContext, see JSAPI User Guide.
+ The stackchunksize parameter does not control the JavaScript stack size. (The JSAPI does not provide a way to adjust the stack depth limit.)
+ Passing a large number for stackchunksize is a mistake. In a DEBUG build, large chunk sizes can degrade performance dramatically.
+ The usual value of 8192 is recommended.
+ The application must call JS_DestroyContext when it is done using the context. Before a JSRuntime may be destroyed,
+ all the JSContexts associated with it must be destroyed.
+ The new JSContext initially has no global object.
+ The new JSContext is associated with the calling thread.  No other thread may use it or destroy it.
+ */
+    _cx = JS_NewContext(_rt, 8192);
 
     JS::RuntimeOptionsRef(_rt).setIon(true);
     JS::RuntimeOptionsRef(_rt).setBaseline(true);

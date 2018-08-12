@@ -629,7 +629,7 @@ bool js_FlowField_doParseByPFTable(JSContext *cx, uint32_t argc, jsval *vp){
             return false;
         }
         std::function<void(unsigned char*,int)> callback=ccsp::JSB::Util::toCallbackBufSize(cx, &args, 4);
-        ccsp::FlowField::doParseByPFTable(xNum,yNum,validTileCount,pfTable,callback);
+        ccsp::FlowField::doParseByPFTable(xNum,yNum,validTileCount,pfTable,size,callback);
         return true;
     }
     JS_ReportError(cx, "js_FlowField_doParseByPFTable : wrong number of arguments: %d, was expecting >=%d", argc, 5);

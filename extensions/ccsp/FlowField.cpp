@@ -4,7 +4,9 @@
 //
 //  Created by joe on 2018/6/14.
 //
-
+#include <iostream>
+#include <pthread.h>
+#include <string>
 #include <cstdio>
 #include <thread>
 #include <mutex>
@@ -21,7 +23,9 @@ static int s_jobDone=0;
 static std::mutex s_mtx;
 static std::condition_variable s_cv;
 static unsigned char* s_ffTable;
+static unsigned char* s_pfTable;
 static int s_bufSize=0;
+static int s_pfBufSize=0;
 static std::function<void (unsigned char*,int)> s_cb;
 std::vector<std::thread> s_threadVector;
 //static void waitJob(){
@@ -43,13 +47,88 @@ std::vector<std::thread> s_threadVector;
 //    }
 //}
 
+//static void threadParseByPFTableOld(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
+//                                 std::function<void (unsigned char*,int)> cb){
+//    //int cores=DeviceUtil::getCpuCoreNum();
+//    //int c2=std::thread::hardware_concurrency();
+//    //CCLOG("FlowField.doParseByPFTable:cores from DeviceUtil %d, hardware_concurrency %d tid 0x%x",cores,c2,pthread_self());
+//    int cores=8;
+//    int total=xNum*yNum;
+//    bool realloc=false;
+//    if(!s_ffTable){
+//        s_bufSize=total*validTileCount;
+//        s_ffTable=(unsigned char*)malloc(s_bufSize);
+//        CCLOG("FlowField.doParseByPFTable:malloc %.2fM",((float)s_bufSize)/1024/1024);
+//    }
+//    if(s_bufSize && s_bufSize!=total*validTileCount){
+//            CCLOG("FlowField.doParseByPFTable:realloc,debug,return");
+//            return;
+//        free(s_ffTable);
+//        realloc=true;
+//        s_bufSize=total*validTileCount;
+//        s_ffTable=(unsigned char*)malloc(s_bufSize);
+//        CCLOG("FlowField.doParseByPFTable:free and re-alloc %.2fM",((float)s_bufSize)/1024/1024);
+//    }
+//    if(s_ffTable==NULL){
+//     CCLOG("FlowField.doParseByPFTable:malloc failed:%d %s",errno,strerror(errno));
+//     return;
+//    }
+//    memset(s_ffTable,0,s_bufSize);
+//    //CCLOG("FlowField.doParseByPFTable:memset ok");
+//    s_cb=cb;
+//    //CCLOG("FlowField.doParseByPFTable:begin to check count");
+//    int count=total/cores;
+//    if(total%cores)
+//        count++;
+//    int checked=0;
+//    int needCheck=count;
+//    s_jobNum=0;
+//    s_jobDone=0;
+//
+//    //CCLOG("FlowField.doParseByPFTable:begin to create thread");
+//
+//    if(realloc){
+//        CCLOG("FlowField.doParseByPFTable:realloc,debug,return");
+//        return;
+//         Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
+//                    s_cb(s_ffTable,0);
+//                });
+//        return;
+//    }
+//    s_threadVector.clear();
+//    while (checked<total) {
+//        s_jobNum++;
+//        std::thread jobThread(FlowField::doParse,xNum,yNum,validTileCount,pfTable,s_ffTable,checked,needCheck);
+//        //CCLOG("FlowField.doParseByPFTable--1:%d checked,total %d",checked,total);
+//        s_threadVector.push_back(std::move(jobThread));
+//        checked+=needCheck;
+//        if(checked+count>total)
+//            needCheck=total-checked;
+//        //CCLOG("FlowField.doParseByPFTable:%d checked,total %d",checked,total);
+//        if(!needCheck)
+//            break;
+//    }
+//    //CCLOG("FlowField.doParseByPFTable:%d threads created",s_jobNum);
+//    for(auto &thread:s_threadVector){
+//        thread.join();
+//    }
+////    std::thread waitThread(waitJob);
+////    waitThread.detach();
+//    if(s_cb){
+//        //CCLOG("FlowField.waitJob:all threads finished,performFunctionInCocosThread");
+//        Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
+//            s_cb(s_ffTable,s_bufSize);
+//        });
+//    }
+//}
+
 static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
                                  std::function<void (unsigned char*,int)> cb){
     int cores=DeviceUtil::getCpuCoreNum();
-    int c2=std::thread::hardware_concurrency();
-    CCLOG("FlowField.doParseByPFTable:cores from DeviceUtil %d, hardware_concurrency %d",cores,c2);
+    //int c2=std::thread::hardware_concurrency();
+    CCLOG("FlowField.doParseByPFTable:cores from DeviceUtil %d,tid 0x%lx",cores,(unsigned long)pthread_self());
     int total=xNum*yNum;
-    s_threadVector.clear();
+    bool realloc=false;
     if(!s_ffTable){
         s_bufSize=total*validTileCount;
         s_ffTable=(unsigned char*)malloc(s_bufSize);
@@ -57,29 +136,32 @@ static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned
     }
     if(s_bufSize && s_bufSize!=total*validTileCount){
         free(s_ffTable);
+        realloc=true;
         s_bufSize=total*validTileCount;
         s_ffTable=(unsigned char*)malloc(s_bufSize);
         CCLOG("FlowField.doParseByPFTable:free and re-alloc %.2fM",((float)s_bufSize)/1024/1024);
     }
+    if(s_ffTable==NULL){
+     CCLOG("FlowField.doParseByPFTable:malloc failed:%d %s",errno,strerror(errno));
+     return;
+    }
     memset(s_ffTable,0,s_bufSize);
-    
     s_cb=cb;
     int count=total/cores;
+    if(total%cores)
+        count++;
     int checked=0;
     int needCheck=count;
     s_jobNum=0;
     s_jobDone=0;
-
+    s_threadVector.clear();
     while (checked<total) {
         s_jobNum++;
         std::thread jobThread(FlowField::doParse,xNum,yNum,validTileCount,pfTable,s_ffTable,checked,needCheck);
-        //CCLOG("FlowField.doParseByPFTable--1:%d checked,total %d",checked,total);
         s_threadVector.push_back(std::move(jobThread));
-         //CCLOG("FlowField.doParseByPFTable--2:%d checked,total %d",checked,total);
         checked+=needCheck;
         if(checked+count>total)
             needCheck=total-checked;
-        //CCLOG("FlowField.doParseByPFTable:%d checked,total %d",checked,total);
         if(!needCheck)
             break;
     }
@@ -87,20 +169,16 @@ static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned
     for(auto &thread:s_threadVector){
         thread.join();
     }
-//    std::thread waitThread(waitJob);
-//    waitThread.detach();
-    if(s_cb){
-        CCLOG("FlowField.waitJob:all threads finished,performFunctionInCocosThread");
-        Director::getInstance()->getScheduler()->performFunctionInCocosThread([&](){
-            s_cb(s_ffTable,s_bufSize);
-        });
-    }
+    if(s_cb)
+        s_cb(s_ffTable,s_bufSize);
 }
 
-void FlowField::doParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,
+void FlowField::doParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,int pfSize,
                                  std::function<void (unsigned char*,int)> cb){
-    std::thread doJob(threadParseByPFTable,xNum,yNum,validTileCount,pfTable,cb);
-    doJob.detach();
+    threadParseByPFTable(xNum,yNum,validTileCount,pfTable,cb);
+    return;
+//    std::thread doJob(threadParseByPFTable,xNum,yNum,validTileCount,pfTable,cb);
+//    doJob.detach();
 }
 
 void FlowField::clean(){
@@ -118,7 +196,7 @@ void FlowField::clean(){
 void FlowField::doParse(int xNum, int yNum, int validTileCount, unsigned char *pfTable, 
                    unsigned char *ffTable, int index, int count){
     //std::unique_lock<std::mutex> lock(s_mtx);
-     //CCLOG("FlowField.doParse:begin,need to calculate %d",count);
+    //CCLOG("FlowField.doParse:begin,need to calculate %d,thread 0x%x",count,pthread_self());
     int x=0;
     int y=0;
     int parseIndex=0;
