@@ -7,6 +7,8 @@
 
 #include "JsonUtil.h"
 #include "cocos/editor-support/cocostudio/DictionaryHelper.h"
+#include "external/json/document.h"
+
 //#include "cocos2d.h"
 using namespace ccsp;
 using namespace cocos2d;
@@ -83,6 +85,41 @@ std::string JsonUtil::toString(cocos2d::ValueMap* valueMap){
     return s;
 }
 
+cocos2d::ValueMap _parseObj(rapidjson::Document& doc){
+    cocos2d::ValueMap retMap;
+    for (rapidjson::Value::ConstMemberIterator itr = doc.MemberBegin(); itr != doc.MemberEnd(); ++itr){
+        //const char* type=itr->value.GetType();
+        if(itr->value.IsString()){
+            //CCLOG("%s %s",itr->name.GetString(),itr->value.GetString());
+            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetString());
+        }
+        else if(itr->value.IsInt()){
+            //CCLOG("%s %d",itr->name.GetString(),itr->value.GetInt());
+            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetInt());
+        }
+        else if(itr->value.IsFloat()){
+            //CCLOG("%s %f",itr->name.GetString(),itr->value.GetFloat());
+            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetFloat());
+        }
+        else if(itr->value.IsObject()){
+            cocos2d::ValueMap mapInner;
+            for(auto& m: itr->value.GetObject()){
+                if(m.value.IsString()){
+                    mapInner[m.name.GetString()]=cocos2d::Value(m.value.GetString());
+                }
+                else if(itr->value.IsInt()){
+                    mapInner[m.name.GetString()]=cocos2d::Value(m.value.GetInt());
+                }
+                else if(itr->value.IsFloat()){
+                    mapInner[m.name.GetString()]=cocos2d::Value(m.value.GetFloat());
+                }
+            }
+            retMap[itr->name.GetString()]=mapInner;
+        }
+    }
+    return retMap;
+}
+
 cocos2d::ValueMap JsonUtil::toObj(const char* str){
     rapidjson::Document doc;
     cocos2d::ValueMap retMap;
@@ -92,23 +129,29 @@ cocos2d::ValueMap JsonUtil::toObj(const char* str){
         CCLOGERROR("GetParseError %d\n", doc.GetParseError());
         return retMap;
     }
-    for (rapidjson::Value::ConstMemberIterator itr = doc.MemberBegin(); itr != doc.MemberEnd(); ++itr){
-        //const char* type=itr->value.GetType();
-        if(itr->value.IsString()){
-            CCLOG("%s %s",itr->name.GetString(),itr->value.GetString());
-            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetString());
-        }
-        else if(itr->value.IsInt()){
-             CCLOG("%s %d",itr->name.GetString(),itr->value.GetInt());
-             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetInt());
-        }
-        else if(itr->value.IsFloat()){
-            CCLOG("%s %f",itr->name.GetString(),itr->value.GetFloat());
-             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetFloat());
-        }
-    }
-//    for(auto &i : retMap){
-//        CCLOG("%s %s",i.first.c_str(),i.second.asString().c_str());
+    return _parseObj(doc);
+    
+//    for (rapidjson::Value::ConstMemberIterator itr = doc.MemberBegin(); itr != doc.MemberEnd(); ++itr){
+//        //const char* type=itr->value.GetType();
+//        if(itr->value.IsString()){
+//            CCLOG("%s %s",itr->name.GetString(),itr->value.GetString());
+//            retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetString());
+//        }
+//        else if(itr->value.IsInt()){
+//             CCLOG("%s %d",itr->name.GetString(),itr->value.GetInt());
+//             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetInt());
+//        }
+//        else if(itr->value.IsFloat()){
+//            CCLOG("%s %f",itr->name.GetString(),itr->value.GetFloat());
+//             retMap[itr->name.GetString()]=cocos2d::Value(itr->value.GetFloat());
+//        }
+//        else if(itr->value.IsObject()){
+//            itr->value.GetObject()
+//            retMap[itr->name.GetString()]=cocos2d::ValueMap();
+//        }
 //    }
-    return retMap;
+////    for(auto &i : retMap){
+////        CCLOG("%s %s",i.first.c_str(),i.second.asString().c_str());
+////    }
+//    return retMap;
 }
