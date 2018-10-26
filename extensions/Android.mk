@@ -47,7 +47,7 @@ LOCAL_STATIC_LIBRARIES := cocos2dx_internal_static
 #joe#LOCAL_STATIC_LIBRARIES += box2d_static
 LOCAL_STATIC_LIBRARIES += bullet_static
 LOCAL_STATIC_LIBRARIES += cocos_network_static
-
+LOCAL_STATIC_LIBRARIES += cocos_curl_static
 LOCAL_CXXFLAGS += -fexceptions
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
