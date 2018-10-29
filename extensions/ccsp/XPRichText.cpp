@@ -319,7 +319,6 @@ static int getPrevWordByBlank(const std::string& text, int idx)
     return -1;
 }
 
-
 static int getPrevWord2(const std::string& text, int idx)
 {
     CCLOG("getPrevWord2: %s",text.c_str());
@@ -329,8 +328,8 @@ static int getPrevWord2(const std::string& text, int idx)
     CCLOG("getPrevWord2: begin1");
      std::locale loc2("POSIX");
         CCLOG("getPrevWord2: begin2");
-        std::locale loc3("ar_AE");
-                CCLOG("getPrevWord2: begin3");
+        //std::locale loc3("ar_AE");
+                //CCLOG("getPrevWord2: begin3");
     for (int i=idx-1; i>=0; --i)
     {
         if (!std::isalnum(text[i], std::locale())){
@@ -343,6 +342,18 @@ static int getPrevWord2(const std::string& text, int idx)
     }
      CCLOG("getPrevWord2:return -1");
     return -1;
+}
+
+static int dbgPrintText(const std::string& text){
+    std::string ret;
+    char bytes[10]={0};
+    for (size_t i = 0, size = text.length(); i < size; ++i)
+    {
+        //snprintf(bytes, 4, "0x%x",text[i]);
+        //ret.append(bytes);
+        CCLOG("%d:0x%02x",i,text[i]);
+    }
+    //CCLOG("%s %d",ret.c_str(),text.length());
 }
 
 static bool isWrappable(const std::string& text)
@@ -369,6 +380,7 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     }
 
     CCLOG("findSplitPositionForWord:%s",text.c_str());
+    dbgPrintText(text);
 
     for(int idx = (int)text.size()-1; idx >=0; )
     {
