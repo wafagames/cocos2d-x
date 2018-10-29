@@ -295,12 +295,53 @@ void XPRichText::formatText()
 
 static int getPrevWord(const std::string& text, int idx)
 {
+    //std::locale locUTF8("en_US.UTF-8");
+
     // start from idx-1
     for (int i=idx-1; i>=0; --i)
     {
         if (!std::isalnum(text[i], std::locale()))
             return i;
+            //if (!std::isalnum(text[i],std::locale("en_US.UTF-8")))
+                 // return i;
     }
+    return -1;
+}
+
+static int getPrevWordByBlank(const std::string& text, int idx)
+{
+    for (int i=idx-1; i>=0; --i)
+    {
+        if (text[i]==0x20){
+           return i;
+        }
+    }
+    return -1;
+}
+
+
+static int getPrevWord2(const std::string& text, int idx)
+{
+    CCLOG("getPrevWord2: %s",text.c_str());
+    CCLOG("device pre defined local is %s",std::locale("").name().c_str());
+    // start from idx-1
+    std::locale loc1("");
+    CCLOG("getPrevWord2: begin1");
+     std::locale loc2("POSIX");
+        CCLOG("getPrevWord2: begin2");
+        std::locale loc3("ar_AE");
+                CCLOG("getPrevWord2: begin3");
+    for (int i=idx-1; i>=0; --i)
+    {
+        if (!std::isalnum(text[i], std::locale())){
+           //非语言集中的有语义性的字符，即找到了单词间的连接字符，返回这个位置
+           CCLOG("getPrevWord2:i %d %c return",i,text[i]);
+           return i;
+        }
+
+        CCLOG("getPrevWord2:i %d %c continue",i,text[i]);
+    }
+     CCLOG("getPrevWord2:return -1");
     return -1;
 }
 
@@ -321,32 +362,44 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     bool startingNewLine = (_customSize.width == originalLeftSpaceWidth);
     if (!isWrappable(text))
     {
+        CCLOG("findSplitPositionForWord:isWrappable return false ");
         if (startingNewLine)
             return (int) text.length();
         return 0;
     }
 
+    CCLOG("findSplitPositionForWord:%s",text.c_str());
+
     for(int idx = (int)text.size()-1; idx >=0; )
     {
-        int newidx = getPrevWord(text, idx);
+        CCLOG("findSplitPositionForWord:round idx %d",idx);
+
+        int newidx = getPrevWordByBlank(text, idx);
         if (newidx >0)
         {
+            int oldIdx=idx;
             idx = newidx;
             auto leftStr = Helper::getSubStringOfUTF8String(text, 0, idx);
+             CCLOG("findSplitPositionForWord:idx %d,leftStr %s",idx,leftStr.c_str());
             label->setString(leftStr);
-            if (label->getContentSize().width <= originalLeftSpaceWidth)
+            if (label->getContentSize().width <= originalLeftSpaceWidth){
+                 CCLOG("findSplitPositionForWord:find proper pos return %d oldIdx %d",idx,oldIdx);
+                 //auto temp = getPrevWord2(text, oldIdx);
                 return idx;
+            }
         }
         else if(newidx==0)
             return 0;
         else
         {
+             CCLOG("findSplitPositionForWord:cannot find proper pos idx is %d,return",idx);
             if (startingNewLine)
                 return idx;
             return 0;
         }
     }
 
+     CCLOG("findSplitPositionForWord:cannot find space return text.size %d",text.size());
     // no spaces... return the original label + size
     label->setString(text);
     return (int)text.size();
@@ -451,10 +504,14 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
     {
         int leftLength = 0;
          leftLength = findSplitPositionForWord(textRenderer, text);
-        if(!leftLength)
+        if(!leftLength){
             leftLength = findSplitPositionForChar(textRenderer, text);
-        if(!leftLength)
+            CCLOG("XPRichText:cannot find pos for word,find pos for char");
+        }
+        if(!leftLength){
+            CCLOG("XPRichText:still cannot find pos for char,set leftLength to 1");
             leftLength=1;
+        }
         
 //        if (static_cast<RichText::WrapMode>(_defaults.at(KEY_WRAP_MODE).asInt()) == WRAP_PER_WORD)
 //            leftLength = findSplitPositionForWord(textRenderer, text);
