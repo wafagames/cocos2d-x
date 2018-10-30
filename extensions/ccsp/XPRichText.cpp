@@ -373,18 +373,18 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
     bool startingNewLine = (_customSize.width == originalLeftSpaceWidth);
     if (!isWrappable(text))
     {
-        CCLOG("findSplitPositionForWord:isWrappable return false ");
+        //CCLOG("findSplitPositionForWord:isWrappable return false ");
         if (startingNewLine)
             return (int) text.length();
         return 0;
     }
 
-    CCLOG("findSplitPositionForWord:%s",text.c_str());
-    dbgPrintText(text);
+    //CCLOG("findSplitPositionForWord:%s",text.c_str());
+    //dbgPrintText(text);
 
     for(int idx = (int)text.size()-1; idx >=0; )
     {
-        CCLOG("findSplitPositionForWord:round idx %d",idx);
+        //CCLOG("findSplitPositionForWord:round idx %d",idx);
 
         int newidx = getPrevWordByBlank(text, idx);
         if (newidx >0)
@@ -392,10 +392,10 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
             int oldIdx=idx;
             idx = newidx;
             auto leftStr = Helper::getSubStringOfUTF8String(text, 0, idx);
-             CCLOG("findSplitPositionForWord:idx %d,leftStr %s",idx,leftStr.c_str());
+             //CCLOG("findSplitPositionForWord:idx %d,leftStr %s",idx,leftStr.c_str());
             label->setString(leftStr);
             if (label->getContentSize().width <= originalLeftSpaceWidth){
-                 CCLOG("findSplitPositionForWord:find proper pos return %d oldIdx %d",idx,oldIdx);
+                 //CCLOG("findSplitPositionForWord:find proper pos return %d oldIdx %d",idx,oldIdx);
                  //auto temp = getPrevWord2(text, oldIdx);
                 return idx;
             }
@@ -404,14 +404,14 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
             return 0;
         else
         {
-             CCLOG("findSplitPositionForWord:cannot find proper pos idx is %d,return",idx);
+             //CCLOG("findSplitPositionForWord:cannot find proper pos idx is %d,return",idx);
             if (startingNewLine)
                 return idx;
             return 0;
         }
     }
 
-     CCLOG("findSplitPositionForWord:cannot find space return text.size %d",text.size());
+     //CCLOG("findSplitPositionForWord:cannot find space return text.size %d",text.size());
     // no spaces... return the original label + size
     label->setString(text);
     return (int)text.size();
