@@ -21,7 +21,7 @@
 
 
 #ifdef jsb_by_spiderMonkey
-    #include "ScriptingCore.h"
+    #include "cocos/scripting/js-bindings/manual/ScriptingCore.h"
     #include "SpiderMonkey/Util.h"
 #endif
 
