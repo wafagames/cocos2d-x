@@ -293,67 +293,19 @@ void XPRichText::formatText()
     }
 }
 
-static int getPrevWord(const std::string& text, int idx)
-{
-    //std::locale locUTF8("en_US.UTF-8");
-
-    // start from idx-1
-    for (int i=idx-1; i>=0; --i)
-    {
-        if (!std::isalnum(text[i], std::locale()))
-            return i;
-            //if (!std::isalnum(text[i],std::locale("en_US.UTF-8")))
-                 // return i;
-    }
-    return -1;
-}
-
 static int getPrevWordByBlank(const std::string& text, int idx)
 {
-    for (int i=idx-1; i>=0; --i)
-    {
-        if (text[i]==0x20){
-           return i;
-        }
-    }
-    return -1;
-}
-
-static int getPrevWord2(const std::string& text, int idx)
-{
-    CCLOG("getPrevWord2: %s",text.c_str());
-    CCLOG("device pre defined local is %s",std::locale("").name().c_str());
-    // start from idx-1
-    std::locale loc1("");
-    CCLOG("getPrevWord2: begin1");
-     std::locale loc2("POSIX");
-        CCLOG("getPrevWord2: begin2");
-        //std::locale loc3("ar_AE");
-                //CCLOG("getPrevWord2: begin3");
-    for (int i=idx-1; i>=0; --i)
-    {
-        if (!std::isalnum(text[i], std::locale())){
-           //非语言集中的有语义性的字符，即找到了单词间的连接字符，返回这个位置
-           CCLOG("getPrevWord2:i %d %c return",i,text[i]);
-           return i;
-        }
-
-        CCLOG("getPrevWord2:i %d %c continue",i,text[i]);
-    }
-     CCLOG("getPrevWord2:return -1");
-    return -1;
-}
-
-static int dbgPrintText(const std::string& text){
-    std::string ret;
-    char bytes[10]={0};
-    for (size_t i = 0, size = text.length(); i < size; ++i)
-    {
-        //snprintf(bytes, 4, "0x%x",text[i]);
-        //ret.append(bytes);
-        CCLOG("%d:0x%02x",i,text[i]);
-    }
-    //CCLOG("%s %d",ret.c_str(),text.length());
+//    for (int i=idx-1; i>=0; --i)
+//    {
+//        if (text[i]==0x20){
+//           return i;
+//        }
+//    }
+//    return -1;
+    std::size_t index=text.find_last_of(" ",idx-1);
+    if(index==std::string::npos)
+        return -1;
+    return (int)index;
 }
 
 static bool isWrappable(const std::string& text)
@@ -369,34 +321,30 @@ static bool isWrappable(const std::string& text)
 int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::string& text)
 {
     auto originalLeftSpaceWidth = _leftSpaceWidth + label->getContentSize().width;
-
     bool startingNewLine = (_customSize.width == originalLeftSpaceWidth);
     if (!isWrappable(text))
     {
-        CCLOG("findSplitPositionForWord:isWrappable return false ");
+        //CCLOG("findSplitPositionForWord:isWrappable return false ");
         if (startingNewLine)
             return (int) text.length();
         return 0;
     }
-
-    CCLOG("findSplitPositionForWord:%s",text.c_str());
-    dbgPrintText(text);
-
+    //CCLOG("findSplitPositionForWord:%s",text.c_str());
+    //dbgPrintText(text);
     for(int idx = (int)text.size()-1; idx >=0; )
     {
-        CCLOG("findSplitPositionForWord:round idx %d",idx);
-
+        //CCLOG("findSplitPositionForWord:round idx %d",idx);
         int newidx = getPrevWordByBlank(text, idx);
         if (newidx >0)
         {
-            int oldIdx=idx;
+            //int oldIdx=idx;
             idx = newidx;
-            auto leftStr = Helper::getSubStringOfUTF8String(text, 0, idx);
-             CCLOG("findSplitPositionForWord:idx %d,leftStr %s",idx,leftStr.c_str());
+            //auto leftStr = Helper::getSubStringOfUTF8String(text, 0, idx);
+            auto leftStr=text.substr(0,idx);
+             //CCLOG("findSplitPositionForWord:idx %d,leftStr %s",idx,leftStr.c_str());
             label->setString(leftStr);
             if (label->getContentSize().width <= originalLeftSpaceWidth){
-                 CCLOG("findSplitPositionForWord:find proper pos return %d oldIdx %d",idx,oldIdx);
-                 //auto temp = getPrevWord2(text, oldIdx);
+                 //CCLOG("findSplitPositionForWord:find proper pos return %d oldIdx %d",idx,oldIdx);
                 return idx;
             }
         }
@@ -404,14 +352,13 @@ int XPRichText::findSplitPositionForWord(cocos2d::Label* label, const std::strin
             return 0;
         else
         {
-             CCLOG("findSplitPositionForWord:cannot find proper pos idx is %d,return",idx);
+             //CCLOG("findSplitPositionForWord:cannot find proper pos idx is %d,return",idx);
             if (startingNewLine)
                 return idx;
             return 0;
         }
     }
-
-     CCLOG("findSplitPositionForWord:cannot find space return text.size %d",text.size());
+     //CCLOG("findSplitPositionForWord:cannot find space return text.size %d",text.size());
     // no spaces... return the original label + size
     label->setString(text);
     return (int)text.size();
@@ -430,14 +377,16 @@ int XPRichText::findSplitPositionForChar(cocos2d::Label* label, const std::strin
 
     // The adjustment of the new line position
     auto originalLeftSpaceWidth = _leftSpaceWidth + textRendererWidth;
-    auto leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+    //auto leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+    auto leftStr = curText.substr(0,leftLength);
     label->setString(leftStr);
     auto leftWidth = label->getContentSize().width;
     if (originalLeftSpaceWidth < leftWidth) {
         // Have protruding
         for (;;) {
             leftLength--;
-            leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            //leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            leftStr = curText.substr(0,leftLength);
             label->setString(leftStr);
             leftWidth = label->getContentSize().width;
             if (leftWidth <= originalLeftSpaceWidth) {
@@ -452,7 +401,8 @@ int XPRichText::findSplitPositionForChar(cocos2d::Label* label, const std::strin
         // A wide margin
         for (;;) {
             leftLength++;
-            leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            //leftStr = Helper::getSubStringOfUTF8String(curText, 0, leftLength);
+            leftStr = curText.substr(0,leftLength);
             label->setString(leftStr);
             leftWidth = label->getContentSize().width;
             if (originalLeftSpaceWidth < leftWidth) {
@@ -517,8 +467,8 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
         int leftLength = 0;
          leftLength = findSplitPositionForWord(textRenderer, text);
         if(!leftLength){
-            leftLength = findSplitPositionForChar(textRenderer, text);
             CCLOG("XPRichText:cannot find pos for word,find pos for char");
+            leftLength = findSplitPositionForChar(textRenderer, text);
         }
         if(!leftLength){
             CCLOG("XPRichText:still cannot find pos for char,set leftLength to 1");
@@ -532,21 +482,26 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
 
         //The minimum cut length is 1, otherwise will cause the infinite loop.
         //        if (0 == leftLength) leftLength = 1;
-        std::string leftWords = Helper::getSubStringOfUTF8String(text, 0, leftLength);
+        
+        //std::string leftWords = Helper::getSubStringOfUTF8String(text, 0, leftLength);
+        std::string leftWords=text.substr(0,leftLength);
         int rightStart = leftLength;
         if (std::isspace(text[rightStart], std::locale()))
             rightStart++;
-        std::string cutWords = Helper::getSubStringOfUTF8String(text, rightStart, text.length() - leftLength);
+        //std::string cutWords = Helper::getSubStringOfUTF8String(text, rightStart, text.length() - leftLength);
+        std::string cutWords=text.substr(rightStart,text.length() - leftLength);
         if (leftLength > 0)
         {
             cocos2d::Label* leftRenderer = nullptr;
             if (fileExist)
             {
-                leftRenderer = cocos2d::Label::createWithTTF(Helper::getSubStringOfUTF8String(leftWords, 0, leftLength), fontName, fontSize);
+                //leftRenderer = cocos2d::Label::createWithTTF(Helper::getSubStringOfUTF8String(leftWords, 0, leftLength), fontName, fontSize);
+                leftRenderer = cocos2d::Label::createWithTTF(leftWords, fontName, fontSize);
             }
             else
             {
-                leftRenderer = cocos2d::Label::createWithSystemFont(Helper::getSubStringOfUTF8String(leftWords, 0, leftLength), fontName, fontSize);
+                //leftRenderer = cocos2d::Label::createWithSystemFont(Helper::getSubStringOfUTF8String(leftWords, 0, leftLength), fontName, fontSize);
+                leftRenderer = cocos2d::Label::createWithSystemFont(leftWords, fontName, fontSize);
             }
             if (leftRenderer)
             {
@@ -756,7 +711,6 @@ Node* XPRichText::_getHighestRenderInLine(Vector<Node*>* arr){
     return nodeRet;
 }
 
-
 void XPRichText::_addAllRenders(){
     int k=0;
     for(auto& row:_elementRenders){
@@ -789,7 +743,6 @@ void XPRichText::_debugDrawAllLines(){
         _debugDrawOneLine(row, row->at(0)->getPositionX(), node->getPositionY());
     }
 }
-
 
 Node* XPRichText::getRenderByID(int i){
     return getProtectedChildByTag(i);
@@ -870,9 +823,7 @@ void XPRichText::formarRenderers(){
         _debugDrawAllLines();
         _backLayer->setContentSize(newSize);
     }
-    
 }
-
 
 void XPRichText::adaptRenderers()
 {
@@ -1103,4 +1054,23 @@ void XPRichText::setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl)
 //        this->setContentSize(_customSize);
 //    }
 //    updateContentSizeWithTextureSize(_contentSize);
+//}
+//static int getPrevWord(const std::string& text, int idx)
+//{
+//    //std::locale locUTF8("en_US.UTF-8");
+//    // start from idx-1
+//    for (int i=idx-1; i>=0; --i)
+//    {
+//        if (!std::isalnum(text[i], std::locale()))
+//            return i;
+//    }
+//    return -1;
+//}
+//static int dbgPrintText(const std::string& text){
+//    std::string ret;
+//    char bytes[10]={0};
+//    for (size_t i = 0, size = text.length(); i < size; ++i)
+//    {
+//        CCLOG("%d:0x%02x",i,text[i]);
+//    }
 //}
