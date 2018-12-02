@@ -69,6 +69,11 @@ void* Util::toObject(JSContext *cx, JS::CallArgs *args, int index){
     return jsProxy->ptr;
 }
 
+bool Util::toValueMap(JSContext *cx, JS::CallArgs *args, int index,cocos2d::ValueMap* valueMap){
+     ok &= jsval_to_ccvaluemap(cx, args.get(index), valueMap);
+     return ok;
+}
+
 void* Util::toVoidMemoryFromUint8Array(JSContext *cx, JS::CallArgs *args, int index,int* size){
     GLsizei count;
     void* buf;
