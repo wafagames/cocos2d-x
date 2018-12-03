@@ -70,7 +70,7 @@ void* Util::toObject(JSContext *cx, JS::CallArgs *args, int index){
 }
 
 bool Util::toValueMap(JSContext *cx, JS::CallArgs *args, int index,cocos2d::ValueMap* valueMap){
-     ok &= jsval_to_ccvaluemap(cx, args.get(index), valueMap);
+     bool ok = jsval_to_ccvaluemap(cx, args->get(index), valueMap);
      return ok;
 }
 
