@@ -101,6 +101,8 @@ bool HttpUtil::get(const char *szUrl,std::function<void(int code,const char* str
                                      if (returnCode==200){
                                          std::vector<char> *buffer = response->getResponseData();
                                          strRet.assign(buffer->begin(),buffer->end());
+                                     }else{
+                                         CCLOG("HttpUtil::get:error %s,code %d",response->getErrorBuffer(),returnCode);
                                      }
                                      Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
                                          cb(returnCode,strRet.c_str());
