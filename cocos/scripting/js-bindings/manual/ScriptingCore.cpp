@@ -102,6 +102,7 @@ static std::vector<sc_register_sth> registrationList;
 static std::unordered_map<std::string, JS::PersistentRootedScript*> filename_script;
 // port ~> socket map
 static std::unordered_map<int,int> ports_sockets;
+static std::function<void(const char* fileName,int line,const char* msg)> s_onError;
 
 static void cc_closesocket(int fd)
 {
@@ -223,6 +224,10 @@ void removeJSObject(JSContext* cx, cocos2d::Ref* nativeObj)
         jsb_remove_proxy(proxy);
     }
     else CCLOG("removeJSObject: BUG: cannot find native object = %p", nativeObj);
+}
+
+void ScriptingCore::regOnError(std::function<void(const char* fileName,int line,const char* msg)> cb){
+    s_onError=cb;
 }
 
 void ScriptingCore::executeJSFunctionWithThisObj(JS::HandleValue thisObj, JS::HandleValue callback)
@@ -939,6 +944,9 @@ void ScriptingCore::reportError(JSContext *cx, const char *message, JSErrorRepor
             report->filename ? report->filename : "<no filename=\"filename\">",
             (unsigned int) report->lineno,
             message);
+    if(s_onError){
+        s_onError(report->filename ? report->filename : "<no filename=\"filename\">",report->lineno,message);
+    }
 };
 
 

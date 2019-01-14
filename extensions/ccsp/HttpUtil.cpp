@@ -64,11 +64,13 @@ bool HttpUtil::upload(const char *szUrl,const char* szFileName,std::function<voi
     return true;
 }
 
-bool HttpUtil::post(const char *szUrl,std::function<void(int code,const char* strResponse)> cb){
+bool HttpUtil::post(const char *szUrl,const char* szParam,std::function<void(int code,const char* strResponse)> cb){
     network::HttpRequest *request = new network::HttpRequest();
     request->setUrl(szUrl);
     request->setRequestType(cocos2d::network::HttpRequest::Type::POST);
     request->setTag("ccsp_HttpUtil_post");
+    if(szParam)
+        request->setRequestData(szParam, strlen(szParam));
     request->setResponseCallback( [=](network::HttpClient* client,network::HttpResponse* response)
                                  {
                                      std::string strRet;
@@ -89,10 +91,12 @@ bool HttpUtil::post(const char *szUrl,std::function<void(int code,const char* st
 }
 
 
-bool HttpUtil::get(const char *szUrl,std::function<void(int code,const char* strResponse)> cb){
+bool HttpUtil::get(const char *szUrl,const char* szParam,std::function<void(int code,const char* strResponse)> cb){
     network::HttpRequest *request = new network::HttpRequest();
     request->setUrl(szUrl);
     request->setRequestType(cocos2d::network::HttpRequest::Type::GET);
+    if(szParam)
+        request->setRequestData(szParam, strlen(szParam));
     request->setTag("ccsp_HttpUtil_get");
     request->setResponseCallback( [=](network::HttpClient* client,network::HttpResponse* response)
                                  {

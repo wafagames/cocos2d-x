@@ -93,6 +93,7 @@ private:
     ScriptingCore();
 
 	std::chrono::steady_clock::time_point _engineStartTime;
+    
 public:
     ~ScriptingCore();
 
@@ -101,6 +102,8 @@ public:
      * @return @~english The ScriptingCore instance.
      */
     static ScriptingCore *getInstance();
+    
+    void regOnError(std::function<void(const char* fileName,int line,const char* msg)> cb);
     
     /**@~english
      * Gets the script type, for ScriptingCore, it will return `cocos2d::kScriptTypeJavascript`
