@@ -640,6 +640,45 @@ bool js_FlowField_clean(JSContext *cx, uint32_t argc, jsval *vp){
     return true;
 }
 
+bool js_HttpUtil_get(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==3) {
+        std::string szUrl=ccsp::JSB::Util::toString(cx,&args,0);
+        std::string szParam=ccsp::JSB::Util::toString(cx,&args,1);
+        std::function<void(int,const char*)> callback=ccsp::JSB::Util::toCallbackIntConstCharBuf(cx, &args, 2);
+        ccsp::HttpUtil::get(szUrl.c_str(),szParam.c_str(),callback);
+        return true;
+    }
+    JS_ReportError(cx, "js_HttpUtil_get : wrong number of arguments: %d, was expecting >=%d", argc, 3);
+    return false;
+}
+
+bool js_HttpUtil_post(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==3) {
+        std::string szUrl=ccsp::JSB::Util::toString(cx,&args,0);
+        std::string szParam=ccsp::JSB::Util::toString(cx,&args,1);
+        std::function<void(int,const char*)> callback=ccsp::JSB::Util::toCallbackIntConstCharBuf(cx, &args, 2);
+        ccsp::HttpUtil::post(szUrl.c_str(),szParam.c_str(),callback);
+        return true;
+    }
+    JS_ReportError(cx, "js_HttpUtil_post : wrong number of arguments: %d, was expecting >=%d", argc, 3);
+    return false;
+}
+
+bool js_HttpUtil_upload(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==3) {
+        std::string szUrl=ccsp::JSB::Util::toString(cx,&args,0);
+        std::string szFileName=ccsp::JSB::Util::toString(cx,&args,1);
+        std::function<void(int,const char*)> callback=ccsp::JSB::Util::toCallbackIntConstCharBuf(cx, &args, 2);
+        ccsp::HttpUtil::upload(szUrl.c_str(),szFileName.c_str(),callback);
+        return true;
+    }
+    JS_ReportError(cx, "js_HttpUtil_upload : wrong number of arguments: %d, was expecting >=%d", argc, 3);
+    return false;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -652,6 +691,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject textureUtilObj(cx);
     JS::RootedObject eventUtilObj(cx);
     JS::RootedObject flowFieldObj(cx);
+    JS::RootedObject httpObj(cx);
     
     JS::RootedObject tmpObj(cx);
    
@@ -670,6 +710,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "uiUtil", &uiUtilObj);
     get_or_create_js_obj(cx, jsbObj, "eventUtil", &eventUtilObj);
     get_or_create_js_obj(cx, jsbObj, "flowField", &flowFieldObj);
+    get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpObj);
     
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -719,4 +760,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     
     JS_DefineFunction(cx,flowFieldObj, "doParseByPFTable", js_FlowField_doParseByPFTable, 5, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,flowFieldObj, "clean", js_FlowField_clean, 0, JSPROP_READONLY | JSPROP_PERMANENT);
+    
+    JS_DefineFunction(cx,httpObj, "get", js_HttpUtil_get, 3, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx,httpObj, "post", js_HttpUtil_post, 3, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx,httpObj, "upload", js_HttpUtil_upload, 3, JSPROP_READONLY | JSPROP_PERMANENT);
 }

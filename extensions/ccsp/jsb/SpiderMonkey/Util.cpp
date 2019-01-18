@@ -292,6 +292,26 @@ std::function<void(unsigned char*,int)> Util::toCallbackBufSize (JSContext* cx, 
     return nullptr;
 }
 
+std::function<void(int,const char*)> Util::toCallbackIntConstCharBuf (JSContext* cx, JS::CallArgs* args,int index)
+{
+    if(JS_TypeOfValue(cx, args->get(index)) == JSTYPE_FUNCTION)
+    {
+        JS::RootedObject jstarget(cx, args->thisv().toObjectOrNull());
+        std::shared_ptr<JSFunctionWrapper> func(new JSFunctionWrapper(cx, jstarget, args->get(index),args->thisv()));
+        return [=](int intValue,const char* buf) -> void {
+            JSB_AUTOCOMPARTMENT_WITH_GLOBAL_OBJCET
+            jsval largv[2];
+            largv[0]=int32_to_jsval(cx,intValue);
+            largv[1] = c_string_to_jsval(cx, buf);
+            JS::RootedValue rval(cx);
+            bool succeed = func->invoke(2, &largv[0], &rval);
+            if (!succeed && JS_IsExceptionPending(cx)) {
+                JS_ReportPendingException(cx);
+            }
+        };
+    }
+    return nullptr;
+}
 
 void Util::returnInt(JSContext* cx, JS::CallArgs* args,int v){
     args->rval().set(int32_to_jsval(cx,v));

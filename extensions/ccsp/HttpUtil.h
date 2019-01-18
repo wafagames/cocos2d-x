@@ -17,7 +17,6 @@ namespace ccsp {
         static bool get(const char* szUrl,const char* szParam,std::function<void(int code,const char* strResponse)>);
         static bool post(const char* szUrl,const char* szParam,std::function<void(int code,const char* strResponse)>);
         static bool upload(const char* szUrl,const char* fileName,std::function<void(int code,const char* strResponse)>);
-       
     };
     
 }
