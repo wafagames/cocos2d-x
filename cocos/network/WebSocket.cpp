@@ -43,6 +43,9 @@
 #include <errno.h>
 
 #include "libwebsockets.h"
+#include "zlib.h"
+#include <stdio.h>
+#include <string.h>
 
 #define NS_NETWORK_BEGIN namespace cocos2d { namespace network {
 #define NS_NETWORK_END }}
@@ -197,6 +200,23 @@ static std::string getFileNameForPath(const std::string& filePath)
 
 static struct lws_protocols __defaultProtocols[2];
 
+static const struct lws_extension exts[] = {
+            {
+                "permessage-deflate",
+                lws_extension_callback_pm_deflate,
+                // client_no_context_takeover extension is not supported in the current version, it will cause connection fail
+                // It may be a bug of lib websocket build
+                //            "permessage-deflate; client_no_context_takeover; client_max_window_bits"
+                "permessage-deflate; client_max_window_bits"
+            },
+            {
+                "deflate-frame",
+                lws_extension_callback_pm_deflate,
+                "deflate_frame"
+            },
+            { nullptr, nullptr, nullptr /* terminator */ }
+        };
+        
 static lws_context_creation_info convertToContextCreationInfo(const struct lws_protocols* protocols, bool peerServerCert)
 {
     lws_context_creation_info info;
@@ -219,7 +239,7 @@ static lws_context_creation_info convertToContextCreationInfo(const struct lws_p
     // libwebsockets official said it's probably an issue of user code
     // since 'libwebsockets' passed AutoBahn stressed Test.
 
-    //    info.extensions = exts;
+    //info.extensions = exts;
 
     info.gid = -1;
     info.uid = -1;
@@ -848,22 +868,22 @@ void WebSocket::onClientOpenConnectionRequest()
 {
     if (nullptr != __wsContext)
     {
-        static const struct lws_extension exts[] = {
-            {
-                "permessage-deflate",
-                lws_extension_callback_pm_deflate,
-                // client_no_context_takeover extension is not supported in the current version, it will cause connection fail
-                // It may be a bug of lib websocket build
-                //            "permessage-deflate; client_no_context_takeover; client_max_window_bits"
-                "permessage-deflate; client_max_window_bits"
-            },
-            {
-                "deflate-frame",
-                lws_extension_callback_pm_deflate,
-                "deflate_frame"
-            },
-            { nullptr, nullptr, nullptr /* terminator */ }
-        };
+        // static const struct lws_extension exts[] = {
+        //     {
+        //         "permessage-deflate",
+        //         lws_extension_callback_pm_deflate,
+        //         // client_no_context_takeover extension is not supported in the current version, it will cause connection fail
+        //         // It may be a bug of lib websocket build
+        //         //            "permessage-deflate; client_no_context_takeover; client_max_window_bits"
+        //         "permessage-deflate; client_max_window_bits"
+        //     },
+        //     {
+        //         "deflate-frame",
+        //         lws_extension_callback_pm_deflate,
+        //         "deflate_frame"
+        //     },
+        //     { nullptr, nullptr, nullptr /* terminator */ }
+        // };
 
         _readyStateMutex.lock();
         _readyState = State::CONNECTING;
@@ -1092,6 +1112,10 @@ int WebSocket::onClientWritable()
     return 0;
 }
 
+static char* s_plainBuf=0;
+static char* s_deCompressBuf=0;
+static int s_bufSize=1024*1024;
+
 int WebSocket::onClientReceivedData(void* in, ssize_t len)
 {
     // In websocket thread
@@ -1099,19 +1123,19 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
     packageIndex++;
     if (in != nullptr && len > 0)
     {
-        // LOGD("Receiving data:index:%d, len=%d\n", packageIndex, (int)len);
-
+        LOGD("Receiving data:index:%d, len=%d\n", packageIndex, (int)len);
         unsigned char* inData = (unsigned char*)in;
         _receivedData.insert(_receivedData.end(), inData, inData + len);
     }
     else
     {
-        // LOGD("Empty message received, index=%d!\n", packageIndex);
+        LOGD("Empty message received, index=%d!\n", packageIndex);
     }
 
     // If no more data pending, send it to the client thread
     size_t remainingSize = lws_remaining_packet_payload(_wsInstance);
     int isFinalFragment = lws_is_final_fragment(_wsInstance);
+    
 //    LOGD("remainingSize: %d, isFinalFragment: %d\n", (int)remainingSize, isFinalFragment);
 
     if (remainingSize == 0 && isFinalFragment)
@@ -1125,20 +1149,116 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
 
         bool isBinary = (lws_frame_is_binary(_wsInstance) != 0);
 
-        if (!isBinary)
-        {
+        if (!isBinary){
             frameData->push_back('\0');
         }
 
+        if(frameSize>=1024){
+            LOGD("frameSize %ld\n", frameSize);
+        }
+       
+        // if(frameSize>=4){
+        //      unsigned char* buf=(unsigned char*)frameData->data();
+        //     LOGD("WebSocket::onClientReceivedData %02x %02x %02x %02x\n",buf[0],buf[1],buf[2],buf[3]);
+        //     if(isBinary){
+        //         int stringLen2=s_bufSize;
+        //         LOGD("WebSocket::onClientReceivedData %02x %02x %02x %02x\n",buf[0],buf[1],buf[2],buf[3]);
+        //         char* plainBuf=(char*)malloc(s_bufSize);
+        //         memset(plainBuf, 0, s_bufSize);
+        //         int status=uncompress((Bytef*)(plainBuf),(uLongf*)&stringLen2,(Bytef*)(buf+1),(uLong)(frameSize-1));
+        //         LOGD("after un-compressing status %d alloc buf size %d,after %d\n",status,s_bufSize,stringLen2);
+        //         LOGD("after un-compressing: %s\n",plainBuf);
+        //         //free(plainBuf);
+        //     }
+        // }
+        
         std::shared_ptr<std::atomic<bool>> isDestroyed = _isDestroyed;
         __wsHelper->sendMessageToCocosThread([this, frameData, frameSize, isBinary, isDestroyed](){
             // In UI thread
             // LOGD("Notify data len %d to Cocos thread.\n", (int)frameSize);
-
             Data data;
-            data.isBinary = isBinary;
-            data.bytes = (char*)frameData->data();
-            data.len = frameSize;
+
+            int status=-1;
+            int stringLen=0;
+            unsigned char* buf=(unsigned char*)frameData->data();
+            const char* strPForSearch=",\"p\":\"";
+ 
+            if(isBinary && frameSize>=3 && buf[0]==4 && buf[1]==0x78  && buf[2]==0x9c){
+                char strP[128]={0};
+                if(!s_plainBuf){
+                    if(s_bufSize<frameSize*13)
+                        s_bufSize=(int)frameSize*13;
+                    s_plainBuf=(char*)malloc(s_bufSize);
+                    s_deCompressBuf=(char*)malloc(s_bufSize);
+                }else{
+                    if(s_bufSize<frameSize*13){
+                        free(s_plainBuf);
+                        free(s_deCompressBuf);
+                        s_bufSize=(int)frameSize*13;
+                        s_plainBuf=(char*)malloc(s_bufSize);
+                        s_deCompressBuf=(char*)malloc(s_bufSize);
+                    }
+                }
+                memset(s_plainBuf, 0, s_bufSize);
+                memset(s_deCompressBuf, 0, s_bufSize);
+
+                //const char* strPrefix="42[\"role_dump_all\",";
+                //int lenPrefix=(int)strlen(strPrefix);
+                //strncpy(s_plainBuf,strPrefix,lenPrefix);
+                
+                stringLen=s_bufSize;
+                status=uncompress((Bytef*)s_deCompressBuf,(uLongf*)&stringLen,(Bytef*)(buf+1),(uLong)(frameSize-1));
+                if(status==0){
+                    //char* namePos=strnstr((const char*)s_deCompressBuf,strPForSearch,stringLen);
+                    char* namePos=strstr((const char*)s_deCompressBuf,strPForSearch);
+                    if(namePos && namePos!=s_deCompressBuf){
+                        //ok we find event name as protocol name
+                        namePos+=strlen(strPForSearch);
+                        for(int i=0;i<100;i++){
+                            if(namePos[i]=='"')
+                                break;
+                            strP[i]=namePos[i];
+                        }
+                    
+                         int nPrefix=snprintf(s_plainBuf,s_bufSize,"42[\"%s\",",strP);
+                         memcpy(&s_plainBuf[nPrefix],s_deCompressBuf,stringLen);
+                         stringLen+=nPrefix;
+                         s_plainBuf[stringLen]=']';
+                         stringLen++;
+                    }
+                    float rate=0;
+                    if(stringLen)
+                        rate=(1-((float)frameSize/stringLen))*100;
+                    LOGD("WebSocket::onClientReceivedData:[%s %.02f%% %d=>%d]\n",strP,rate,stringLen,(int)frameSize);
+                }
+               
+                //stringLen=s_bufSize-lenPrefix-1;
+                //status=uncompress((Bytef*)(s_plainBuf+lenPrefix),(uLongf*)&stringLen,(Bytef*)(buf+1),(uLong)(frameSize-1));
+                // if(status==0){
+                //     stringLen+=lenPrefix;
+                //     s_plainBuf[stringLen]=']';
+                //     stringLen++;
+                // }
+                // float rate=0;
+                // if(stringLen)
+                //     rate=(1-((float)frameSize/stringLen))*100;
+                // LOGD("WebSocket::onClientReceivedData: received compressed data from server,binary %d,strlen %d,rate %.02f\n", (int)frameSize,stringLen,rate);
+            }
+            
+            if(status==0 && stringLen>0){
+                data.isBinary = 0;
+                data.bytes = (char*)s_plainBuf;
+                data.len = stringLen;
+            }else{
+                data.isBinary = isBinary;
+                data.bytes = (char*)frameData->data();
+                data.len = frameSize;
+            }
+            
+//            Data data;
+//            data.isBinary = isBinary;
+//            data.bytes = (char*)frameData->data();
+//            data.len = frameSize;
 
             if (*isDestroyed)
             {
@@ -1221,6 +1341,11 @@ int WebSocket::onConnectionError()
 
 int WebSocket::onConnectionClosed()
 {
+//    if(s_plainBuf){
+//        free(s_plainBuf);
+//        s_plainBuf=0;
+//    }
+    
     {
         std::lock_guard<std::mutex> lk(_readyStateMutex);
         LOGD("WebSocket (%p) onConnectionClosed, state: %d ...\n", this, (int)_readyState);

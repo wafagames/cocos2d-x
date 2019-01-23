@@ -4187,6 +4187,7 @@
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
 		D8347E951EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
+		D84B247521F706520094AEB5 /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D84B247421F706520094AEB5 /* libuv_a.a */; };
 		D8910A2020D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
 		D8910A2120D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
 		D8910A2220D2A46C00728B20 /* FlowField.h in Headers */ = {isa = PBXBuildFile; fileRef = D8910A1F20D2A46C00728B20 /* FlowField.h */; };
@@ -5761,6 +5762,7 @@
 		D82F608520924A4900A910AB /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
 		D8347E901EBC673000616927 /* TextureUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureUtil.cpp; path = ccsp/TextureUtil.cpp; sourceTree = "<group>"; };
 		D8347E911EBC673000616927 /* TextureUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureUtil.h; path = ccsp/TextureUtil.h; sourceTree = "<group>"; };
+		D84B247421F706520094AEB5 /* libuv_a.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv_a.a; path = ../external/uv/prebuilt/ios/libuv_a.a; sourceTree = "<group>"; };
 		D8910A1E20D2A46C00728B20 /* FlowField.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FlowField.cpp; path = ccsp/FlowField.cpp; sourceTree = "<group>"; };
 		D8910A1F20D2A46C00728B20 /* FlowField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlowField.h; path = ccsp/FlowField.h; sourceTree = "<group>"; };
 		D8A4FB0621C77EB800AE21CA /* CurlUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurlUtil.h; path = ccsp/CurlUtil.h; sourceTree = "<group>"; };
@@ -5838,6 +5840,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D84B247521F706520094AEB5 /* libuv_a.a in Frameworks */,
 				46270FA81E1CC84500AAA098 /* libcrypto.a in Frameworks */,
 				46270FA91E1CC84500AAA098 /* libssl.a in Frameworks */,
 				D82B39EE20F963AC00A62E91 /* libssl.a in Frameworks */,
@@ -5927,6 +5930,7 @@
 		1551A341158F2AB200E66CFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D84B247421F706520094AEB5 /* libuv_a.a */,
 				46270FA61E1CC84500AAA098 /* libcrypto.a */,
 				46270FA71E1CC84500AAA098 /* libssl.a */,
 				46270FA21E1CC6A100AAA098 /* libcrypto.a */,
@@ -13355,11 +13359,12 @@
 					"\"$(SRCROOT)/../external/websockets/prebuilt/ios\"",
 					"\"$(SRCROOT)/../external/chipmunk/prebuilt/ios\"",
 					"\"$(SRCROOT)/../external/openssl/prebuilt/ios\"",
+					"\"$(SRCROOT)/../external/uv/prebuilt/ios\"",
 				);
 				OTHER_LDFLAGS = "-llibsql3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/freetype2/include/ios $(SRCROOT)/../external/curl/include/ios $(SRCROOT)/../external/webp/include/ios $(SRCROOT)/../external/tiff/include/ios $(SRCROOT)/../external/jpeg/include/ios $(SRCROOT)/../external/png/include/ios $(SRCROOT)/../external/websockets/include/ios $(SRCROOT)/../external/freetype2/include/ios/freetype2 $(SRCROOT)/../external/openssl/include/ios";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/freetype2/include/ios $(SRCROOT)/../external/curl/include/ios $(SRCROOT)/../external/webp/include/ios $(SRCROOT)/../external/tiff/include/ios $(SRCROOT)/../external/jpeg/include/ios $(SRCROOT)/../external/png/include/ios $(SRCROOT)/../external/websockets/include/ios $(SRCROOT)/../external/freetype2/include/ios/freetype2 $(SRCROOT)/../external/openssl/include/ios $(SRCROOT)/../external/uv/include/";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
@@ -13390,11 +13395,12 @@
 					"\"$(SRCROOT)/../external/websockets/prebuilt/ios\"",
 					"\"$(SRCROOT)/../external/chipmunk/prebuilt/ios\"",
 					"\"$(SRCROOT)/../external/openssl/prebuilt/ios\"",
+					"\"$(SRCROOT)/../external/uv/prebuilt/ios\"",
 				);
 				OTHER_LDFLAGS = "-llibsql3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/freetype2/include/ios $(SRCROOT)/../external/curl/include/ios $(SRCROOT)/../external/webp/include/ios $(SRCROOT)/../external/tiff/include/ios $(SRCROOT)/../external/jpeg/include/ios $(SRCROOT)/../external/png/include/ios $(SRCROOT)/../external/websockets/include/ios $(SRCROOT)/../external/freetype2/include/ios/freetype2 $(SRCROOT)/../external/openssl/include/ios";
+				USER_HEADER_SEARCH_PATHS = "$(inherited) $(SRCROOT)/../external/freetype2/include/ios $(SRCROOT)/../external/curl/include/ios $(SRCROOT)/../external/webp/include/ios $(SRCROOT)/../external/tiff/include/ios $(SRCROOT)/../external/jpeg/include/ios $(SRCROOT)/../external/png/include/ios $(SRCROOT)/../external/websockets/include/ios $(SRCROOT)/../external/freetype2/include/ios/freetype2 $(SRCROOT)/../external/openssl/include/ios $(SRCROOT)/../external/uv/include/";
 				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
