@@ -2,22 +2,26 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [v3.14.1](#v3141)
-  - [修复的问题](#%E4%BF%AE%E5%A4%8D%E7%9A%84%E9%97%AE%E9%A2%98)
-  - [其他](#%E5%85%B6%E4%BB%96)
+- [Cocos2d-x 3.17.1 Release Notes](#cocos2d-x-3171-release-notes)
+  - [版本变动](#%E7%89%88%E6%9C%AC%E5%8F%98%E5%8A%A8)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# v3.14.1
+# Cocos2d-x 3.17.1 Release Notes #
 
-## 修复的问题
+Cocos2d-x 3.17.1 侧重于稳定性的提升, 已有问题的修复。
 
-* 如果创建物理场景但是没有设置3d物理的摄像机，那么程序会崩溃
-* 由于glfw版本冲突，在linux平台可能会有链接错误
-* 通过带有多边形信息的sprite frame创建的Sprite效果不对
-* VS2015编译Lua工程时有链接错误
-* 通过`cocos compile/run -p android --android-studio`命令编译Android工程时会有编译错误
+## 版本变动
 
-## 其他
+- 修复 3.17 引入的 Lua 加载性能下降的 BUG
+- 减少渲染中 glClear 的调用次数，降低电量消耗
+- CMake 脚本优化，解决存在的链接问题
+- Android 默认启用 CMake 方式编译
+- Android 升级 Gradle 到 4.6, SDK 28, plugin 3.1.0 
+- 升级 LuaJIT 到 2.1.0-beta3，修复 3.17 Lua 项目的闪退问题
+- 升级 libwebsockets 到 2.4.2
+- FileUtils 内部加锁，增加线程安全，完善接口实现
+- 限制 Label 长度，避免绘制错误
+- 增加 Downloader 的 Lua 绑定
 
-通过查看[3.14.1版本信息](https://github.com/cocos2d/cocos2d-x/milestone/36?closed=1)了解所有的问题或者代码改动。
+当前版本包含 45 项 bugs 修复和 34 项小改进，不再列举，请参考 [ChangeLog](https://github.com/cocos2d/cocos2d-x/blob/v3/CHANGELOG)。

@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2012 cocos2d-x.org
- Copyright (c) 2013-2017 Chukong Technologies Inc.
+ Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -2294,8 +2295,7 @@ Animate3DCallbackTest::Animate3DCallbackTest()
 
         ValueMap valuemap0;
         animate->setKeyFrameUserInfo(275, valuemap0);
-        
-        auto listener = EventListenerCustom::create(Animate3DDisplayedNotification, [&](EventCustom* event)
+        _customEventListener = EventListenerCustom::create(Animate3DDisplayedNotification, [&](EventCustom* event)
         {
             auto info = (Animate3D::Animate3DDisplayedEventInfo*)event->getUserData();
             auto node = getChildByTag(100);
@@ -2309,12 +2309,19 @@ Animate3DCallbackTest::Animate3DCallbackTest()
             
             cocos2d::log("frame %d", info->frame);
         });
-        Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(listener, -1);
+        Director::getInstance()->getEventDispatcher()->addEventListenerWithFixedPriority(_customEventListener, -1);
     }
 }
 
 Animate3DCallbackTest::~Animate3DCallbackTest()
 {
+    cocos2d::log("Animate3DCallbackTest destroied!");
+    if(_customEventListener)
+    {
+        Director::getInstance()->getEventDispatcher()->removeEventListener(_customEventListener);
+        _customEventListener = nullptr;
+    }
+
 }
 
 std::string Animate3DCallbackTest::title() const
@@ -2440,7 +2447,8 @@ CameraBackgroundClearTest::CameraBackgroundClearTest()
 
 void CameraBackgroundClearTest::switch_CameraClearMode(cocos2d::Ref* sender)
 {
-    auto type = _camera->getBackgroundBrush()->getBrushType();
+    auto brush = _camera->getBackgroundBrush();
+    auto type = brush ? brush->getBrushType() : CameraBackgroundBrush::BrushType::NONE;
     if (type == CameraBackgroundBrush::BrushType::NONE)
     {
         _camera->setBackgroundBrush(CameraBackgroundBrush::createDepthBrush(1.f));
@@ -2547,24 +2555,6 @@ Sprite3DNormalMappingTest::Sprite3DNormalMappingTest()
         addChild(sprite);
     }
 
-    float radius = 100.0;
-
-    PointLight* light = PointLight::create(Vec3(0.0, 0.0, 0.0), Color3B(255, 255, 255), 1000);
-    light->runAction(RepeatForever::create(Sequence::create(CallFuncN::create([radius](Node *node){
-        static float angle = 0.0;
-        static bool reverseDir = false;
-        node->setPosition3D(Vec3(radius * cos(angle), 0.0f, radius * sin(angle)));
-        if (reverseDir){
-            angle -= 0.01f;
-            if (angle < 0.0)
-                reverseDir = false;
-        }
-        else{
-            angle += 0.01f;
-            if (3.14159 < angle)
-                reverseDir = true;
-        }
-    }), nullptr)));
     //setup camera
     auto camera = Camera::createPerspective(60.0, s.width / s.height, 1.0f, 1000.f);
     camera->setCameraFlag(CameraFlag::USER1);
@@ -2572,7 +2562,31 @@ Sprite3DNormalMappingTest::Sprite3DNormalMappingTest()
     camera->lookAt(Vec3(0.f, 0.f, 0.f));
     addChild(camera);
 
+    PointLight* light = PointLight::create(Vec3(0.0, 0.0, 0.0), Color3B(255, 255, 255), 1000);
+    light->setTag(100);
     addChild(light);
+    
+    scheduleUpdate();
+}
+
+void Sprite3DNormalMappingTest::update(float dt)
+{
+    static float angle = 0.0f;
+    static bool reverseDir = false;
+    static float radius = 100.0f;
+    
+    auto light = static_cast<PointLight*>(getChildByTag(100));
+    light->setPosition3D(Vec3(radius * cos(angle), 0.0f, radius * sin(angle)));
+    if (reverseDir){
+        angle -= 0.01f;
+        if (angle < 0.0)
+            reverseDir = false;
+    }
+    else{
+        angle += 0.01f;
+        if (3.14159 < angle)
+            reverseDir = true;
+    }
 }
 
 Sprite3DNormalMappingTest::~Sprite3DNormalMappingTest()
