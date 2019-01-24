@@ -1,11 +1,10 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion PROP_MIN_SDK_VERSION
         targetSdkVersion PROP_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
@@ -19,21 +18,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
-// final SUPPORT_LIB_VER = '27.1.1'
-// configurations.all {
-//     resolutionStrategy {
-//         force "com.android.support:appcompat-v7:${SUPPORT_LIB_VER}"
-//         force "com.android.support:support-v4:${SUPPORT_LIB_VER}"
-//     }
-// }
-
-
 dependencies {
-    compile fileTree(dir: '../java/libs', include: ['*.jar'])
+    implementation fileTree(dir: '../java/libs', include: ['*.jar'])
 }
