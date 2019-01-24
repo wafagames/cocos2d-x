@@ -1123,13 +1123,13 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
     packageIndex++;
     if (in != nullptr && len > 0)
     {
-        LOGD("Receiving data:index:%d, len=%d\n", packageIndex, (int)len);
+        //LOGD("Receiving data:index:%d, len=%d\n", packageIndex, (int)len);
         unsigned char* inData = (unsigned char*)in;
         _receivedData.insert(_receivedData.end(), inData, inData + len);
     }
     else
     {
-        LOGD("Empty message received, index=%d!\n", packageIndex);
+        //LOGD("Empty message received, index=%d!\n", packageIndex);
     }
 
     // If no more data pending, send it to the client thread
@@ -1210,7 +1210,7 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
                 status=uncompress((Bytef*)s_deCompressBuf,(uLongf*)&stringLen,(Bytef*)(buf+1),(uLong)(frameSize-1));
                 if(status==0){
                     //char* namePos=strnstr((const char*)s_deCompressBuf,strPForSearch,stringLen);
-                    char* namePos=strstr((const char*)s_deCompressBuf,strPForSearch);
+                    char* namePos=strstr(s_deCompressBuf,strPForSearch);
                     if(namePos && namePos!=s_deCompressBuf){
                         //ok we find event name as protocol name
                         namePos+=strlen(strPForSearch);
