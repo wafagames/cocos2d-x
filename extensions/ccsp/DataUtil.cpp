@@ -7,7 +7,7 @@
 //
 
 #include "DataUtil.h"
-
+#include <stdlib.h>
 
 using namespace ccsp;
 

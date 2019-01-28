@@ -239,7 +239,7 @@ static lws_context_creation_info convertToContextCreationInfo(const struct lws_p
     // libwebsockets official said it's probably an issue of user code
     // since 'libwebsockets' passed AutoBahn stressed Test.
 
-    //info.extensions = exts;
+    info.extensions = exts;
 
     info.gid = -1;
     info.uid = -1;
@@ -1153,9 +1153,11 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
             frameData->push_back('\0');
         }
 
-        if(frameSize>=1024){
-            LOGD("frameSize %ld\n", frameSize);
-        }
+        // LOGD("frameSize %ld\n", frameSize);
+
+        // if(frameSize>=1024){
+        //     LOGD("frameSize %ld\n", frameSize);
+        // }
        
         // if(frameSize>=4){
         //      unsigned char* buf=(unsigned char*)frameData->data();

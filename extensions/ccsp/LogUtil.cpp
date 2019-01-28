@@ -6,6 +6,7 @@
 //
 //
 
+#include <stdlib.h>
 #include "LogUtil.h"
 #include "TimeUtil.h"
 #include "FileUtil.h"

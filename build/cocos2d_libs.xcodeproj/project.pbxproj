@@ -4187,7 +4187,7 @@
 		D8347E931EBC673000616927 /* TextureUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8347E901EBC673000616927 /* TextureUtil.cpp */; };
 		D8347E941EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
 		D8347E951EBC673000616927 /* TextureUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D8347E911EBC673000616927 /* TextureUtil.h */; };
-		D84B247521F706520094AEB5 /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D84B247421F706520094AEB5 /* libuv_a.a */; };
+		D84B247521F706520094AEB5 /* libuv_a.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D84B247421F706520094AEB5 /* libuv_a.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D8910A2020D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
 		D8910A2120D2A46C00728B20 /* FlowField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D8910A1E20D2A46C00728B20 /* FlowField.cpp */; };
 		D8910A2220D2A46C00728B20 /* FlowField.h in Headers */ = {isa = PBXBuildFile; fileRef = D8910A1F20D2A46C00728B20 /* FlowField.h */; };

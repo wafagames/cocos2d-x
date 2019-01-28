@@ -974,7 +974,6 @@ void SIOClientImpl::onMessage(WebSocket* /*ws*/, const WebSocket::Data& data)
 
                     payload = payload.substr(payloadSecondSlashPos + 4,
                                              payload.size() - (payloadSecondSlashPos + 5));
-                    CCLOG("protocol %s str size %lu",eventname.c_str(),payload.size());
 
                     if (c) c->fireEvent(eventname, payload);
                     if (c) c->getDelegate()->onMessage(c, payload);
