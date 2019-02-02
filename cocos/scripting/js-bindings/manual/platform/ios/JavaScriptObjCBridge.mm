@@ -122,6 +122,10 @@ bool JavaScriptObjCBridge::CallInfo::execute(JSContext *cx,jsval *argv,unsigned 
                     bool b = [obj boolValue];
                     [invocation setArgument:&b atIndex:i];
                 }
+                else if([obj isKindOfClass:[NSNumber class]]){
+                    float f = [obj floatValue];
+                    [invocation setArgument:&f atIndex:i];
+                }
                 else
                 {
                     [invocation setArgument:&obj atIndex:i];
