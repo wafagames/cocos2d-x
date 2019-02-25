@@ -98,7 +98,7 @@ public class Cocos2dxEditBoxHelper {
                 editBox.setInputMode(6); //kEditBoxInputModeSingleLine
                 editBox.setReturnType(0);  //kKeyboardReturnTypeDefault
                 editBox.setHintTextColor(Color.GRAY);
-                editBox.setVisibility(View.INVISIBLE);
+                editBox.setVisibility(View.GONE);
                 editBox.setBackgroundColor(Color.TRANSPARENT);
                 editBox.setTextColor(Color.WHITE);
                 editBox.setSingleLine();
@@ -266,10 +266,10 @@ public class Cocos2dxEditBoxHelper {
                     }
                     // TODO: The font size is not the same across all the android devices...
                     if (fontSize >= 0){
-                        float density =  mCocos2dxActivity.getResources().getDisplayMetrics().density;
+                    //    float density =  mCocos2dxActivity.getResources().getDisplayMetrics().density;
 //                        Log.e("XXX", "density is " + density);
-                        editBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                                fontSize / density );
+                        editBox.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                                fontSize);
                     }
                     editBox.setTypeface(tf);
                 }
@@ -433,6 +433,7 @@ public class Cocos2dxEditBoxHelper {
         Cocos2dxEditBox editBox = mEditBoxArray.get(index);
         if (null != editBox) {
             editBox.requestFocus();
+             mCocos2dxActivity.getGLSurfaceView().requestLayout();
             imm.showSoftInput(editBox, 0);
             mCocos2dxActivity.getGLSurfaceView().setSoftKeyboardShown(true);
         }
