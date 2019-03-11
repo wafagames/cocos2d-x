@@ -374,6 +374,9 @@ bool FontAtlas::prepareLetterDefinitions(const std::u32string& utf32Text)
                     {
                         data = _currentPageData + CacheTextureWidth * (int)startY;
                     }
+
+                    if(_atlasTextures.size()==0)
+                        return true;
                     _atlasTextures[_currentPage]->updateWithData(data, 0, startY,
                         CacheTextureWidth, CacheTextureHeight - startY);
 
@@ -442,6 +445,10 @@ bool FontAtlas::prepareLetterDefinitions(const std::u32string& utf32Text)
     {
         data = _currentPageData + CacheTextureWidth * (int)startY;
     }
+
+    if(_atlasTextures.size()==0)
+        return true;
+
     _atlasTextures[_currentPage]->updateWithData(data, 0, startY, CacheTextureWidth, _currentPageOrigY - startY + _currLineHeight);
 
     return true;
