@@ -890,7 +890,7 @@ void WebSocket::onClientOpenConnectionRequest()
         _readyStateMutex.unlock();
 
         Uri uri = Uri::parse(_url);
-        LOGD("scheme: %s, host: %s, port: %d, path: %s\n", uri.getScheme().c_str(), uri.getHostName().c_str(), static_cast<int>(uri.getPort()), uri.getPathEtc().c_str());
+        //LOGD("scheme: %s, host: %s, port: %d, path: %s\n", uri.getScheme().c_str(), uri.getHostName().c_str(), static_cast<int>(uri.getPort()), uri.getPathEtc().c_str());
 
         int sslConnection = 0;
         if (uri.isSecure())
@@ -952,7 +952,7 @@ int WebSocket::onClientWritable()
         std::lock_guard<std::mutex> readMutex(_readyStateMutex);
         if (_readyState == State::CLOSING)
         {
-            LOGD("Closing websocket (%p) connection.\n", this);
+            //LOGD("Closing websocket (%p) connection.\n", this);
             return -1;
         }
     }
@@ -1231,7 +1231,7 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
                     float rate=0;
                     if(stringLen)
                         rate=(1-((float)frameSize/stringLen))*100;
-                    LOGD("WebSocket::onClientReceivedData:[%s %.02f%% %d=>%d]\n",strP,rate,stringLen,(int)frameSize);
+                    //LOGD("WebSocket::onClientReceivedData:[%s %.02f%% %d=>%d]\n",strP,rate,stringLen,(int)frameSize);
                 }
                
                 //stringLen=s_bufSize-lenPrefix-1;
@@ -1264,7 +1264,7 @@ int WebSocket::onClientReceivedData(void* in, ssize_t len)
 
             if (*isDestroyed)
             {
-                LOGD("WebSocket instance was destroyed!\n");
+                //LOGD("WebSocket instance was destroyed!\n");
             }
             else
             {
@@ -1282,7 +1282,7 @@ int WebSocket::onConnectionOpened()
 {
     const lws_protocols* lwsSelectedProtocol = lws_get_protocol(_wsInstance);
     _selectedProtocol = lwsSelectedProtocol->name;
-    LOGD("onConnectionOpened...: %p, client protocols: %s, server selected protocol: %s\n", this, _clientSupportedProtocols.c_str(), _selectedProtocol.c_str());
+    //LOGD("onConnectionOpened...: %p, client protocols: %s, server selected protocol: %s\n", this, _clientSupportedProtocols.c_str(), _selectedProtocol.c_str());
     /*
      * start the ball rolling,
      * LWS_CALLBACK_CLIENT_WRITEABLE will come next service
@@ -1302,7 +1302,7 @@ int WebSocket::onConnectionOpened()
     __wsHelper->sendMessageToCocosThread([this, isDestroyed](){
         if (*isDestroyed)
         {
-            LOGD("WebSocket instance was destroyed!\n");
+            //LOGD("WebSocket instance was destroyed!\n");
         }
         else
         {
@@ -1316,7 +1316,7 @@ int WebSocket::onConnectionError()
 {
     {
         std::lock_guard<std::mutex> lk(_readyStateMutex);
-        LOGD("WebSocket (%p) onConnectionError, state: %d ...\n", this, (int)_readyState);
+        //LOGD("WebSocket (%p) onConnectionError, state: %d ...\n", this, (int)_readyState);
         if (_readyState == State::CLOSED)
         {
             return 0;
@@ -1328,7 +1328,7 @@ int WebSocket::onConnectionError()
     __wsHelper->sendMessageToCocosThread([this, isDestroyed](){
         if (*isDestroyed)
         {
-            LOGD("WebSocket instance was destroyed!\n");
+            //LOGD("WebSocket instance was destroyed!\n");
         }
         else
         {
@@ -1350,7 +1350,7 @@ int WebSocket::onConnectionClosed()
     
     {
         std::lock_guard<std::mutex> lk(_readyStateMutex);
-        LOGD("WebSocket (%p) onConnectionClosed, state: %d ...\n", this, (int)_readyState);
+       // LOGD("WebSocket (%p) onConnectionClosed, state: %d ...\n", this, (int)_readyState);
         if (_readyState == State::CLOSED)
         {
             return 0;
@@ -1360,7 +1360,7 @@ int WebSocket::onConnectionClosed()
         {
             if (_closeState == CloseState::SYNC_CLOSING)
             {
-                LOGD("onConnectionClosed, WebSocket (%p) is closing by client synchronously.\n", this);
+                //LOGD("onConnectionClosed, WebSocket (%p) is closing by client synchronously.\n", this);
                 for(;;)
                 {
                     std::lock_guard<std::mutex> lkClose(_closeMutex);
@@ -1376,16 +1376,16 @@ int WebSocket::onConnectionClosed()
             }
             else if (_closeState == CloseState::ASYNC_CLOSING)
             {
-                LOGD("onConnectionClosed, WebSocket (%p) is closing by client asynchronously.\n", this);
+                //LOGD("onConnectionClosed, WebSocket (%p) is closing by client asynchronously.\n", this);
             }
             else
             {
-                LOGD("onConnectionClosed, WebSocket (%p) is closing by server.\n", this);
+                //LOGD("onConnectionClosed, WebSocket (%p) is closing by server.\n", this);
             }
         }
         else
         {
-            LOGD("onConnectionClosed, WebSocket (%p) is closing by server.\n", this);
+            //LOGD("onConnectionClosed, WebSocket (%p) is closing by server.\n", this);
         }
 
         _readyState = State::CLOSED;
@@ -1403,7 +1403,7 @@ int WebSocket::onConnectionClosed()
         }
     });
 
-    LOGD("WebSocket (%p) onConnectionClosed DONE!\n", this);
+    //LOGD("WebSocket (%p) onConnectionClosed DONE!\n", this);
     return 0;
 }
 
@@ -1440,13 +1440,13 @@ int WebSocket::onSocketCallback(struct lws *wsi,
         case LWS_CALLBACK_UNLOCK_POLL:
             break;
         case LWS_CALLBACK_PROTOCOL_INIT:
-            LOGD("protocol init...");
+            //LOGD("protocol init...");
             break;
         case LWS_CALLBACK_PROTOCOL_DESTROY:
-            LOGD("protocol destroy...");
+            //LOGD("protocol destroy...");
             break;
         default:
-            LOGD("WebSocket (%p) Unhandled websocket event: %d\n", this, reason);
+            //LOGD("WebSocket (%p) Unhandled websocket event: %d\n", this, reason);
             break;
     }
 
