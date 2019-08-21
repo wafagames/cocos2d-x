@@ -8,6 +8,7 @@
 
 #include "DataUtil.h"
 #include <stdlib.h>
+#include <cstring>
 
 using namespace ccsp;
 

@@ -8,6 +8,7 @@ LOCAL_MODULE_FILENAME := libextension
 LOCAL_ARM_MODE := arm
 
 LOCAL_SRC_FILES := \
+ccsp/Browser.cpp \
 ccsp/CurlUtil.cpp \
 ccsp/DataUtil.cpp \
 ccsp/DeviceUtil.cpp \

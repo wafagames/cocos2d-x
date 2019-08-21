@@ -28,6 +28,7 @@
 #include "extensions/ccsp/XPRichText.h"
 #include "extensions/ccsp/FlowField.h"
 #include "extensions/ccsp/HttpUtil.h"
+#include "extensions/ccsp/Browser.h"
 
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global);
 

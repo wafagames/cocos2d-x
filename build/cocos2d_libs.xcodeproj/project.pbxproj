@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02FC47CB22F046310076D543 /* Browser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02FC47C922F046300076D543 /* Browser.cpp */; };
+		02FC47CC22F046310076D543 /* Browser.h in Headers */ = {isa = PBXBuildFile; fileRef = 02FC47CA22F046310076D543 /* Browser.h */; };
+		02FC47CD22F046650076D543 /* Browser.h in Headers */ = {isa = PBXBuildFile; fileRef = 02FC47CA22F046310076D543 /* Browser.h */; };
+		02FC47CE22F046830076D543 /* Browser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02FC47C922F046300076D543 /* Browser.cpp */; };
 		0C261F281BE7528900707478 /* Light3DReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C261F261BE7528900707478 /* Light3DReader.cpp */; };
 		0C261F291BE7528900707478 /* Light3DReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C261F261BE7528900707478 /* Light3DReader.cpp */; };
 		0C261F2A1BE7528900707478 /* Light3DReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C261F271BE7528900707478 /* Light3DReader.h */; };
@@ -4251,6 +4255,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02FC47C922F046300076D543 /* Browser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Browser.cpp; path = ccsp/Browser.cpp; sourceTree = "<group>"; };
+		02FC47CA22F046310076D543 /* Browser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Browser.h; path = ccsp/Browser.h; sourceTree = "<group>"; };
 		0634A4C5194B19E400E608AF /* CCActionTimeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionTimeline.cpp; sourceTree = "<group>"; };
 		0634A4C6194B19E400E608AF /* CCActionTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTimeline.h; sourceTree = "<group>"; };
 		0634A4C7194B19E400E608AF /* CCActionTimelineCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCActionTimelineCache.cpp; sourceTree = "<group>"; };
@@ -8722,6 +8728,8 @@
 		D8D72DD01E95E271007341AF /* ccsp */ = {
 			isa = PBXGroup;
 			children = (
+				02FC47C922F046300076D543 /* Browser.cpp */,
+				02FC47CA22F046310076D543 /* Browser.h */,
 				D82F608120924A4900A910AB /* jsb */,
 				D805485B2091B6A6007D697C /* StrUtil.h */,
 				D805485C2091B6A6007D697C /* StrUtil.cpp */,
@@ -8965,6 +8973,7 @@
 				1A40D16F1E8E56C7002E363A /* stringbuffer.h in Headers */,
 				1A570110180BC8EE0088DEC7 /* CCDrawingPrimitives.h in Headers */,
 				B6CAB5091AF9AA1A00B9B856 /* btGrahamScan2dConvexHull.h in Headers */,
+				02FC47CC22F046310076D543 /* Browser.h in Headers */,
 				50CB247D19D9C5A100687767 /* AudioPlayer.h in Headers */,
 				1A570114180BC8EE0088DEC7 /* CCDrawNode.h in Headers */,
 				15B3707A19EE414C00ABE682 /* AssetsManagerEx.h in Headers */,
@@ -10372,6 +10381,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02FC47CD22F046650076D543 /* Browser.h in Headers */,
 				D8CFE78B20F3B5A600794D91 /* HttpUtil.h in Headers */,
 				D8012B0F1F42C1F60097FA3E /* UIUtil.h in Headers */,
 				C5F516201C822D900013B695 /* UITabControl.h in Headers */,
@@ -11239,6 +11249,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 1551A334158F2AB200E66CFE;
@@ -11307,6 +11318,7 @@
 				15AE190119AAD35000C27E9E /* CCComController.cpp in Sources */,
 				B6CAB4071AF9AA1A00B9B856 /* btMultiBodyJointLimitConstraint.cpp in Sources */,
 				C5F516191C8216C60013B695 /* TabControlReader.cpp in Sources */,
+				02FC47CB22F046310076D543 /* Browser.cpp in Sources */,
 				B6CAB38F1AF9AA1A00B9B856 /* btRaycastCallback.cpp in Sources */,
 				15AE1BE619AAE01E00C27E9E /* CCTableViewCell.cpp in Sources */,
 				50ABBEBB1925AB6F00A911A9 /* ccUtils.cpp in Sources */,
@@ -12482,6 +12494,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02FC47CE22F046830076D543 /* Browser.cpp in Sources */,
 				C5F5161F1C822D6D0013B695 /* UITabControl.cpp in Sources */,
 				C5F5161D1C822D400013B695 /* TabControlReader.cpp in Sources */,
 				D0FD03541A3B51AA00825BB5 /* CCAllocatorGlobalNewDelete.cpp in Sources */,

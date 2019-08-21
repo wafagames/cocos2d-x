@@ -7,9 +7,11 @@
 //
 
 #include <stdlib.h>
+#include <cstring>
 #include "LogUtil.h"
 #include "TimeUtil.h"
 #include "FileUtil.h"
+
 //#include "platform/CCFileUtils.h"
 
 #define  CCSP_MAX_LOG_LENGTH 16*1024

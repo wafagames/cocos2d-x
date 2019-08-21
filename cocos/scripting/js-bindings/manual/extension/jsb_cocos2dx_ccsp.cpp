@@ -679,6 +679,17 @@ bool js_HttpUtil_upload(JSContext *cx, uint32_t argc, jsval *vp){
     return false;
 }
 
+bool js_Browser_openUrl(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc ==1) {
+        std::string url=ccsp::JSB::Util::toString(cx,&args,0);
+        ccsp::Browser::openUrl(url);
+        return true;
+    }
+    JS_ReportError(cx, "js_Browser_openUrl : wrong number of arguments: %d, was expecting >=%d", argc, 1);
+    return false;
+}
+
 void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
 {
     JS::RootedObject jsbObj(cx);
@@ -692,7 +703,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS::RootedObject eventUtilObj(cx);
     JS::RootedObject flowFieldObj(cx);
     JS::RootedObject httpObj(cx);
-    
+    JS::RootedObject browserObj(cx);
+
     JS::RootedObject tmpObj(cx);
    
     
@@ -711,7 +723,8 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "eventUtil", &eventUtilObj);
     get_or_create_js_obj(cx, jsbObj, "flowField", &flowFieldObj);
     get_or_create_js_obj(cx, jsbObj, "httpUtil", &httpObj);
-    
+    get_or_create_js_obj(cx, jsbObj, "browser", &browserObj);
+
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "setLogFileFullName", js_setLogFileFullName, 1, JSPROP_READONLY | JSPROP_PERMANENT);
@@ -764,4 +777,6 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     JS_DefineFunction(cx,httpObj, "get", js_HttpUtil_get, 3, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,httpObj, "post", js_HttpUtil_post, 3, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx,httpObj, "upload", js_HttpUtil_upload, 3, JSPROP_READONLY | JSPROP_PERMANENT);
+
+    JS_DefineFunction(cx,browserObj, "openUrl", js_Browser_openUrl, 1, JSPROP_READONLY | JSPROP_PERMANENT);
 }
