@@ -18,6 +18,7 @@ namespace ccsp{
     {
     public:
         static std::vector<std::string> explode(std::string s,char splitChar);
+         static std::string trim(std::string s);
     };
 }
 

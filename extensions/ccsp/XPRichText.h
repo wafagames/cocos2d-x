@@ -94,6 +94,7 @@ namespace ccsp {
         void setOpenUrlHandler(const OpenUrlHandler& handleOpenUrl);
 
         Node* getRenderByID(int);
+        int getRenderIndexByStr(std::string);
         void addClickEventForRenderer(int i,std::function<void (Node*,Point)> cb);
         void setOnRenrderEnd(std::function<void(Node*,Size)>);
         void setRenderString(int,std::string,Color4B);
@@ -157,6 +158,7 @@ namespace ccsp {
         DrawNode* _drawNode;
         std::vector<std::tuple<Rect,std::function<void(Node*,Point)>,Node*,int>> _clickAreaArr;
         std::function<void(Node*,Size)> _onRenderingEnd;
+        std::map<std::string,int> _strIndexMap;
         bool _onRenderingEndCalled=false;
     };
     

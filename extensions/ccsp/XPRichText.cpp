@@ -711,13 +711,32 @@ Node* XPRichText::_getHighestRenderInLine(Vector<Node*>* arr){
     return nodeRet;
 }
 
+//void XPRichText::_addAllRenders(){
+//    int k=0;
+//    for(auto& row:_elementRenders){
+//        if(!row->size())
+//            continue;
+//        for(auto& node:*row)
+//            addProtectedChild(node,1,k++);
+//    }
+//}
+
 void XPRichText::_addAllRenders(){
     int k=0;
     for(auto& row:_elementRenders){
         if(!row->size())
             continue;
-        for(auto& node:*row)
-            addProtectedChild(node,1,k++);
+        for(auto& node:*row){
+             addProtectedChild(node,1,k++);
+             cocos2d::Label* obj=dynamic_cast<cocos2d::Label*>(node);
+              if(!obj)
+                  continue;
+            std::string str=obj->getString();
+            if(str.size()<=0)
+                continue;
+            std::string trimedStr=ccsp::StrUtil::trim(str);
+            _strIndexMap[trimedStr]=k-1;
+        }
     }
 }
 
@@ -747,6 +766,11 @@ void XPRichText::_debugDrawAllLines(){
 Node* XPRichText::getRenderByID(int i){
     return getProtectedChildByTag(i);
 }
+
+int XPRichText::getRenderIndexByStr(std::string s){
+    return _strIndexMap.at(s);
+}
+
 
 void XPRichText::formarRenderers(){
     float maxLineHeight=_findMaxHeightInAllRenders();
