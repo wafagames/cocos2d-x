@@ -420,6 +420,10 @@ int XPRichText::findSplitPositionForChar(cocos2d::Label* label, const std::strin
     return leftLength;
 }
 
+void XPRichText::setForceNewLine(bool b){
+    _bForceNewLine=b;
+}
+
 int XPRichText::handleTextRenderer(int index,const std::string& text, const std::string& fontName, float fontSize, const Color3B &color,
                                   GLubyte opacity, uint32_t flags, const std::string& url,
                                   const Color3B& outlineColor, int outlineSize ,
@@ -467,6 +471,14 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
         int leftLength = 0;
          leftLength = findSplitPositionForWord(textRenderer, text);
         if(!leftLength){
+            if(_bForceNewLine){
+                CCLOG("XPRichText:cannot find pos for word,will add new line!");
+               addNewLine();
+               return handleTextRenderer(index+1,text, fontName, fontSize, color, opacity, flags, url,
+                                  outlineColor, outlineSize,
+                                  shadowColor, shadowOffset, shadowBlurRadius,
+                                  glowColor);
+            }
             CCLOG("XPRichText:cannot find pos for word,find pos for char");
             leftLength = findSplitPositionForChar(textRenderer, text);
         }
@@ -768,6 +780,10 @@ Node* XPRichText::getRenderByID(int i){
 }
 
 int XPRichText::getRenderIndexByStr(std::string s){
+    if(s.size()<=0)
+        return -1;
+    if (_strIndexMap.find(s) == _strIndexMap.end())
+        return -1;
     return _strIndexMap.at(s);
 }
 

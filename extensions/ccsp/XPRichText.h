@@ -100,6 +100,7 @@ namespace ccsp {
         void setRenderString(int,std::string,Color4B);
          void setRenderString(int,std::string);
         void setRenderTexture(int,std::string);
+        void setForceNewLine(bool b);
         
     CC_CONSTRUCTOR_ACCESS:
         virtual bool init() override;
@@ -147,6 +148,7 @@ namespace ccsp {
         float _fixWidth=0;
          float _fixHeight=0;
         bool _clickEnabled=false;
+        bool _bForceNewLine=false;
         
         float _maxLineWidth=0;
        

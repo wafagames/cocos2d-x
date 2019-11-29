@@ -213,6 +213,18 @@ bool js_XPRichText_setRenderTexture(JSContext *cx, uint32_t argc, jsval *vp){
     return false;
 }
 
+bool js_XPRichText_setForceNewLine(JSContext *cx, uint32_t argc, jsval *vp){
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    if (argc == 1) {
+        bool s=ccsp::JSB::Util::toBool(cx,&args,0);
+        ccsp::XPRichText* cobj=(ccsp::XPRichText*)ccsp::JSB::Util::getThis(cx,&args);
+        cobj->setForceNewLine(s);
+        return true;
+    }
+    JS_ReportError(cx, "js_XPRichText_setForceNewLine : wrong number of arguments: %d, was expecting %d", argc, 1);
+    return false;
+}
+
 bool js_XPRichText_addClickEventForRenderer(JSContext *cx, uint32_t argc, jsval *vp){
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
     if (argc ==2) {
@@ -271,6 +283,7 @@ void js_register_XPRichText(JSContext *cx, JS::HandleObject global) {
          JS_FN("setRenderString", js_XPRichText_setRenderString, 3, JSPROP_PERMANENT | JSPROP_ENUMERATE),
          JS_FN("setRenderTexture", js_XPRichText_setRenderTexture, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FN("setOnRenderEnd", js_XPRichText_setOnRenderEnd, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+         JS_FN("setForceNewLine", js_XPRichText_setForceNewLine, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
         JS_FS_END
     };
     
