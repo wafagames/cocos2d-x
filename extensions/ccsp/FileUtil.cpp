@@ -80,3 +80,7 @@ bool FileUtil::appendString(const std::string &fullPathName,const std::string &s
     
     return false;
 }
+
+void FileUtil::deleteFile(const std::string &fullPathName){
+    cocos2d::FileUtils::getInstance()->removeFile(fullPathName);
+}

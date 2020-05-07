@@ -46,3 +46,11 @@ void LogUtil::logToFileWithTime(const char *szFmt, ...){
     va_end(args);
     return;
 }
+
+
+void LogUtil::clear(){
+    if(_strLogFileName.empty())
+        return;
+    FileUtil::getInstance()->deleteFile(_strLogFileName);
+    return;
+}

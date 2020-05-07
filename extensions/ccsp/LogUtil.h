@@ -24,8 +24,8 @@ class LogUtil {
     };
     //std::string getLogFileName(){return _strLogFileName;};
     void logToFileWithTime(const char* szFmt,...);
-    
-    
+    void clear();
+
     private:
         bool _bEnable;
         std::string _strLogFileName;

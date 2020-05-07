@@ -47,6 +47,46 @@ bool js_copy_file(JSContext *cx, uint32_t argc, jsval *vp)
     return false;
 }
 
+bool js_appendString(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    if (argc == 2)
+    {
+        std::string srcFileName;
+        std::string fileContent;
+        bool ok = jsval_to_std_string(cx, args.get(0), &srcFileName);
+        JSB_PRECONDITION2(ok, cx, false, "js_appendStr : Error processing arguments");
+        
+        ok = jsval_to_std_string(cx, args.get(1), &fileContent);
+        JSB_PRECONDITION2(ok, cx, false, "js_appendStr : Error processing arguments");
+        
+        bool ret=ccsp::FileUtil::getInstance()->appendString(srcFileName,fileContent);
+        jsval jsret = JSVAL_NULL;
+        jsret = INT_TO_JSVAL(ret);
+        args.rval().set(jsret);
+        return true;
+    }
+    JS_ReportError(cx, "js_appendStr : wrong number of arguments");
+    return false;
+}
+
+bool js_deleteFile(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    if (argc == 1)
+    {
+        std::string srcFileName;
+        bool ok = jsval_to_std_string(cx, args.get(0), &srcFileName);
+        JSB_PRECONDITION2(ok, cx, false, "js_deleteFile : Error processing arguments");
+        ccsp::FileUtil::getInstance()->deleteFile(srcFileName);
+        return true;
+    }
+    JS_ReportError(cx, "js_deleteFile : wrong number of arguments");
+    return false;
+}
+
 bool js_enableLogToFile(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -726,6 +766,9 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
     get_or_create_js_obj(cx, jsbObj, "browser", &browserObj);
 
     JS_DefineFunction(cx, fileUtilObj, "copyFile", js_copy_file, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+     JS_DefineFunction(cx, fileUtilObj, "appendString", js_appendString, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+     JS_DefineFunction(cx, fileUtilObj, "deleteFile", js_deleteFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "setLogFileFullName", js_setLogFileFullName, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, httpUtilObj, "setConnectTimeOut", js_setConnectTimeOut, 1, JSPROP_READONLY | JSPROP_PERMANENT);

@@ -19,6 +19,7 @@ namespace ccsp{
         static FileUtil* getInstance();
         bool copyFile(std::string &srcFullPath,std::string &dstFullPath);
         bool appendString(const std::string &fullPathName,const std::string &str);
+        void deleteFile(const std::string &fullPathName);
     };
 }
 

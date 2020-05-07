@@ -5,6 +5,7 @@
 //  Created by joe on 2018/6/14.
 //
 #include <iostream>
+#include <stdio.h>
 #include <pthread.h>
 #include <string>
 #include <cstdio>
@@ -78,6 +79,37 @@ static void threadParseByPFTable(int xNum, int yNum, int validTileCount,unsigned
     }
     if(s_cb)
         s_cb(s_ffTable,s_bufSize);
+    
+//    std::sort(v.bebgin(),v.end(),[](int a,int b){return a>b;});
+//    int i=0,j=1;
+//    auto func=[i,&j](bool a,float f){f++;cout << i << "," << b << "," << f <<endl;};
+//    auto func2=[&](bool a,float f){cout <<i<<endl;};
+//    void(*f)(bool,float);
+//    f=[](bool a,float b){};
+//
+//    int(*f2)(int,float);
+//    f2=[](int a,float b){
+//        if(b>0)
+//            return a+1;
+//        else
+//            return 0;
+//    };
+//
+//    f2(1,3);
+//
+//    std::function<int(int,float)>f3;
+//    int(*f4)(int,float);
+//
+//    std::function<int(const char*,int)>f5;
+//    int(*f6)(const char*,int);
+//
+//    std::function<char*(int a,int b)>f7;
+//    const char*(*f8)(int,int);
+//    f8=[](int a,int b){return "ss1";};
+//
+//    f3=f2;
+//
+//    f3(1,1.0);
 }
 
 void FlowField::doParseByPFTable(int xNum, int yNum, int validTileCount,unsigned char *pfTable,int pfSize,
