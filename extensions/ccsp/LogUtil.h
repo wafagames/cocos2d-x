@@ -16,6 +16,7 @@ namespace ccsp {
 class LogUtil {
     public :
         
+    LogUtil();
     static LogUtil* getInstance();
     void enableLogToFile(bool bEnable){_bEnable=bEnable;};
     bool isEnable(){return _bEnable;};
@@ -24,11 +25,14 @@ class LogUtil {
     };
     //std::string getLogFileName(){return _strLogFileName;};
     void logToFileWithTime(const char* szFmt,...);
+    void logByFileName(const char* fileName,const char* szFmt,...);
+    void logBy2FileName(const char* fileName1,const char* fileName2,const char* szFmt,...);
     void clear();
 
     private:
         bool _bEnable;
         std::string _strLogFileName;
+        std::string _rootPath;
 };
     
 }
