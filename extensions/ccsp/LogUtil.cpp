@@ -11,6 +11,7 @@
 #include "LogUtil.h"
 #include "TimeUtil.h"
 #include "FileUtil.h"
+#include "HttpUtil.h"
 
 #include "platform/CCFileUtils.h"
 
@@ -97,4 +98,21 @@ void LogUtil::clear(){
         return;
     FileUtil::getInstance()->deleteFile(_strLogFileName);
     return;
+}
+
+void LogUtil::uploadToUrl(const char *url,const char *szVersion,const char *szChannel, const char* fileName,int line,const char* msg){
+  if(!_bEnableCrashUpload  || !url)
+      return;
+    char szBuf[1024]={0};
+    snprintf(szBuf, sizeof(szBuf), "errorStr=%s|%s|%s|%u|%s",szVersion,szChannel,fileName,line,msg);
+      
+    //CCLOG("AppDelegate onJSError:%s|%s|%s|%u|%s",s_strVersion.c_str(),s_strChannel.c_str(),fileName,line,msg);
+      
+    ccsp::HttpUtil::post(url,szBuf,[&](int c,const char* strRet){
+                  if(c==200){
+                      CCLOG("AppDelegate:onJSError:200,upload js crash info ok");
+                  }else{
+                      CCLOG("AppDelegate:onJSError:%d,upload js crash info failed",c);
+                  }
+              });
 }

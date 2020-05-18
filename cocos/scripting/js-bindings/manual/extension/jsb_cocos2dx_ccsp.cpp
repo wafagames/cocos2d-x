@@ -103,6 +103,22 @@ bool js_enableLogToFile(JSContext *cx, uint32_t argc, jsval *vp)
     return false;
 }
 
+bool js_enableCrashUpload(JSContext *cx, uint32_t argc, jsval *vp)
+{
+    JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
+    JS::RootedObject obj(cx, args.thisv().toObjectOrNull());
+    if (argc == 1)
+    {
+        int bEnable;
+        bool ok = jsval_to_int(cx, args.get(0), &bEnable);
+        JSB_PRECONDITION2(ok, cx, false, "js_enableCrashUpload : Error processing arguments");
+        ccsp::LogUtil::getInstance()->enableCrashUpload(bEnable);
+        return true;
+    }
+    JS_ReportError(cx, "js_enableCrashUpload : wrong number of arguments");
+    return false;
+}
+
 bool js_setLogFileFullName(JSContext *cx, uint32_t argc, jsval *vp)
 {
     JS::CallArgs args = JS::CallArgsFromVp(argc, vp);
@@ -770,6 +786,7 @@ void register_all_cocos2dx_ccsp(JSContext* cx, JS::HandleObject global)
      JS_DefineFunction(cx, fileUtilObj, "deleteFile", js_deleteFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     
     JS_DefineFunction(cx, logUtilObj, "enableLogToFile", js_enableLogToFile, 1, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, logUtilObj, "enableCrashUpload", js_enableCrashUpload, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, logUtilObj, "setLogFileFullName", js_setLogFileFullName, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, httpUtilObj, "setConnectTimeOut", js_setConnectTimeOut, 1, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, httpUtilObj, "setReadTimeOut", js_setReadTimeOut, 1, JSPROP_READONLY | JSPROP_PERMANENT);
