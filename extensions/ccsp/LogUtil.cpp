@@ -33,6 +33,24 @@ LogUtil::LogUtil(){
     _rootPath=cocos2d::FileUtils::getInstance()->getWritablePath();
 }
 
+void LogUtil::logConsole(const char *szFmt, ...){
+    va_list args;
+    va_start(args, szFmt);
+    //char szTimeBuf[128]={0};
+    char* szLog;
+    szLog=(char*)malloc(CCSP_MAX_LOG_LENGTH);
+    memset(szLog,0,CCSP_MAX_LOG_LENGTH);
+    
+    TimeUtil::getInstance()->getTimeStrLong(szLog, CCSP_MAX_LOG_LENGTH);
+    unsigned long len=strlen(szLog);
+    szLog[len++]=0x20;
+    vsnprintf(&szLog[len], CCSP_MAX_LOG_LENGTH-len, szFmt, args);
+//    CCLOG(std::string(szLog));
+    free(szLog);
+    va_end(args);
+    return;
+}
+
 void LogUtil::logToFileWithTime(const char *szFmt, ...){
     va_list args;
     va_start(args, szFmt);

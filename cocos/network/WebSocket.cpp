@@ -34,6 +34,7 @@
 #include "base/CCEventDispatcher.h"
 #include "base/CCEventListenerCustom.h"
 #include "platform/CCFileUtils.h"
+#include "extensions/ccsp/LogUtil.h"
 
 #include <thread>
 #include <mutex>
@@ -231,6 +232,7 @@ static lws_context_creation_info convertToContextCreationInfo(const struct lws_p
 
     info.port = CONTEXT_PORT_NO_LISTEN;
     info.protocols = protocols;
+    // info.pt_serv_buf_size=1024*1024;
 
     // FIXME: Disable 'permessage-deflate' extension temporarily because of issues:
     // https://github.com/cocos2d/cocos2d-x/issues/16045, https://github.com/cocos2d/cocos2d-x/issues/15767
@@ -314,6 +316,8 @@ public:
 
     static int onSocketCallback(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len)
     {
+        // if(len>=10)
+        //     ccsp::LogUtil::logConsole("onSocketCallback %d",len);
         // Gets the user data from context. We know that it's a 'WebSocket' instance.
         if (wsi == nullptr) {
             return 0;
@@ -675,6 +679,7 @@ void WebSocket::send(const std::string& message)
         msg->what = WS_MSG_TO_SUBTRHEAD_SENDING_STRING;
         msg->data = data;
         msg->user = this;
+        // ccsp::LogUtil::logConsole("WebSocket::send post msg to websocket thread");
         __wsHelper->sendMessageToWebSocketThread(msg);
     }
     else
@@ -1118,6 +1123,7 @@ static int s_bufSize=1024*1024;
 
 int WebSocket::onClientReceivedData(void* in, ssize_t len)
 {
+//    ccsp::LogUtil::logConsole("WebSocket::onClientReceivedData %d",len);
     // In websocket thread
     static int packageIndex = 0;
     packageIndex++;

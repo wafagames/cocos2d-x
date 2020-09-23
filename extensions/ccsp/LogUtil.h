@@ -26,6 +26,7 @@ class LogUtil {
         _strLogFileName=name;
     };
     //std::string getLogFileName(){return _strLogFileName;};
+    static void logConsole(const char* szFmt,...);
     void logToFileWithTime(const char* szFmt,...);
     void logByFileName(const char* fileName,const char* szFmt,...);
     void logBy2FileName(const char* fileName1,const char* fileName2,const char* szFmt,...);

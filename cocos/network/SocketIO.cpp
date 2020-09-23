@@ -44,6 +44,7 @@
 #include "json/writer.h"
 
 #include "extensions/ccsp/DataUtil.h"
+#include "extensions/ccsp/LogUtil.h"
 
 NS_CC_BEGIN
 
@@ -726,6 +727,7 @@ void SIOClientImpl::send(SocketIOPacket *packet)
     if (_connected)
     {
         CCLOGINFO("-->SEND:%s", req.data());
+        //ccsp::LogUtil::logConsole("SIOClientImpl::send %d", req.length());
         _ws->send(req.data());
     }
     else
@@ -766,8 +768,8 @@ void SIOClientImpl::onOpen(WebSocket* /*ws*/)
 
 void SIOClientImpl::onMessage(WebSocket* /*ws*/, const WebSocket::Data& data)
 {
-    CCLOGINFO("SIOClientImpl::onMessage received: %s", data.bytes);
-
+    //ccsp::LogUtil::logConsole("SIOClientImpl::onMessage received: %d", strlen(data.bytes));
+    
     std::string payload = data.bytes;
     int control = atoi(payload.substr(0, 1).c_str());
     payload = payload.substr(1, payload.size() - 1);
