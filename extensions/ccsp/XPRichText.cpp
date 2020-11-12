@@ -225,7 +225,7 @@ void XPRichText::formatText()
                 {
                     elementRenderer->setAnchorPoint(Point(0,0));
                     elementRenderer->setIgnoreAnchorPointForPosition(false);
-                    elementRenderer->setColor(element->_color);
+                    elementRenderer->setTextColor(element->_color);
                     elementRenderer->setOpacity(element->_opacity);
                     pushToContainer(index,elementRenderer);
                 }
@@ -519,7 +519,7 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
             {
                 leftRenderer->setAnchorPoint(Point(0,0));
                 leftRenderer->setIgnoreAnchorPointForPosition(false);
-                leftRenderer->setColor(color);
+                leftRenderer->setTextColor(Color4B(color.r,color.g,color.b,opacity));
                 leftRenderer->setOpacity(opacity);
                 pushToContainer(index,leftRenderer);
 
@@ -557,7 +557,7 @@ int XPRichText::handleTextRenderer(int index,const std::string& text, const std:
     }
     else
     {
-        textRenderer->setColor(color);
+        textRenderer->setTextColor(Color4B(color.r,color.g,color.b,opacity));
         textRenderer->setOpacity(opacity);
         pushToContainer(index,textRenderer);
         return index;
