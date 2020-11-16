@@ -225,7 +225,12 @@ void XPRichText::formatText()
                 {
                     elementRenderer->setAnchorPoint(Point(0,0));
                     elementRenderer->setIgnoreAnchorPointForPosition(false);
-                    elementRenderer->setTextColor(element->_color);
+                    if(element->_type==RichElement::Type::TEXT){
+                        cocos2d::Label* elmtText = static_cast<cocos2d::Label*>(elementRenderer);
+                        elmtText->setTextColor(Color4B(element->_color.r,element->_color.g,element->_color.b,element->_opacity));
+                    }
+                    else
+                        elementRenderer->setColor(element->_color);
                     elementRenderer->setOpacity(element->_opacity);
                     pushToContainer(index,elementRenderer);
                 }
